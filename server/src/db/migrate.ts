@@ -4,7 +4,7 @@
  *   npm run migrate -- --status           list applied / pending
  *   npm run migrate -- --down <id>        roll back one applied migration (destroys its data)
  */
-import { closePool, getPool } from './pool';
+import { closePool, describeDbError, getPool } from './pool';
 import { migrations } from './migrations';
 
 const LOCK_NAME = 'turve_migrations';
@@ -68,7 +68,7 @@ async function run(): Promise<void> {
 
 run()
   .catch((error) => {
-    console.error('Migration failed:', error instanceof Error ? error.message : error);
+    console.error(`Migration failed: ${describeDbError(error)}`);
     process.exitCode = 1;
   })
   .finally(() => closePool());

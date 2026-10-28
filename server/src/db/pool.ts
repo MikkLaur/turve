@@ -44,6 +44,22 @@ export async function withTransaction<T>(fn: (conn: PoolConnection) => Promise<T
   }
 }
 
+/**
+ * One line for logs: the driver wraps the real reason (wrong password, unknown database, no privileges, refused)
+ * in error.cause behind a generic "pool failed to retrieve a connection". Never contains the password.
+ */
+export function describeDbError(error: unknown): string {
+  const parts: string[] = [];
+  let current: unknown = error;
+  for (let depth = 0; current && depth < 4; depth++) {
+    const e = current as { code?: string; sqlMessage?: string | null; message?: string; cause?: unknown };
+    const text = (e.sqlMessage || e.message || String(current)).split('\n')[0] ?? '';
+    parts.push(e.code ? `${e.code}: ${text}` : text);
+    current = e.cause;
+  }
+  return parts.join(' ← caused by ');
+}
+
 /** MariaDB's JSON is LONGTEXT; depending on server metadata the driver returns a string or an object. */
 export function parseJson<T>(value: unknown): T | null {
   if (value == null) {

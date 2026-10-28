@@ -1,6 +1,6 @@
 import app from './app';
 import { config } from './config/config';
-import { getPool } from './db/pool';
+import { describeDbError, getPool } from './db/pool';
 
 (async () => {
   try {
@@ -10,7 +10,7 @@ import { getPool } from './db/pool';
       console.log(`turve API listening on port ${config.port} (${config.nodeEnv})`);
     });
   } catch (error) {
-    console.error(`Database not reachable: ${error instanceof Error ? error.message : error}`);
+    console.error(`Database not reachable: ${describeDbError(error)}`);
     process.exit(1);
   }
 })();
