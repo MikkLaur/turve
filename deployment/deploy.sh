@@ -131,16 +131,24 @@ if [[ " $DEPLOY_STATIC " == *" site "* ]]; then
     die "Site build failed. If it lists content TODOs, fill them in (or set ALLOW_CONTENT_TODO='true' to publish anyway)."
 fi
 
+# The complete server/ folder is assembled locally (code + start.sh + generated .env) and sent with one rsync,
+# so a dry run works even before server/ exists on the VM. Remote node_modules/ and dist/ are kept.
+STAGE="$ENV_DIR/stage"
+mkdir -p "$STAGE/server"
+rsync -a --exclude node_modules/ --exclude dist/ --exclude /test/ --exclude .env --exclude .DS_Store \
+  "$REPO_ROOT/server/" "$STAGE/server/"
+cp "$SCRIPT_DIR/start.sh" "$STAGE/server/start.sh"
+chmod 755 "$STAGE/server/start.sh"
+cp "$ENV_DIR/server.env" "$STAGE/server/.env"
+chmod 600 "$STAGE/server/.env"
+
 sync_all() {
   local flags=(-az --itemize-changes -e "ssh -p $SSH_PORT")
   [ "$1" = dry ] && flags+=(--dry-run)
-  local code_excludes=(--exclude node_modules/ --exclude dist/ --exclude .env --exclude .DS_Store)
 
   echo "--- server/"
-  rsync "${flags[@]}" --delete "${code_excludes[@]}" --exclude /start.sh \
-    "$REPO_ROOT/server/" "$TARGET:$REMOTE_ROOT/server/"
-  rsync "${flags[@]}" "$SCRIPT_DIR/start.sh" "$TARGET:$REMOTE_ROOT/server/start.sh"
-  rsync "${flags[@]}" "$ENV_DIR/server.env" "$TARGET:$REMOTE_ROOT/server/.env"
+  rsync "${flags[@]}" --delete --exclude node_modules/ --exclude dist/ \
+    "$STAGE/server/" "$TARGET:$REMOTE_ROOT/server/"
 
   local part
   for part in $DEPLOY_STATIC; do
