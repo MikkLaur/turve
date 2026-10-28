@@ -65,9 +65,36 @@ pm2 jlist 2>/dev/null | node -e '
     let apps = []; try { apps = JSON.parse(raw); } catch {}
     console.log(apps.length ? "  all PM2 apps: " + apps.map((a) => `${a.name} (${a.pm2_env?.status ?? "?"})`).join(", ") : "  all PM2 apps: none");
   });'
-echo "--- who listens on port $PORT (the address shown is HEALTH_HOST)"
-listening="$( (ss -ltnH 2>/dev/null || netstat -ltn 2>/dev/null) | awk -v p=":$PORT" '$4 ~ p"$" {print "  " $4}')"
-echo "${listening:-  nothing yet (the app is not running)}"
+if [ -n "$pid" ] && [ "$pid" != "0" ]; then
+  echo "--- '$APP' details"
+  # Only these fields are printed; PM2's stored environment (with secrets) stays on the VM.
+  pm2 jlist 2>/dev/null | APP="$APP" node -e '
+    let raw = ""; process.stdin.on("data", (d) => (raw += d)).on("end", () => {
+      const app = JSON.parse(raw).find((a) => a.name === process.env.APP);
+      if (!app) return;
+      const e = app.pm2_env || {};
+      const env = { ...(e.env || {}), ...e };
+      console.log(`  status ${e.status}, restarts ${e.restart_time} (unstable ${e.unstable_restarts}), up since ${new Date(e.pm_uptime).toISOString()}`);
+      console.log(`  script ${e.pm_exec_path}  cwd ${e.pm_cwd}  interpreter ${e.exec_interpreter}`);
+      console.log(`  PORT given by PM2/Zone: ${env.PORT ?? "(none – app uses .env)"}  NODE_ENV: ${env.NODE_ENV ?? "(none)"}`);
+      console.log(`  logs: ${e.pm_out_log_path} | ${e.pm_err_log_path}`);
+    });'
+  echo "--- sockets the app listens on (one of these is HEALTH_HOST:PORT)"
+  pids="$pid $(pgrep -P "$pid" 2>/dev/null | tr '\n' ' ')"
+  if command -v ss >/dev/null; then
+    found=""
+    for p in $pids; do found+="$(ss -ltnpH 2>/dev/null | grep "pid=$p," | awk '{print "  " $4}')"$'\n'; done
+    found="$(printf '%s' "$found" | sed '/^$/d' | sort -u)"
+    echo "${found:-  none – the app is not listening (see the log lines below)}"
+  else
+    echo "  ss is not available on the VM"
+  fi
+  echo "--- last log lines"
+  out_log="$(pm2 jlist 2>/dev/null | APP="$APP" node -e 'let r="";process.stdin.on("data",d=>r+=d).on("end",()=>{const a=JSON.parse(r).find(x=>x.name===process.env.APP);process.stdout.write(a?a.pm2_env.pm_out_log_path+"\n"+a.pm2_env.pm_err_log_path:"")})')"
+  for log in $out_log; do
+    [ -f "$log" ] && { echo "  [$log]"; tail -n 8 "$log" | sed 's/^/    /'; }
+  done
+fi
 # Probe with Node: unlike bash's /dev/tcp it tells apart "no such name", "refused" and "timeout".
 probe() {
   node -e '
