@@ -59,6 +59,12 @@ done
 echo "--- PM2 app '$APP'"
 pid="$(pm2 pid "$APP" 2>/dev/null | tr -d '[:space:]')"
 if [ -n "$pid" ] && [ "$pid" != "0" ]; then echo "  running (pid $pid)"; elif [ "$pid" = "0" ]; then echo "  registered but stopped"; else echo "  not registered yet"; fi
+# All PM2 apps by name and status only; the rest of jlist (incl. environment variables) is dropped on the VM.
+pm2 jlist 2>/dev/null | node -e '
+  let raw = ""; process.stdin.on("data", (d) => (raw += d)).on("end", () => {
+    let apps = []; try { apps = JSON.parse(raw); } catch {}
+    console.log(apps.length ? "  all PM2 apps: " + apps.map((a) => `${a.name} (${a.pm2_env?.status ?? "?"})`).join(", ") : "  all PM2 apps: none");
+  });'
 echo "--- who listens on port $PORT (the address shown is HEALTH_HOST)"
 listening="$( (ss -ltnH 2>/dev/null || netstat -ltn 2>/dev/null) | awk -v p=":$PORT" '$4 ~ p"$" {print "  " $4}')"
 echo "${listening:-  nothing yet (the app is not running)}"
