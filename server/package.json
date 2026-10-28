@@ -1,0 +1,37 @@
+{
+  "name": "turve-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API for www.turve.ee: inquiries, public security check, admin panel (kapsaaed).",
+  "license": "UNLICENSED",
+  "main": "dist/server.js",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "dev": "NODE_ENV=development tsx watch src/server.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "NODE_ENV=test node --import tsx --test 'test/**/*.test.ts'",
+    "migrate": "node dist/db/migrate.js",
+    "migrate:dev": "NODE_ENV=development tsx src/db/migrate.ts",
+    "create-admin": "node dist/scripts/createAdmin.js",
+    "reset-totp": "node dist/scripts/resetTotp.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "express-validator": "^7.3.2",
+    "mariadb": "^3.5.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.19.2",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  }
+}

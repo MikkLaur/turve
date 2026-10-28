@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+deployment/deployment.config
+
+# Server-generated / host-managed (live only on the VM)
+logs/
+stats/
+phpini/
+*.tar.gz
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

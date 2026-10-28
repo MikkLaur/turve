@@ -1,0 +1,37 @@
+# Copy to deployment.config (keep it out of git, chmod 600) and fill in.
+# Use single quotes around values; values must not contain single quotes or newlines.
+
+# --- Connection to the VM (the separate Zone.eu account for turve.ee)
+SSH_USER=''
+SSH_HOST=''
+SSH_PORT='22'
+REMOTE_ROOT='domeenid/www.turve.ee'          # relative to the remote home directory
+PM2_APP='turve'
+# Space-separated list of static parts to upload. Empty = don't touch them.
+#   site     → builds site/ locally and uploads site/dist/ to htdocs/ (www.turve.ee), deleting stale files
+#   kapsaaed → uploads kapsaaed/ to kapsaaed/ (kapsaaed.turve.ee)
+DEPLOY_STATIC=''
+# DEPLOY_STATIC='site kapsaaed'
+
+# --- API (server/.env)
+NODE_ENV='production'
+PORT='3000'
+# Zone.eu binds the app to the account's own loopback IP, not 127.0.0.1. Find it on the VM (see CLAUDE.md).
+HEALTH_HOST=''
+# Generate each: node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+# TOTP_ENC_KEY encrypts the admin TOTP secrets in the DB. Changing it invalidates every enrolled authenticator.
+TOTP_ENC_KEY=''
+FORM_TOKEN_SECRET=''
+SITE_ORIGIN='https://www.turve.ee'
+PUBLIC_ORIGINS='https://www.turve.ee https://turve.ee'
+ADMIN_ORIGIN='https://kapsaaed.turve.ee'
+# Optional: DNS servers for the public security check, e.g. '1.1.1.1 9.9.9.9'. Empty = the VM's resolver.
+CHECK_DNS_SERVERS=''
+
+# --- Database (the MariaDB created for turve.ee in the Zone.eu panel)
+DB_HOST=''
+DB_PORT='3306'
+DB_NAME=''
+DB_USER=''
+DB_PASSWORD=''
+DB_CONNECTION_LIMIT='5'
