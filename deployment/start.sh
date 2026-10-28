@@ -3,5 +3,6 @@
 set -euo pipefail
 # DATETIME columns hold UTC; the mariadb driver uses the process time zone.
 export TZ=UTC
-cd "$HOME/domeenid/www.turve.ee/server"
+# This file is uploaded as server/start.sh, so the API lives next to it.
+cd "$(dirname "$(readlink -f "$0")")"
 exec node dist/server.js

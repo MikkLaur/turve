@@ -37,7 +37,9 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - After deploy: `curl -s -o /dev/null -w '%{http_code}' https://api.turve.ee/api/health` → 200; `POST https://api.turve.ee/api/admin/login` with a foreign Origin → 403; run www.turve.ee through the site's own check, Mozilla Observatory and SSL Labs.
 
 ## Deployment
-- `./deployment/deploy.sh [--yes]` from the repo root. Reads `deployment/deployment.config` (mode 600, git-ignored; template in `deployment.config.dist`).
+- `./deployment/deploy.sh --preflight` (read-only: Node/npm/pm2 versions, remote folders, PM2 app state, loopback IP for `HEALTH_HOST`, DB port), `--dry-run` (build + show the upload, change nothing), or `[--yes]` (deploy). Run from the repo root. Reads `deployment/deployment.config` (mode 600, git-ignored; template in `deployment.config.dist`).
+  - The site is built with `--strict`, which refuses while content TODOs remain. Set `ALLOW_CONTENT_TODO='true'` only for a deliberate soft launch.
+  - First deploy: if PM2 has no `turve` app yet, the script stops after upload, build and migration (exit 3) and prints what to create in the Zone panel.
   - Writes `server/.env` in a temp dir and shows an `rsync --dry-run`. **Check for `*deleting` lines** before you confirm.
   - `DEPLOY_STATIC='site kapsaaed'` also builds and uploads the site (`--delete`, Let's Encrypt challenges protected) and the panel.
   - On the VM it runs `npm ci`, `npm run build`, `npm run migrate`, `pm2 restart turve`, then a health check on `HEALTH_HOST`.

@@ -12,7 +12,7 @@ export function aboutPage(ctx: PageContext): PageOutput {
     <section class="section" aria-labelledby="h-person">
       <div class="wrap person">
         ${PERSON.photo
-          ? html`<img class="person-photo" src="${asset(PERSON.photo)}" alt="${a.photoAlt}" width="320" height="320">`
+          ? html`<img class="person-photo" src="${asset(PERSON.photo)}" alt="${PERSON.name ? `${PERSON.name}, ${a.photoAlt}` : a.photoAlt.charAt(0).toUpperCase() + a.photoAlt.slice(1)}" width="320" height="320">`
           : html`<div class="person-photo placeholder" role="img" aria-label="${a.photoAlt}"><span>turve</span></div>`}
         <div>
           <h2 id="h-person">${PERSON.name || a.personTitle}</h2>

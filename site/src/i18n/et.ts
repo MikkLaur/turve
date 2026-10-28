@@ -23,7 +23,8 @@ export const et = {
     noTracking: 'Sellel lehel pole jälgimist, küpsiseid ega kolmanda osapoole skripte.',
     privacy: 'Privaatsus',
     contact: 'Kontakt',
-    regCode: 'Registrikood',
+    providerBefore: 'Turve teenuseid osutab',
+    regCode: 'registrikood',
     securityTxt: 'Turvaprobleemist teatamine',
   },
 
@@ -275,12 +276,12 @@ export const et = {
     heading: 'Kes on Turve taga',
     lead: 'Turve on väike ettevõte ühe selge mõttega: väikeettevõttel peab olema võimalik saada turvaline veebileht ja päris turvaekspertiisi hinnaga, mis on jõukohane.',
     personTitle: 'Inimene',
-    // TODO(owner): replace with your own story, background and credentials.
     personBio: [
-      'Töötan igapäevaselt turvainsenerina. [Lisa siia oma taust: kogemus, valdkonnad, sertifikaadid.]',
+      'Töötan igapäevaselt turvainsenerina ja tegelen süsteemide turvalisusega.',
       'Turve sai alguse sellest, et nägin, kui sageli on väikeettevõtete veebilehed vananenud ja kaitseta, kuigi nende korda tegemine ei pea olema kallis.',
+      'Viimati ehitasin Kämblakoja massaažistuudiole kakskeelse kodulehe koos broneerimissüsteemi ja halduspaneeliga.',
     ],
-    photoAlt: 'Turve asutaja portree',
+    photoAlt: 'Turve asutaja',
     valuesTitle: 'Mida lubame',
     values: [
       { title: 'Ausus', text: 'Ütleme, kui midagi pole vaja teha. Ka siis, kui see tähendab väiksemat arvet.' },
@@ -331,11 +332,11 @@ export const et = {
     title: 'Privaatsus | Turve',
     description: 'Kuidas Turve isikuandmeid kogub, kasutab ja kaitseb.',
     heading: 'Privaatsuspoliitika',
-    // TODO(owner): have this reviewed before launch. {tokens} are filled from COMPANY in config.ts.
+    // {tokens} are filled from COMPANY in config.ts.
     sections: [
       {
         title: 'Kes vastutab',
-        paragraphs: ['Isikuandmete vastutav töötleja on {legalName} (registrikood {regCode}, {address}). Küsimuste korral kirjutage {email}.'],
+        paragraphs: ['Isikuandmete vastutav töötleja on {legalName} (registrikood {regCode}), kes osutab teenuseid kaubamärgi Turve all. Ettevõtte ametlikud andmed on e-äriregistris. Küsimuste korral kirjutage {email}.'],
       },
       {
         title: 'Milliseid andmeid kogume',

@@ -24,7 +24,8 @@ export const en: Messages = {
     noTracking: 'This site has no tracking, no cookies and no third-party scripts.',
     privacy: 'Privacy',
     contact: 'Contact',
-    regCode: 'Registry code',
+    providerBefore: 'Turve services are provided by',
+    regCode: 'registry code',
     securityTxt: 'Report a security issue',
   },
 
@@ -277,10 +278,11 @@ export const en: Messages = {
     lead: 'Turve is a small company with one clear idea: a small business should be able to get a secure website and real security expertise at a price it can afford.',
     personTitle: 'The person',
     personBio: [
-      'I work as a security engineer. [Add your background here: experience, areas, certifications.]',
+      'I work as a security engineer, looking after the security of systems day to day.',
       'Turve started when I saw how often small-business websites are outdated and unprotected, even though fixing them does not have to be expensive.',
+      'Most recently I built a bilingual website for the Kämblakoda massage studio, with a booking system and an admin panel.',
     ],
-    photoAlt: 'Portrait of the founder of Turve',
+    photoAlt: 'founder of Turve',
     valuesTitle: 'What we promise',
     values: [
       { title: 'Honesty', text: "We tell you when something doesn't need doing, even if that means a smaller invoice." },
@@ -334,7 +336,7 @@ export const en: Messages = {
     sections: [
       {
         title: 'Who is responsible',
-        paragraphs: ['The controller of personal data is {legalName} (registry code {regCode}, {address}). For questions, write to {email}.'],
+        paragraphs: ['The controller of personal data is {legalName} (registry code {regCode}), which provides its services under the Turve brand. The official company details are in the Estonian e-Business Register. For questions, write to {email}.'],
       },
       {
         title: 'What data we collect',

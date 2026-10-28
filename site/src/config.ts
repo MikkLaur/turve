@@ -12,23 +12,33 @@ export function siteConfig(dev: boolean): SiteConfig {
 }
 
 /**
- * Company details for the footer, privacy policy and structured data.
- * Estonian law (InfoTS § 4) wants name, registry code and contact on the site: fill these before launch.
- * Empty values are left out of the page; the build lists them as TODO.
+ * Company details for the footer, privacy policy, security.txt and structured data.
+ * Turve is a brand of Lõvikonserv OÜ. The address is left out on purpose (it is the owner's home address);
+ * the footer links the company to the e-Business Register, which shows the official one.
  */
 export const COMPANY = {
   brand: 'Turve',
-  legalName: '',
-  regCode: '',
-  address: '',
-  email: '',
+  legalName: 'Lõvikonserv OÜ',
+  regCode: '16869757',
+  email: 'info@turve.ee',
   phone: '',
 };
 
+/** The company's public entry in the Estonian e-Business Register. */
+export function registerUrl(lang: 'et' | 'en'): string {
+  return `https://ariregister.rik.ee/${lang === 'et' ? 'est' : 'eng'}/company/${COMPANY.regCode}`;
+}
+
+/** Fills {legalName}, {regCode} and {email} in a text; a missing value stays visible as [key] so it gets noticed. */
+export function fillCompany(text: string): string {
+  return text.replace(/\{(legalName|regCode|email)\}/g, (_m, key: 'legalName' | 'regCode' | 'email') => COMPANY[key] || `[${key}]`);
+}
+
 /** The person behind Turve (about page). The build lists empty fields as TODO. */
 export const PERSON = {
-  name: '',
+  name: 'Mikk Laur',
   role: { et: 'Turvainsener ja arendaja', en: 'Security engineer and developer' },
-  photo: '', // e.g. 'img/person.webp' in assets/
+  // 640×640 WebP made from the original with metadata stripped (magick … -resize 640x640 -strip).
+  photo: 'img/person.webp',
   linkedin: '',
 };

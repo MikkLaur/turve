@@ -1,6 +1,7 @@
 /**
  * Builds www.turve.ee into site/dist/: both languages, assets with content hashes, sitemap, .htaccess,
  * security.txt. Fails on broken internal links. Usage: npm run build (production) | tsx src/build.ts --dev
+ * --strict (used by deploy.sh) also fails while content TODOs remain, so placeholders never go live by accident.
  */
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
@@ -143,18 +144,17 @@ function checkLinks(): string[] {
 
 function todos(): string[] {
   const list: string[] = [];
-  for (const key of ['legalName', 'regCode', 'address', 'email'] as const) {
+  for (const key of ['legalName', 'regCode', 'email'] as const) {
     if (!COMPANY[key]) list.push(`COMPANY.${key} is empty (site/src/config.ts)`);
   }
   if (!PERSON.name) list.push('PERSON.name is empty (site/src/config.ts)');
-  if (!PERSON.photo) list.push('PERSON.photo is empty (site/src/config.ts)');
   for (const [lang, t] of [['et', et], ['en', en]] as const) {
     if (t.about.personBio.some((p) => p.includes('['))) list.push(`about.personBio (${lang}) still has a [placeholder]`);
   }
   return list;
 }
 
-export function build(dev: boolean): void {
+export function build(dev: boolean, strict = false): void {
   const cfg = siteConfig(dev);
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
@@ -197,12 +197,15 @@ export function build(dev: boolean): void {
   console.log(`Built ${LANGS.length * PAGES.length + 1}${dev ? ' (+ style tile)' : ''} pages into ${path.relative(process.cwd(), DIST) || DIST} for ${cfg.siteOrigin}`);
   if (pending.length) {
     console.log(`TODO before launch:\n  - ${pending.join('\n  - ')}`);
+    if (strict) {
+      throw new Error('Refusing a --strict (deploy) build while content TODOs remain.');
+    }
   }
 }
 
 if (require.main === module) {
   try {
-    build(process.argv.includes('--dev'));
+    build(process.argv.includes('--dev'), process.argv.includes('--strict'));
   } catch (error) {
     console.error(error instanceof Error ? error.message : error);
     process.exit(1);

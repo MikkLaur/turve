@@ -1,4 +1,4 @@
-import { COMPANY } from '../config';
+import { fillCompany } from '../config';
 import { pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
@@ -17,11 +17,6 @@ export function thanksPage(ctx: PageContext): PageOutput {
       </div>
     </section>`;
   return { id: 'thanks', title: t.thanks.title, description: t.thanks.description, body, noindex: true };
-}
-
-/** Fills {legalName}-style tokens from COMPANY; missing values stay visible as [legalName] so they get noticed. */
-function fillCompany(text: string): string {
-  return text.replace(/\{(legalName|regCode|address|email)\}/g, (_m, key: keyof typeof COMPANY) => COMPANY[key] || `[${key}]`);
 }
 
 export function privacyPage(ctx: PageContext): PageOutput {

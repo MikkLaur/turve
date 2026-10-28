@@ -1,4 +1,4 @@
-import { COMPANY } from './config';
+import { COMPANY, registerUrl } from './config';
 import type { PageContext, PageOutput } from './context';
 import { html, jsonBlock, raw, toString } from './html';
 import { href, LANGS, NAV, ROUTES } from './routes';
@@ -36,13 +36,14 @@ function header(page: PageOutput, ctx: PageContext) {
 
 function footer(ctx: PageContext) {
   const { t, lang } = ctx;
-  const legal = [COMPANY.legalName, COMPANY.regCode && `${t.footer.regCode} ${COMPANY.regCode}`, COMPANY.address].filter(Boolean);
   return html`<footer class="site-footer">
     <div class="wrap footer-inner">
       <div>
         <a class="brand brand-small" href="${href('home', lang)}"><span class="brand-word">turve</span><span class="brand-cursor" aria-hidden="true"></span></a>
         <p>${t.footer.tagline}</p>
-        ${legal.length ? html`<p class="muted">${legal.join(' · ')}</p>` : ''}
+        ${COMPANY.legalName
+          ? html`<p>${t.footer.providerBefore} <a href="${registerUrl(lang)}" rel="noopener">${COMPANY.legalName}</a>${COMPANY.regCode ? ` (${t.footer.regCode} ${COMPANY.regCode})` : ''}.</p>`
+          : ''}
         ${COMPANY.email ? html`<p><a href="mailto:${COMPANY.email}">${COMPANY.email}</a></p>` : ''}
       </div>
       <ul class="footer-links">

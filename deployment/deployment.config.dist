@@ -2,8 +2,8 @@
 # Use single quotes around values; values must not contain single quotes or newlines.
 
 # --- Connection to the VM (the separate Zone.eu account for turve.ee)
-SSH_USER=''
-SSH_HOST=''
+SSH_USER=''                                   # the Zone account's SSH user, e.g. virt123456
+SSH_HOST='turve.ee'
 SSH_PORT='22'
 REMOTE_ROOT='domeenid/www.turve.ee'          # relative to the remote home directory
 PM2_APP='turve'
@@ -12,11 +12,15 @@ PM2_APP='turve'
 #   kapsaaed → uploads kapsaaed/ to kapsaaed/ (kapsaaed.turve.ee)
 DEPLOY_STATIC=''
 # DEPLOY_STATIC='site kapsaaed'
+# The site build refuses to deploy while content TODOs remain (company details, placeholder bio).
+# 'true' publishes anyway – only for a deliberate soft launch.
+ALLOW_CONTENT_TODO='false'
 
 # --- API (server/.env)
 NODE_ENV='production'
 PORT='3000'
-# Zone.eu binds the app to the account's own loopback IP, not 127.0.0.1. Find it on the VM (see CLAUDE.md).
+# Zone.eu binds the app to the account's own loopback IP (127.x.x.x), not 127.0.0.1.
+# ./deployment/deploy.sh --preflight lists it. May stay empty for the very first deploy (health check is skipped).
 HEALTH_HOST=''
 # Generate each: node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 # TOTP_ENC_KEY encrypts the admin TOTP secrets in the DB. Changing it invalidates every enrolled authenticator.
@@ -28,7 +32,7 @@ ADMIN_ORIGIN='https://kapsaaed.turve.ee'
 # Optional: DNS servers for the public security check, e.g. '1.1.1.1 9.9.9.9'. Empty = the VM's resolver.
 CHECK_DNS_SERVERS=''
 
-# --- Database (the MariaDB created for turve.ee in the Zone.eu panel)
+# --- Database (the MariaDB created for turve.ee in the Zone.eu panel; host as shown there, often 'localhost')
 DB_HOST=''
 DB_PORT='3306'
 DB_NAME=''
