@@ -127,7 +127,8 @@ if [[ " $DEPLOY_STATIC " == *" site "* ]]; then
   # --strict fails while content TODOs remain (empty company details, placeholder bio), so they can't go live by accident.
   strict=(--strict)
   [ "$ALLOW_CONTENT_TODO" = "true" ] && strict=()
-  (cd "$REPO_ROOT/site" && npm ci --no-audit --no-fund && npx tsx src/build.ts "${strict[@]}") ||
+  # umask 022: the build must not inherit this script's private umask (files would be unreadable to the web server).
+  (umask 022 && cd "$REPO_ROOT/site" && npm ci --no-audit --no-fund && npx tsx src/build.ts "${strict[@]}") ||
     die "Site build failed. If it lists content TODOs, fill them in (or set ALLOW_CONTENT_TODO='true' to publish anyway)."
 fi
 
@@ -146,6 +147,7 @@ sync_all() {
   local flags=(-az --itemize-changes -e "ssh -p $SSH_PORT")
   [ "$1" = dry ] && flags+=(--dry-run)
 
+  # Web-served folders get fixed permissions (dirs 755, files 644) whatever the local umask was.
   echo "--- server/"
   rsync "${flags[@]}" --delete --exclude node_modules/ --exclude dist/ \
     "$STAGE/server/" "$TARGET:$REMOTE_ROOT/server/"
@@ -156,12 +158,12 @@ sync_all() {
       site)
         echo "--- site/dist/ → htdocs/"
         # The site is fully generated, so stale files are deleted. Let's Encrypt challenges are kept.
-        rsync "${flags[@]}" --delete --filter 'P /.well-known/acme-challenge/' --exclude .DS_Store \
+        rsync "${flags[@]}" --delete --chmod=D755,F644 --filter 'P /.well-known/acme-challenge/' --exclude .DS_Store \
           "$REPO_ROOT/site/dist/" "$TARGET:$REMOTE_ROOT/htdocs/"
         ;;
       kapsaaed)
         echo "--- kapsaaed/"
-        rsync "${flags[@]}" --delete --filter 'P /.well-known/acme-challenge/' --exclude .DS_Store \
+        rsync "${flags[@]}" --delete --chmod=D755,F644 --filter 'P /.well-known/acme-challenge/' --exclude .DS_Store \
           "$REPO_ROOT/kapsaaed/" "$TARGET:$REMOTE_ROOT/kapsaaed/"
         ;;
     esac
