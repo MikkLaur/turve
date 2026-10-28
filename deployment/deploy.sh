@@ -80,6 +80,25 @@ if [ -n "$DB_HOST" ]; then
   echo "--- DB server from the VM"
   probe "$DB_HOST" "$DB_PORT"
 fi
+# After a first upload: log in with the deployed server/.env and list the databases this user can see (names only).
+if [ -f "$ROOT/server/.env" ] && [ -d "$ROOT/server/node_modules/mariadb" ]; then
+  echo "--- DB login with the deployed server/.env"
+  (cd "$ROOT/server" && node -e '
+    require("dotenv").config({ quiet: true });
+    const env = process.env;
+    require("mariadb")
+      .createConnection({ host: env.DB_HOST, port: Number(env.DB_PORT || 3306), user: env.DB_USER, password: env.DB_PASSWORD, connectTimeout: 8000 })
+      .then(async (conn) => {
+        const [me] = await conn.query("SELECT CURRENT_USER() AS user, VERSION() AS version");
+        const dbs = (await conn.query("SHOW DATABASES")).map((row) => row.Database).filter((name) => name !== "information_schema");
+        console.log(`  logged in as ${me.user} (server ${me.version})`);
+        console.log(`  DB_NAME '"'"'${env.DB_NAME}'"'"' ${dbs.includes(env.DB_NAME) ? "is accessible" : "is NOT among the databases this user can see"}`);
+        console.log(`  databases this user can see: ${dbs.join(", ") || "(none)"}`);
+        await conn.end();
+      })
+      .catch((e) => console.log(`  login failed: ${e.code}: ${e.sqlMessage || e.message}`));
+  ')
+fi
 REMOTE
   exit 0
 fi
