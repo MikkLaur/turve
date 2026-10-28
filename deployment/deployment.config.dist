@@ -6,7 +6,7 @@ SSH_USER=''                                   # the Zone account's SSH user, e.g
 SSH_HOST='turve.ee'
 SSH_PORT='22'
 REMOTE_ROOT='domeenid/www.turve.ee'          # relative to the remote home directory
-PM2_APP='turve'
+PM2_APP='turve-api'                          # the name the app has in the Zone panel
 # Space-separated list of static parts to upload. Empty = don't touch them.
 #   site     → builds site/ locally and uploads site/dist/ to htdocs/ (www.turve.ee), deleting stale files
 #   kapsaaed → uploads kapsaaed/ to kapsaaed/ (kapsaaed.turve.ee)
@@ -19,9 +19,8 @@ ALLOW_CONTENT_TODO='false'
 # --- API (server/.env)
 NODE_ENV='production'
 PORT='3000'
-# Zone.eu binds the app to the account's own loopback IP (127.x.x.x), not 127.0.0.1.
-# ./deployment/deploy.sh --preflight lists it. May stay empty for the very first deploy (health check is skipped).
-HEALTH_HOST=''
+# Checked after each restart, through Zone's proxy (the way visitors reach the API).
+HEALTH_URL='https://api.turve.ee/api/health'
 # Generate each: node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 # TOTP_ENC_KEY encrypts the admin TOTP secrets in the DB. Changing it invalidates every enrolled authenticator.
 TOTP_ENC_KEY=''

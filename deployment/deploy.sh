@@ -22,7 +22,7 @@ source "$CONFIG_FILE"
 : "${PM2_APP:=turve}"
 : "${NODE_ENV:=production}"
 : "${PORT:=3000}"
-: "${HEALTH_HOST:=}"
+: "${HEALTH_URL:=https://api.turve.ee/api/health}"
 : "${DEPLOY_STATIC:=}"
 : "${ALLOW_CONTENT_TODO:=false}"
 
@@ -35,7 +35,7 @@ esac
 TARGET="$SSH_USER@$SSH_HOST"
 SSH=(ssh -p "$SSH_PORT" -o ConnectTimeout=15)
 
-# ssh joins its arguments into one command string, so an empty argument (e.g. HEALTH_HOST='') would vanish
+# ssh joins its arguments into one command string, so an empty argument (e.g. DB_HOST='') would vanish
 # and shift the rest. Quote each one for the remote shell; the script itself comes on stdin.
 # Login shell (-l): pm2/npm from /opt/zse/bin are only on PATH there.
 remote_command() {
@@ -45,8 +45,8 @@ remote_command() {
 # ---------------------------------------------------------------- preflight (read-only)
 if [ "$MODE" = "--preflight" ]; then
   echo "==> Read-only checks on $TARGET (nothing is changed)"
-  "${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "${DB_HOST:-}" "${DB_PORT:-3306}" "$PORT")" <<'REMOTE'
-ROOT="$HOME/${1:?}"; APP="${2:?}"; DB_HOST="${3-}"; DB_PORT="${4:-3306}"; PORT="${5:-3000}"
+  "${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "${DB_HOST:-}" "${DB_PORT:-3306}")" <<'REMOTE'
+ROOT="$HOME/${1:?}"; APP="${2:?}"; DB_HOST="${3-}"; DB_PORT="${4:-3306}"
 echo "node:  $(command -v node >/dev/null && node --version || echo MISSING)   (need >= 20.12)"
 echo "npm:   $(command -v npm >/dev/null && npm --version || echo MISSING)"
 echo "pm2:   $(command -v pm2 >/dev/null && pm2 --version 2>/dev/null | tail -1 || echo MISSING)"
@@ -79,16 +79,6 @@ if [ -n "$pid" ] && [ "$pid" != "0" ]; then
       console.log(`  PORT given by PM2/Zone: ${env.PORT ?? "(none – app uses .env)"}  NODE_ENV: ${env.NODE_ENV ?? "(none)"}`);
       console.log(`  logs: ${e.pm_out_log_path} | ${e.pm_err_log_path}`);
     });'
-  echo "--- sockets the app listens on (one of these is HEALTH_HOST:PORT)"
-  pids="$pid $(pgrep -P "$pid" 2>/dev/null | tr '\n' ' ')"
-  if command -v ss >/dev/null; then
-    found=""
-    for p in $pids; do found+="$(ss -ltnpH 2>/dev/null | grep "pid=$p," | awk '{print "  " $4}')"$'\n'; done
-    found="$(printf '%s' "$found" | sed '/^$/d' | sort -u)"
-    echo "${found:-  none – the app is not listening (see the log lines below)}"
-  else
-    echo "  ss is not available on the VM"
-  fi
   echo "--- last log lines"
   out_log="$(pm2 jlist 2>/dev/null | APP="$APP" node -e 'let r="";process.stdin.on("data",d=>r+=d).on("end",()=>{const a=JSON.parse(r).find(x=>x.name===process.env.APP);process.stdout.write(a?a.pm2_env.pm_out_log_path+"\n"+a.pm2_env.pm_err_log_path:"")})')"
   for log in $out_log; do
@@ -142,7 +132,6 @@ for key in DB_HOST DB_NAME DB_USER DB_PASSWORD TOTP_ENC_KEY FORM_TOKEN_SECRET SI
 done
 [ "${#FORM_TOKEN_SECRET}" -ge 32 ] || die "FORM_TOKEN_SECRET must be at least 32 characters."
 [ "${#TOTP_ENC_KEY}" -eq 43 ] || die "TOTP_ENC_KEY must be 32 random bytes in base64url (43 characters)."
-[ -n "$HEALTH_HOST" ] || echo "WARNING: HEALTH_HOST is empty – the health check after restart is skipped. Run --preflight to find it."
 
 for path in server/package.json server/package-lock.json; do
   [ -f "$REPO_ROOT/$path" ] || die "Missing $REPO_ROOT/$path"
@@ -246,12 +235,11 @@ echo "==> Uploading"
 sync_all real
 
 echo "==> Building, migrating and restarting on $SSH_HOST"
-"${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "$PORT" "$HEALTH_HOST")" <<'REMOTE'
+"${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "$PORT")" <<'REMOTE'
 set -euo pipefail
 ROOT="$HOME/${1:?}"
 APP="${2:?}"
 PORT="${3:?}"
-HEALTH_HOST="${4-}"
 export TZ=UTC
 
 node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a>20||(a===20&&b>=12)?0:1)' ||
@@ -278,21 +266,19 @@ In the Zone panel, add the Node.js/PM2 app:
   start script:  $ROOT/server/start.sh
   port:          $PORT
   domain:        api.turve.ee (proxy to the app)
-Then run ./deployment/deploy.sh --preflight to find HEALTH_HOST, and deploy again.
+Then deploy again.
 EOF
   exit 3
 fi
 
 echo "--- Restarting PM2 app $APP"
 pm2 restart "$APP"
-
-if [ -n "$HEALTH_HOST" ]; then
-  echo "--- Health check"
-  curl -fsS -o /dev/null --retry 15 --retry-delay 2 --retry-connrefused "http://$HEALTH_HOST:$PORT/api/health"
-  echo "API is up."
-else
-  echo "--- Health check skipped (HEALTH_HOST not set)"
-fi
 REMOTE
+
+# Checked from here through Zone's proxy, i.e. the way visitors reach the API. (On the VM the app's socket is not
+# visible to ss, and its account loopback address differs from 127.0.0.1.)
+echo "==> Health check: $HEALTH_URL"
+curl -fsS -o /dev/null --retry 15 --retry-delay 2 --retry-all-errors -m 10 "$HEALTH_URL" || die "API did not answer at $HEALTH_URL"
+echo "API is up."
 
 echo "==> Deploy finished."

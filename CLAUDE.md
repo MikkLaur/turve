@@ -10,7 +10,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 |---|---|---|
 | Public site | `site/` → `site/dist/` → `htdocs/` (www.turve.ee) | A small TypeScript build (`site/src/build.ts`, no framework). ET at `/`, EN at `/en/`. Texts are in `site/src/i18n/et.ts`; `en.ts` is typed against it, so a missing translation fails the compile. All markup goes through the escaping `html` tag in `site/src/html.ts`. There is no inline JS or CSS (CSP). Browser JS in `site/assets/js/` builds the DOM with `textContent` only. |
 | Catalog | `server/src/catalog/catalog.ts` | **The single source** of rates and packages. The site build bakes it into the pages and the API prices inquiries from it; client totals are never trusted. Bump `CATALOG_VERSION` and deploy API and site together. Never reuse a package id. |
-| API | `server/` | Express 5 + TypeScript + `mariadb` driver. PM2 app `turve`, behind Apache at `api.turve.ee`. Its own deps are minimal: crypto (scrypt, TOTP, AES-GCM) is `node:crypto`. |
+| API | `server/` | Express 5 + TypeScript + `mariadb` driver. PM2 app `turve-api` (named in the Zone panel), proxied by Zone at `api.turve.ee`. Its own deps are minimal: crypto (scrypt, TOTP, AES-GCM) is `node:crypto`. |
 | Free security check | `server/src/check/` | Passive only: TLS handshakes, http:// and https:// GETs (≤3 redirects), `/.well-known/security.txt`, public DNS. **SSRF guard:** `hostname.ts` (hostnames only), `addressGuard.ts` (public unicast only, including all of 127/8) and `resolve.ts` (resolve via DNS, never /etc/hosts; refuse if any address is non-public; connect to the pinned IP). Every redirect hop is re-validated in `httpProbe.ts`. Results are cached per domain for 1 h; the visitor's IP is never stored. |
 | Admin panel | `kapsaaed/` → kapsaaed.turve.ee | Plain JS, no build step, Estonian UI. Login is password + mandatory TOTP. Sessions are server-side (`Sessions` table holds the SHA-256 of the token) with a `__Host-turve_admin` cookie. Writes need `Origin: https://kapsaaed.turve.ee` and JSON (`middlewares/adminOrigin.ts`). Data is rendered as text only. |
 | DB | Zone.eu MariaDB (turve.ee's own) | Schema via numbered migrations in `server/src/db/migrations/` recorded in `schema_migrations`. **Never** edit an applied migration; add a new one. |
@@ -37,25 +37,31 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - After deploy: `curl -s -o /dev/null -w '%{http_code}' https://api.turve.ee/api/health` → 200; `POST https://api.turve.ee/api/admin/login` with a foreign Origin → 403; run www.turve.ee through the site's own check, Mozilla Observatory and SSL Labs.
 
 ## Deployment
-- `./deployment/deploy.sh --preflight` (read-only: Node/npm/pm2 versions, remote folders, PM2 app state, loopback IP for `HEALTH_HOST`, DB port), `--dry-run` (build + show the upload, change nothing), or `[--yes]` (deploy). Run from the repo root. Reads `deployment/deployment.config` (mode 600, git-ignored; template in `deployment.config.dist`).
+- `./deployment/deploy.sh --preflight` (read-only: Node/npm/pm2 versions, remote folders, PM2 apps and status, DB port, DB login with the deployed `.env` and the databases it can see), `--dry-run` (build + show the upload, change nothing), or `[--yes]` (deploy). Run from the repo root. Reads `deployment/deployment.config` (mode 600, git-ignored; template in `deployment.config.dist`).
   - The site is built with `--strict`, which refuses while content TODOs remain. Set `ALLOW_CONTENT_TODO='true'` only for a deliberate soft launch.
-  - First deploy: if PM2 has no `turve` app yet, the script stops after upload, build and migration (exit 3) and prints what to create in the Zone panel.
+  - First deploy: if PM2 has no `turve-api` app yet, the script stops after upload, build and migration (exit 3) and prints what to create in the Zone panel.
   - Writes `server/.env` in a temp dir and shows an `rsync --dry-run`. **Check for `*deleting` lines** before you confirm.
   - `DEPLOY_STATIC='site kapsaaed'` also builds and uploads the site (`--delete`, Let's Encrypt challenges protected) and the panel.
-  - On the VM it runs `npm ci`, `npm run build`, `npm run migrate`, `pm2 restart turve`, then a health check on `HEALTH_HOST`.
+  - On the VM it runs `npm ci`, `npm run build`, `npm run migrate` and `pm2 restart turve-api`. Then it checks `HEALTH_URL` (`https://api.turve.ee/api/health`) from the local machine, through Zone's proxy.
 - New config keys go in **three places**: the `write_env` list in `deploy.sh`, `deployment.config.dist` and the local `deployment.config`.
 - A deploy restarts the live API and migrates the live DB: always confirm with the owner first.
 - `security.txt` expires 6 months after each site build: redeploy the site at least twice a year.
 
-## One-time Zone.eu setup (separate account from kamblakoda)
-1. Panel: create `www.turve.ee` (htdocs), `kapsaaed.turve.ee` (folder `kapsaaed`) and `api.turve.ee` (Node.js/PM2 proxy to the app port). Let's Encrypt on all of them.
-2. Panel: create the PM2 app `turve` with start script `~/domeenid/www.turve.ee/server/start.sh`.
-3. Find the account's loopback IP for `HEALTH_HOST`: on the VM, `ss -ltnp | grep :3000` once the app runs (Zone binds apps to a 127.x.x.x address, not 127.0.0.1).
-4. First deploy, then on the VM: `cd ~/domeenid/www.turve.ee/server && TZ=UTC npm run create-admin -- <username>` (sets the password and enrols the authenticator).
-5. DNS for turve.ee: add CAA (`0 issue "letsencrypt.org"`) and enable DNSSEC. DMARC is `p=quarantine` today; move to `p=reject`. Once every subdomain is HTTPS-only, add `includeSubDomains; preload` to HSTS in `site/src/headers.ts`.
+## Zone.eu setup (done 2026-10-28, account virt141507)
+- Subdomains `www`/`kapsaaed`/`api` with Let's Encrypt; folders `htdocs/`, `kapsaaed/`, `api/` under `domeenid/www.turve.ee/`.
+- PM2 app **`turve-api`** in the Zone panel; Zone starts it with `pm2 start …/server/start.sh --max-memory-restart 512M`
+  and proxies `api.turve.ee` to it. An app started only over SSH is not kept running: it must be set up in the panel.
+- Database: the real name is `d141937sd654669` (the panel label `turve-prod` is *not* the database name); user
+  `d141937sa599035`. The DB host resolves to 127.0.0.1 on the VM.
+- Still to do on the VM: `cd ~/domeenid/www.turve.ee/server && TZ=UTC npm run create-admin -- <username>`.
+- DNS for turve.ee: add CAA (`0 issue "letsencrypt.org"`), enable DNSSEC, move DMARC from `p=quarantine` to `p=reject`.
+  Once every subdomain is HTTPS-only, add `includeSubDomains; preload` to HSTS in `site/src/headers.ts`.
 
-## Zone.eu quirks (from kamblakoda)
+## Zone.eu quirks
 - `pm2`/`npm` are only on PATH in a **login shell** (`bash -l`). Cron is configured in the Zone panel, not crontab.
+- The app's output goes to `/dev/null`, and `ss` on the VM cannot see the app's listening socket: judge the API from
+  outside (`curl https://api.turve.ee/api/health`). For start-up errors, run a second copy briefly:
+  `cd ~/domeenid/www.turve.ee/server && PORT=3999 TZ=UTC timeout 8 node dist/server.js`.
 - Apache proxies from loopback; `trust proxy` is `loopback`, so rate limits see the client IP.
 - `/etc/hosts` is huge: never dump it. The security check deliberately never uses it.
 
