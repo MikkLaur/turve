@@ -35,11 +35,18 @@ esac
 TARGET="$SSH_USER@$SSH_HOST"
 SSH=(ssh -p "$SSH_PORT" -o ConnectTimeout=15)
 
+# ssh joins its arguments into one command string, so an empty argument (e.g. HEALTH_HOST='') would vanish
+# and shift the rest. Quote each one for the remote shell; the script itself comes on stdin.
+# Login shell (-l): pm2/npm from /opt/zse/bin are only on PATH there.
+remote_command() {
+  printf '%q ' bash -ls -- "$@"
+}
+
 # ---------------------------------------------------------------- preflight (read-only)
 if [ "$MODE" = "--preflight" ]; then
   echo "==> Read-only checks on $TARGET (nothing is changed)"
-  "${SSH[@]}" "$TARGET" bash -ls -- "$REMOTE_ROOT" "$PM2_APP" "${DB_HOST:-}" "${DB_PORT:-3306}" "$PORT" <<'REMOTE'
-ROOT="$HOME/$1"; APP="$2"; DB_HOST="$3"; DB_PORT="$4"; PORT="$5"
+  "${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "${DB_HOST:-}" "${DB_PORT:-3306}" "$PORT")" <<'REMOTE'
+ROOT="$HOME/${1:?}"; APP="${2:?}"; DB_HOST="${3-}"; DB_PORT="${4:-3306}"; PORT="${5:-3000}"
 echo "node:  $(command -v node >/dev/null && node --version || echo MISSING)   (need >= 20.12)"
 echo "npm:   $(command -v npm >/dev/null && npm --version || echo MISSING)"
 echo "pm2:   $(command -v pm2 >/dev/null && pm2 --version 2>/dev/null | tail -1 || echo MISSING)"
@@ -187,13 +194,12 @@ echo "==> Uploading"
 sync_all real
 
 echo "==> Building, migrating and restarting on $SSH_HOST"
-# Login shell: pm2/npm from /opt/zse/bin are only on PATH there.
-"${SSH[@]}" "$TARGET" bash -ls -- "$REMOTE_ROOT" "$PM2_APP" "$PORT" "$HEALTH_HOST" <<'REMOTE'
+"${SSH[@]}" "$TARGET" "$(remote_command "$REMOTE_ROOT" "$PM2_APP" "$PORT" "$HEALTH_HOST")" <<'REMOTE'
 set -euo pipefail
-ROOT="$HOME/$1"
-APP="$2"
-PORT="$3"
-HEALTH_HOST="$4"
+ROOT="$HOME/${1:?}"
+APP="${2:?}"
+PORT="${3:?}"
+HEALTH_HOST="${4-}"
 export TZ=UTC
 
 node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a>20||(a===20&&b>=12)?0:1)' ||
