@@ -54,6 +54,10 @@ code, .mono { font-family: var(--mono); }
 .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; padding: 0.6rem 1rem; background: var(--surface); border-bottom: 1px solid var(--border); }
 .brand { font-weight: 600; font-size: 1.3rem; letter-spacing: -0.03em; }
 .brand .cursor { display: inline-block; width: 0.5em; height: 0.78em; margin-left: 0.07em; background: #2dd4bf; transform: translateY(0.06em); }
+@media (prefers-reduced-motion: no-preference) {
+  .brand .cursor { animation: blink 1.1s steps(1) infinite; }
+}
+@keyframes blink { 50% { opacity: 0; } }
 .brand-sub { font-family: var(--mono); font-size: 0.8rem; font-weight: 400; color: var(--muted); letter-spacing: 0; margin-left: 0.4rem; }
 nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
 .nav-link { text-decoration: none; padding: 0.25rem 0; border-bottom: 2px solid transparent; }
