@@ -53,7 +53,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
   and proxies `api.turve.ee` to it. An app started only over SSH is not kept running: it must be set up in the panel.
 - Database: the real name is `d141937sd654669` (the panel label `turve-prod` is *not* the database name); user
   `d141937sa599035`. The DB host resolves to 127.0.0.1 on the VM.
-- Still to do on the VM: `cd ~/domeenid/www.turve.ee/server && TZ=UTC npm run create-admin -- <username>`.
+- Admin user created on the VM (2026-11-02) with `TZ=UTC npm run create-admin -- <username>`; kapsaaed login works.
 - DNS for turve.ee: add CAA (`0 issue "letsencrypt.org"`), enable DNSSEC, move DMARC from `p=quarantine` to `p=reject`.
   Once every subdomain is HTTPS-only, add `includeSubDomains; preload` to HSTS in `site/src/headers.ts`.
 
