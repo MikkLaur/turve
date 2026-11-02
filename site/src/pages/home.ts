@@ -55,7 +55,23 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
       </div>
     </section>
 
-    <section class="section alt" aria-labelledby="h-modern">
+    <section class="section alt" aria-labelledby="h-fp">
+      <div class="wrap split">
+        <div>
+          <h2 id="h-fp">${h.fpTitle}</h2>
+          <p>${h.fpText}</p>
+          <p><a class="button" href="${href('fingerprint', lang)}">${h.fpButton}</a></p>
+        </div>
+        <div class="terminal" aria-hidden="true">
+          <p class="terminal-bar"><span></span><span></span><span></span></p>
+          <pre><span class="t-prompt">$</span> ${h.fpCommand}
+${h.fpLines.map((line, i) => html`<span class="${i === 0 ? 't-ok' : 't-prompt'}">${i === 0 ? '✓' : '·'}</span> ${line.name.padEnd(10)} ${line.value}
+`)}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="h-modern">
       <div class="wrap split">
         <div>
           <h2 id="h-modern">${h.modernTitle}</h2>
@@ -66,7 +82,7 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
       </div>
     </section>
 
-    <section class="section" aria-labelledby="h-why">
+    <section class="section alt" aria-labelledby="h-why">
       <div class="wrap">
         <h2 id="h-why">${h.whyTitle}</h2>
         <div class="card-grid two">
@@ -75,14 +91,14 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
       </div>
     </section>
 
-    <section class="section alt" aria-labelledby="h-process">
+    <section class="section" aria-labelledby="h-process">
       <div class="wrap">
         <h2 id="h-process">${h.processTitle}</h2>
         <ol class="steps">${h.process.map((step) => html`<li><h3>${step.title}</h3><p>${step.text}</p></li>`)}</ol>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="h-reference">
+    <section class="section alt" aria-labelledby="h-reference">
       <div class="wrap">
         <h2 id="h-reference">${h.referenceTitle}</h2>
         <article class="reference">

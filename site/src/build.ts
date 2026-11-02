@@ -15,6 +15,7 @@ import { renderPage } from './layout';
 import { aboutPage } from './pages/about';
 import { checkPage } from './pages/check';
 import { contactPage } from './pages/contact';
+import { fingerprintPage } from './pages/fingerprint';
 import { homePage } from './pages/home';
 import { pricingPage } from './pages/pricing';
 import { securityPage } from './pages/security';
@@ -40,6 +41,7 @@ const PAGES: [PageId, (ctx: PageContext) => PageOutput][] = [
   ['security', securityPage],
   ['pricing', pricingPage],
   ['check', checkPage],
+  ['fingerprint', fingerprintPage],
   ['about', aboutPage],
   ['contact', contactPage],
   ['thanks', thanksPage],

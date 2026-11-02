@@ -27,6 +27,7 @@ export function checkPage(ctx: PageContext): PageOutput {
         <div><h2>${c.whatTitle}</h2><ul class="checklist">${c.what.map((item) => html`<li>${item}</li>`)}</ul></div>
         <div><h2>${c.notTitle}</h2><ul class="checklist cross">${c.not.map((item) => html`<li>${item}</li>`)}</ul></div>
       </div>
+      <div class="wrap"><p class="fp-crosslink"><a class="card-link" href="${href('fingerprint', lang)}">${c.fingerprintLink}<span aria-hidden="true"> →</span></a></p></div>
     </section>
     ${jsonBlock('check-labels', {
       lang,
