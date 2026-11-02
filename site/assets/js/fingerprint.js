@@ -158,37 +158,67 @@
   }
 
   // ---------- canvas ----------
-  function drawCanvas() {
+  /**
+   * The same drawing on every device: system fonts, an Estonian pangram, emoji and blended shapes.
+   * scale 1 is hashed (independent of screen density and zoom); the copy shown on the page is drawn at the
+   * screen's density so it stays sharp on phones.
+   */
+  function drawCanvas(scale, hashed = false) {
+    const W = 480;
+    const H = 160;
     const canvas = document.createElement('canvas');
-    canvas.width = 480;
-    canvas.height = 120;
-    const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 480, 0);
-    gradient.addColorStop(0, '#0f766e');
-    gradient.addColorStop(1, '#f59e0b');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 480, 120);
+    canvas.width = W * scale;
+    canvas.height = H * scale;
+    // willReadFrequently keeps the hashed copy on the CPU: Chrome otherwise switches between GPU and CPU drawing
+    // depending on memory, which would change the result on the same device.
+    const ctx = canvas.getContext('2d', { willReadFrequently: hashed });
+    ctx.scale(scale, scale);
     ctx.fillStyle = '#0d1b2a';
-    ctx.font = '600 30px "Times New Roman", serif';
-    ctx.fillText('Turve sõrmejälg 🔐', 14, 44);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.font = '22px Arial, sans-serif';
-    ctx.fillText('Õunapuu ÄÖÜ šž ½ ∑ → ✓', 16, 84);
-    ctx.globalCompositeOperation = 'multiply';
-    ctx.fillStyle = 'rgb(255, 0, 255)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(45, 212, 191, 0.12)';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(390, 55, 40, 0, Math.PI * 2);
+    for (let x = 16; x < W; x += 16) {
+      ctx.moveTo(x + 0.5, 0);
+      ctx.lineTo(x + 0.5, H);
+    }
+    for (let y = 16; y < H; y += 16) {
+      ctx.moveTo(0, y + 0.5);
+      ctx.lineTo(W, y + 0.5);
+    }
+    ctx.stroke();
+
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#f6f5f1';
+    ctx.font = '600 30px sans-serif';
+    ctx.fillText('turve', 20, 46);
+    ctx.fillStyle = '#2dd4bf';
+    ctx.fillRect(20 + ctx.measureText('turve').width + 3, 24, 15, 23);
+
+    ctx.fillStyle = '#c9d3df';
+    ctx.font = '15px serif';
+    ctx.fillText('Põdur Zagrebi tšellomängija-följetonist Ciqo', 20, 78);
+    ctx.fillText('külmetas kehvas garaažis.', 20, 98);
+
+    ctx.font = '26px sans-serif';
+    ctx.fillText('🔐 🦊 🍏 🛡️ 🇪🇪', 20, 140);
+
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = 'rgba(45, 212, 191, 0.85)';
+    ctx.beginPath();
+    ctx.arc(402, 62, 34, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = 'rgb(0, 255, 255)';
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.85)';
     ctx.beginPath();
-    ctx.arc(430, 65, 40, 0, Math.PI * 2);
+    ctx.arc(434, 88, 34, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
+
     ctx.strokeStyle = '#2dd4bf';
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(10, 110);
-    ctx.bezierCurveTo(140, 60, 300, 140, 470, 100);
+    ctx.moveTo(222, 150);
+    ctx.bezierCurveTo(300, 118, 380, 162, 466, 134);
     ctx.stroke();
     return canvas;
   }
@@ -305,13 +335,14 @@
       battery(),
     ]);
     const gl = safe(webglInfo);
-    const canvas = safe(drawCanvas);
+    const canvas = safe(() => drawCanvas(1, true));
     const canvasData = canvas ? safe(() => canvas.toDataURL(), null) : null;
+    const shown = safe(() => drawCanvas(Math.min(3, Math.max(1, Math.ceil(window.devicePixelRatio || 1)))));
     const offset = -new Date().getTimezoneOffset() / 60;
     return {
       info,
       gl,
-      canvas,
+      shown,
       canvasData,
       noise: safe(canvasNoise, false),
       audio,
@@ -445,7 +476,12 @@
         ),
       ),
     );
-    if (d.canvas) document.getElementById('fp-canvas').replaceChildren(d.canvas);
+    if (d.shown) {
+      d.shown.setAttribute('role', 'img');
+      d.shown.setAttribute('aria-label', L.canvasAlt);
+      document.getElementById('fp-canvas').replaceChildren(d.shown);
+    }
+    if (d.canvasData) document.getElementById('fp-canvas-hash').textContent = fill(L.canvasHash, { hash: (await sha256(d.canvasData)).slice(0, 8) });
 
     statusBox.setAttribute('hidden', '');
     root.removeAttribute('hidden');

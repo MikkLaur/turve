@@ -302,7 +302,7 @@ export const et = {
       'Sama kood tähendab, et iga veebileht tunneb teid samamoodi ära.',
     ],
     changedNote:
-      'Kui kood muutus, lisab teie brauser sõrmejälgedele juhuslikku müra. Nii teevad näiteks Safari, Brave ja Firefoxi privaatne aken – see on hea.',
+      'Kui kood muutus, lisab teie brauser sõrmejälgedele juhuslikku müra. Nii teevad näiteks Safari, Brave ja Firefoxi privaatne aken – see on hea. Kood muutub ka siis, kui avate lehe teisel ekraanil, sest ekraan on üks signaalidest.',
     inferTitle: 'Mida see leht teie kohta välja luges',
     infer: {
       browser: 'Kasutate brauserit {browser} operatsioonisüsteemis {os}.',
@@ -363,8 +363,10 @@ export const et = {
     discharging: 'akutoitel',
     noise: 'müraga',
     volatileNote: '* Neid me koodi ei arvesta, sest need muutuvad ajas või privaatses aknas.',
+    canvasHash: 'Selle pildi sõrmejälg: {hash}',
+    canvasAlt: 'Teie brauseris joonistatud pilt: Turve logo, eestikeelne lause, emojid ja kaks kattuvat ringi.',
     canvasCaption:
-      'See pilt joonistati just praegu teie brauseris. Iga arvuti joonistab selle pikslitäpsusega veidi erinevalt – sellest tekibki joonistuse sõrmejälg.',
+      "See pilt joonistati just praegu teie brauseris. Iga seade joonistab selle veidi isemoodi: emojid näevad iPhone'is, Androidis ja Windowsis silmaga nähtavalt erinevad välja, fondid ja servad aga sageli vaid üksikute pikslite võrra. Täpselt ühesugused seadmed, näiteks sama mudeli ja tarkvaraga iPhone'id, joonistavad sageli identse pildi – seepärast loeb kõigi signaalide kombinatsioon.",
     privacyNote:
       'Kõik ülaltoodu arvutati teie brauseris ja jääb sinna. Kontrollige ise: arendaja tööriistade võrguvaates (F12 → Network) näete ainult selle lehe enda faile.',
     uniqueTitle: 'Kui ainulaadne ma olen?',

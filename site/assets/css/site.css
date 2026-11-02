@@ -303,6 +303,7 @@ details.findings-ok summary { cursor: pointer; font-weight: 600; margin-bottom: 
 .fp-table-wrap + .fp-small { margin-top: 0.6rem; }
 .fp-canvas { margin: 1.5rem 0; }
 .fp-canvas canvas { display: block; width: 100%; max-width: 30rem; height: auto; border-radius: 0.5rem; border: 1px solid var(--line); }
+.fp-canvas-hash { font-family: var(--mono); font-size: 0.9rem; margin: 0.6rem 0 0.25rem; }
 .fp-canvas figcaption { color: var(--muted); font-size: 0.92rem; margin-top: 0.5rem; max-width: 40rem; }
 .fp-bait { position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; }
 .fp-crosslink { margin: 2.5rem 0 0; }

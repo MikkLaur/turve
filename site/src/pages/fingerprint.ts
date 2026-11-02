@@ -44,6 +44,7 @@ export function fingerprintPage(ctx: PageContext): PageOutput {
         <p class="muted fp-small">${f.volatileNote}</p>
         <figure class="fp-canvas">
           <div id="fp-canvas"></div>
+          <p class="fp-canvas-hash" id="fp-canvas-hash"></p>
           <figcaption>${f.canvasCaption}</figcaption>
         </figure>
         <p class="notice">${f.privacyNote}</p>
@@ -91,6 +92,8 @@ export function fingerprintPage(ctx: PageContext): PageOutput {
         charging: f.charging,
         discharging: f.discharging,
         noise: f.noise,
+        canvasHash: f.canvasHash,
+        canvasAlt: f.canvasAlt,
       },
     })}`;
   return { id: 'fingerprint', title: f.title, description: f.description, body, scripts: ['js/common.js', 'js/fingerprint.js'] };

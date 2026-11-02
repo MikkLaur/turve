@@ -303,7 +303,7 @@ export const en: Messages = {
       'The same code means any website can recognise you the same way.',
     ],
     changedNote:
-      "If the code changed, your browser adds random noise to fingerprints. Safari, Brave and Firefox's private windows do this, for example – which is good.",
+      "If the code changed, your browser adds random noise to fingerprints. Safari, Brave and Firefox's private windows do this, for example – which is good. The code also changes if you open the page on another screen, because the screen is one of the signals.",
     inferTitle: 'What this page worked out about you',
     infer: {
       browser: 'You use {browser} on {os}.',
@@ -364,8 +364,10 @@ export const en: Messages = {
     discharging: 'on battery',
     noise: 'with noise',
     volatileNote: '* Not used for the code, because these change over time or in a private window.',
+    canvasHash: 'Fingerprint of this picture: {hash}',
+    canvasAlt: 'A picture drawn in your browser: the Turve logo, an Estonian sentence, emoji and two overlapping circles.',
     canvasCaption:
-      'This picture was just drawn in your browser. Every computer draws it slightly differently, down to the pixel – that is the drawing fingerprint.',
+      'This picture was just drawn in your browser. Every device draws it slightly differently: emoji look visibly different on iPhone, Android and Windows, while fonts and edges often differ by only a few pixels. Identical devices, such as iPhones of the same model and software, often draw exactly the same picture – which is why the combination of all the signals is what counts.',
     privacyNote:
       "Everything above was worked out in your browser and stays there. Check for yourself: your developer tools' network view (F12 → Network) shows only this page's own files.",
     uniqueTitle: 'How unique am I?',
