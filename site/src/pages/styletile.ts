@@ -46,13 +46,13 @@ export function styleTilePage(ctx: PageContext): PageOutput {
     <section class="section alt" id="tuup">
       <div class="wrap">
         <h2>Kirjatüüp</h2>
-        <p class="section-lead">IBM Plex Sans (tekst) ja IBM Plex Mono (tunnid, hinnad, tehnilised väärtused). Mõlemad OFL-litsentsiga ja serveeritakse meie enda serverist.</p>
+        <p class="section-lead">IBM Plex Sans (tekst) ja IBM Plex Mono (hinnad, tehnilised väärtused). Mõlemad OFL-litsentsiga ja serveeritakse meie enda serverist.</p>
         <h1>Pealkiri 1: turvalised veebilehed</h1>
         <h2>Pealkiri 2: vanade lehtede uuendamine</h2>
         <h3>Pealkiri 3: turva-tervisekontroll</h3>
-        <p class="lead">Juhatus: iga tund on näha enne, kui tellite.</p>
+        <p class="lead">Juhatus: hind on enne tellimist teada.</p>
         <p>Sisutekst: Õun, šokolaad ja žürii. Ärge visake vana lehte minema – teeme selle korda ja lisame, mida täna vaja on.</p>
-        <p class="mono-sample"><code>12 h · 660 €</code> <code>Strict-Transport-Security: max-age=31536000</code></p>
+        <p class="mono-sample"><code>290 €</code> <code>Strict-Transport-Security: max-age=31536000</code></p>
       </div>
     </section>
 

@@ -68,7 +68,7 @@
               'ul',
               { class: 'selection-lines' },
               result.suggestions.map((s) =>
-                T.h('li', null, T.h('span', null, s.name), T.h('span', null, s.cents === null ? L.estimateAfterReview : `${T.hours(s.minutes)} · ${T.euros(s.cents)}`)),
+                T.h('li', null, T.h('span', null, s.name), T.h('span', null, s.cents === null ? L.estimateAfterReview : T.euros(s.cents))),
               ),
             ),
             T.h('p', null, T.h('a', { class: 'button', href: contactUrl }, L.askOffer)),

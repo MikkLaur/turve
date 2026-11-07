@@ -33,8 +33,8 @@ export const en: Messages = {
   common: {
     perUnit: 'each',
     perMonth: 'per month',
-    estimateAfterReview: 'hours set after review',
-    hourlyRate: 'hourly rate',
+    estimateAfterReview: 'price after review',
+    offerRegular: 'Regular price',
     includes: 'Includes',
     readMore: 'Read more',
     seePrices: 'See prices',
@@ -46,11 +46,11 @@ export const en: Messages = {
   home: {
     title: 'Turve – secure websites and cyber security for small businesses',
     description:
-      'We build secure websites, modernise old ones and run affordable security checks and pentests for small businesses. You see every hour before you order.',
+      'We build secure websites, modernise old ones and run affordable security checks and pentests for small businesses. You know the price before you order.',
     eyebrow: 'Websites · Cyber security · For small businesses',
     heroTitle: 'Secure websites and affordable cyber security',
     heroLead:
-      "We build new websites and bring old ones up to date, so they're hard to attack. We run security checks and pentests at prices that work for a small company. You see every hour before you order.",
+      "We build new websites and bring old ones up to date, so they're hard to attack. We run security checks and pentests at prices that work for a small company. You know the price before you order.",
     heroCheckLabel: 'Check your website for free',
     heroCheckPlaceholder: 'yourcompany.ee',
     heroCheckButton: 'Check',
@@ -98,7 +98,7 @@ export const en: Messages = {
     modernText:
       "Many small-business websites were built years ago and haven't been updated since. An outdated WordPress or plugin is one of the most common ways attackers get in. We take such a site over, fix it, and build what you need today.",
     modernPoints: [
-      'Review and a written plan with hours',
+      'Review and a written plan with prices',
       'Security update without rebuilding the site',
       'A new look that keeps your content and search rankings',
       'New features for your existing site',
@@ -110,8 +110,8 @@ export const en: Messages = {
         text: 'Security is our day job. So we build sites the way an attacker looks at them, and test them the same way.',
       },
       {
-        title: 'Every hour is visible',
-        text: 'Every package is listed in hours and euros. You know what you pay for before you order, and the invoice comes with a time log.',
+        title: 'You know the price up front',
+        text: 'Every package lists its price and what it includes. You know what you get and what you pay before you order.',
       },
       {
         title: 'No tracking',
@@ -125,9 +125,9 @@ export const en: Messages = {
     processTitle: 'How it works',
     process: [
       { title: 'Pick packages', text: 'In the price calculator, or just describe what you need.' },
-      { title: 'Get an exact quote', text: 'In hours and euros, within two working days.' },
+      { title: 'Get an exact quote', text: 'At a fixed price, within two working days.' },
       { title: 'Work starts when you approve', text: 'Extra work only if you have approved it first.' },
-      { title: 'Invoice with a time log', text: 'You see exactly where the time went, to the quarter hour.' },
+      { title: 'Invoice after the work', text: 'The invoice comes after handover and is payable within 14 days.' },
     ],
     referenceTitle: 'Our work',
     referenceName: 'Kämblakoda massage studio',
@@ -141,7 +141,7 @@ export const en: Messages = {
   websites: {
     title: 'Websites – new and modernised | Turve',
     description:
-      'Secure, fast websites for small businesses, and modernising older sites: security updates, a new look and new features. Prices in hours.',
+      'Secure, fast websites for small businesses, and modernising older sites: security updates, a new look and new features. Fixed prices.',
     heading: 'Websites that are hard to attack',
     lead: 'We build new sites and bring old ones up to date. Either way, security is built in from the start, not bolted on later.',
     secureTitle: 'How we build securely',
@@ -172,9 +172,9 @@ export const en: Messages = {
   security: {
     title: 'Security services for small businesses | Turve',
     description:
-      'Security health check, website and application pentests, E-ITS, NIS2 and ISO 27001 gap analysis, and a monthly security partner. Prices in hours.',
+      'Security health check, website and application pentests, E-ITS, NIS2 and ISO 27001 gap analysis, and a monthly security partner. Fixed prices.',
     heading: 'Cyber security a small business can afford',
-    lead: 'Large security firms are often too expensive and too complex for a small company. We do the same work as clearly scoped packages, with the price visible up front.',
+    lead: 'Large security firms are often too expensive and too complex for a small company. We do the same work as clearly scoped packages, with the price visible up front. If you have no one to fix what we find, we fix it ourselves.',
     partnerHeading: 'Ongoing security support',
     processTitle: 'How a pentest works',
     process: [
@@ -203,10 +203,9 @@ export const en: Messages = {
 
   pricing: {
     title: 'Pricing and calculator | Turve',
-    description: 'Every package with exact hours and prices. Pick what you need and ask for a quote straight from the calculator.',
+    description: 'Every package with its price. Pick what you need and ask for a quote straight from the calculator.',
     heading: 'Pricing',
-    lead: "Every package is listed in hours. Pick what you need and see the total straight away. Asking for a quote doesn't commit you to anything.",
-    ratesTitle: 'Hourly rates',
+    lead: "Every package has a fixed price. Pick what you need and see the total straight away. Asking for a quote doesn't commit you to anything.",
     estimatorHint: 'Tick the packages you need. The summary is at the bottom of the page.',
     addLabel: 'Add',
     qtyLabel: 'Quantity',
@@ -218,11 +217,13 @@ export const en: Messages = {
     summaryButton: 'Get a quote for this selection',
     summaryClear: 'Clear selection',
     noScript: 'The calculator needs JavaScript. Prices are visible without it; you can ask for a quote on the contact form.',
+    projectTitle: 'Consulting and project work',
+    projectText:
+      "Work that doesn't fit a package is done on a fixed-price quote or by the hour. Hourly work is logged to the quarter hour and the invoice comes with a time log.",
     termsTitle: 'How billing works',
     terms: [
-      'Time is logged to the quarter hour and the invoice comes with a time log.',
-      'Package hours are an agreed maximum. If the work takes less time, you pay less.',
-      'Work outside a package is done only with your prior consent, at the hourly rate.',
+      'Package prices are fixed: you pay the agreed amount, no more.',
+      'Work outside a package is done only with your prior consent.',
       'Unused hours in monthly plans do not carry over to the next month.',
       'Hosting and other third-party costs are billed at cost.',
       'Invoices are payable within 14 days.',
@@ -234,7 +235,6 @@ export const en: Messages = {
     selected: 'Selected',
     remove: 'Remove',
     total: 'Total',
-    hoursShort: 'h',
   },
 
   check: {
@@ -421,7 +421,7 @@ export const en: Messages = {
     valuesTitle: 'What we promise',
     values: [
       { title: 'Honesty', text: "We tell you when something doesn't need doing, even if that means a smaller invoice." },
-      { title: 'Precision', text: 'Every hour is logged and justified.' },
+      { title: 'Clarity', text: 'The price and the scope are written down up front. No surprises on the invoice.' },
       { title: 'Confidentiality', text: 'Your data and security findings go to no one else.' },
     ],
   },

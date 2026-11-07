@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { BILLING_STEP_MINUTES, GROUPS, PACKAGES, RATES, priceCents } from '../src/catalog/catalog';
+import { GROUPS, LAUNCH_OFFER, PACKAGES, RATES, findPackage, priceCents } from '../src/catalog/catalog';
+import { offerStatus } from '../src/catalog/launchOffer';
 import { parseSelection, priceSelection, SelectionError } from '../src/catalog/pricing';
 
 describe('catalog', () => {
@@ -15,14 +16,41 @@ describe('catalog', () => {
     }
   });
 
-  it('bills whole 15-minute steps and whole cents', () => {
+  it('has fixed prices in whole euros', () => {
     for (const pkg of PACKAGES) {
-      if (pkg.minutes !== null) {
-        assert.equal(pkg.minutes % BILLING_STEP_MINUTES, 0, pkg.id);
-        const exact = (pkg.minutes * RATES.find((r) => r.id === pkg.rate)!.centsPerHour) / 60;
-        assert.equal(exact, priceCents(pkg.minutes, pkg.rate), `${pkg.id} is not a whole number of cents`);
+      if (pkg.cents !== null) {
+        assert.ok(Number.isInteger(pkg.cents) && pkg.cents > 0, pkg.id);
+        assert.equal(pkg.cents % 100, 0, `${pkg.id} is not a whole number of euros`);
       }
     }
+  });
+
+  it('has exactly one launch offer package, with a priced regular package', () => {
+    const offers = PACKAGES.filter((p) => p.offer);
+    assert.equal(offers.length, 1);
+    assert.equal(offers[0]!.id, LAUNCH_OFFER.packageId);
+    assert.equal(typeof findPackage(LAUNCH_OFFER.regularPackageId)?.cents, 'number');
+  });
+
+  it('prices hourly work in 15-minute steps', () => {
+    assert.equal(priceCents(90, 'web'), 8250);
+    assert.equal(priceCents(15, 'security'), 1875);
+  });
+});
+
+describe('offerStatus', () => {
+  it('is open while spots are left and the end date has not passed', () => {
+    assert.deepEqual(
+      [offerStatus(0, '2026-11-10').left, offerStatus(0, '2026-11-10').open],
+      [10, true],
+    );
+    assert.equal(offerStatus(3, '2026-12-31').open, true);
+  });
+
+  it('closes when the spots are taken or the date has passed', () => {
+    assert.deepEqual([offerStatus(10, '2026-11-10').left, offerStatus(10, '2026-11-10').open], [0, false]);
+    assert.equal(offerStatus(12, '2026-11-10').left, 0);
+    assert.deepEqual([offerStatus(3, '2027-01-01').left, offerStatus(3, '2027-01-01').open], [7, false]);
   });
 });
 
@@ -52,13 +80,17 @@ describe('parseSelection', () => {
 describe('priceSelection', () => {
   it('prices on the server, separating one-off and monthly', () => {
     const priced = priceSelection(parseSelection('web-company,web-extra-page:3,care-s,sec-partner,mod-new-feature'));
-    // 28 h + 3 × 2 h web work at 55 €/h
-    assert.equal(priced.onceMinutes, 34 * 60);
-    assert.equal(priced.onceCents, 34 * 5500);
-    // 1 h web + 4 h security per month
-    assert.equal(priced.monthlyMinutes, 5 * 60);
-    assert.equal(priced.monthlyCents, 5500 + 4 * 7500);
+    // 790 € + 3 × 49 €
+    assert.equal(priced.onceCents, 79000 + 3 * 4900);
+    // 39 € + 249 € per month
+    assert.equal(priced.monthlyCents, 3900 + 24900);
     assert.equal(priced.needsEstimate, true);
-    assert.equal(priced.lines.find((l) => l.id === 'web-extra-page')?.cents, 3 * 2 * 5500);
+    assert.equal(priced.lines.find((l) => l.id === 'web-extra-page')?.cents, 14700);
+    assert.equal(priced.lines.find((l) => l.id === 'mod-new-feature')?.unitCents, null);
+  });
+
+  it('needs an estimate for the security fixing service', () => {
+    assert.equal(priceSelection(parseSelection('sec-checkup,sec-fix')).needsEstimate, true);
+    assert.equal(priceSelection(parseSelection('sec-checkup')).needsEstimate, false);
   });
 });

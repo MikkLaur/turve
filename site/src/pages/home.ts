@@ -1,7 +1,7 @@
-import { findPackage, priceCents } from '../../../server/src/catalog/catalog';
+import { findPackage } from '../../../server/src/catalog/catalog';
 import { COMPANY } from '../config';
 import { ctaBand } from '../components';
-import { euros, hours } from '../format';
+import { euros } from '../format';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
 import { href } from '../routes';
@@ -35,7 +35,7 @@ export function homePage(ctx: PageContext): PageOutput {
 ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line.status as keyof typeof marks]}</span> ${line.name.padEnd(12)} ${line.value}
 `)}
 <span class="t-grade">${h.terminalGrade}</span>
-<span class="t-prompt">→</span> ${fix.name[lang]} · ${hours(fix.minutes!, lang)} · ${euros(priceCents(fix.minutes!, fix.rate), lang)}</pre>
+<span class="t-prompt">→</span> ${fix.name[lang]} · ${euros(fix.cents!, lang)}</pre>
         </div>
       </div>
     </section>

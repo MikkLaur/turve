@@ -48,9 +48,10 @@ export interface Inquiry extends InquirySummary {
 export async function insertInquiry(input: NewInquiry): Promise<number> {
   const s = input.selection;
   const result = await getPool().query(
+    // onceMinutes/monthlyMinutes are left at their default 0: packages have fixed prices since catalog 2026-11-08.1.
     `INSERT INTO Inquiries (lang, name, company, email, phone, website, message, selectionJson, catalogVersion,
-        onceMinutes, onceCents, monthlyMinutes, monthlyCents, securityCheckId, status, flags, consentAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())`,
+        onceCents, monthlyCents, securityCheckId, status, flags, consentAt)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())`,
     [
       input.lang,
       input.name,
@@ -61,9 +62,7 @@ export async function insertInquiry(input: NewInquiry): Promise<number> {
       input.message,
       s && s.lines.length ? JSON.stringify(s) : null,
       s && s.lines.length ? s.catalogVersion : null,
-      s?.onceMinutes ?? 0,
       s?.onceCents ?? 0,
-      s?.monthlyMinutes ?? 0,
       s?.monthlyCents ?? 0,
       input.securityCheckId,
       input.status,

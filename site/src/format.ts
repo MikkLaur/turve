@@ -10,7 +10,3 @@ export function euros(cents: number, lang: Lang): string {
     maximumFractionDigits: 2,
   }).format(cents / 100);
 }
-
-export function hours(minutes: number, lang: Lang): string {
-  return `${new Intl.NumberFormat(LOCALE[lang], { maximumFractionDigits: 2 }).format(minutes / 60)} h`;
-}

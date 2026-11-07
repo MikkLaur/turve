@@ -1,18 +1,19 @@
-import { GroupId, GROUPS, Package, PACKAGES, priceCents, RATES } from '../../server/src/catalog/catalog';
+import { findPackage, GroupId, GROUPS, LAUNCH_OFFER, Package, PACKAGES } from '../../server/src/catalog/catalog';
 import type { PageContext } from './context';
-import { euros, hours } from './format';
-import { html, Raw } from './html';
+import { euros } from './format';
+import { html, raw, Raw } from './html';
 
+/** The package's fixed price; the launch offer also shows the regular price it replaces. */
 export function priceLine(pkg: Package, ctx: PageContext): Raw {
   const { lang, t } = ctx;
-  if (pkg.minutes === null) {
-    const rate = RATES.find((r) => r.id === pkg.rate)!;
-    return html`<p class="price"><span class="price-hours">${t.common.estimateAfterReview}</span><span class="price-sum">${t.common.hourlyRate} ${euros(rate.centsPerHour, lang)}</span></p>`;
+  if (pkg.cents === null) {
+    return html`<p class="price"><span class="price-sum">${t.common.estimateAfterReview}</span></p>`;
   }
-  const monthly = pkg.billing === 'monthly' ? ` ${t.common.perMonth}` : '';
+  const suffix = `${pkg.billing === 'monthly' ? ` ${t.common.perMonth}` : ''}${pkg.maxQty > 1 ? ` ${t.common.perUnit}` : ''}`;
+  const regular = pkg.offer ? findPackage(LAUNCH_OFFER.regularPackageId) : undefined;
   return html`<p class="price">
-      <span class="price-hours">${hours(pkg.minutes, lang)}${monthly}${pkg.maxQty > 1 ? ` ${t.common.perUnit}` : ''}</span>
-      <span class="price-sum">${euros(priceCents(pkg.minutes, pkg.rate), lang)}${monthly}${pkg.maxQty > 1 ? ` ${t.common.perUnit}` : ''}</span>
+      ${regular && regular.cents !== null ? html`<span class="price-was">${t.common.offerRegular} ${euros(regular.cents, lang)}</span>` : ''}
+      <span class="price-sum">${euros(pkg.cents, lang)}${suffix}</span>
       ${pkg.priceNote ? html`<span class="price-note">${pkg.priceNote[lang]}</span>` : ''}
     </p>`;
 }
@@ -28,7 +29,7 @@ function picker(pkg: Package, ctx: PageContext): Raw {
 
 export function packageCard(pkg: Package, ctx: PageContext, options: { selectable?: boolean } = {}): Raw {
   const { lang, t } = ctx;
-  return html`<article class="package" id="pkg-${pkg.id}" data-package="${pkg.id}">
+  return html`<article class="package${pkg.offer ? ' offer' : ''}" id="pkg-${pkg.id}" data-package="${pkg.id}"${pkg.offer ? raw(' data-offer-card') : ''}>
       <h3>${pkg.name[lang]}</h3>
       <p class="package-summary">${pkg.summary[lang]}</p>
       <details class="package-includes">

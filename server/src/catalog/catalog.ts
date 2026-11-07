@@ -1,5 +1,5 @@
 /**
- * The ONE source of turve.ee rates and packages.
+ * The ONE source of turve.ee rates and packages. Packages have fixed prices; the hourly rates are for work outside them.
  * - The site build (site/src) imports this file and bakes it into the pricing and contact pages and the estimator.
  * - The API prices inquiries from it; prices sent by the browser are never trusted.
  * Changing anything here: bump CATALOG_VERSION, then deploy the API and the site together (DEPLOY_STATIC='site …').
@@ -28,10 +28,11 @@ export interface Group {
 export interface Package {
   id: string;
   group: GroupId;
+  /** Line of business; also which hourly rate applies to work outside the package. */
   rate: RateId;
   billing: 'once' | 'monthly';
-  /** Work per unit (per month for monthly packages); a multiple of BILLING_STEP_MINUTES. null = set after a review. */
-  minutes: number | null;
+  /** Fixed price per unit in cents (per month for monthly packages). null = price is set after a review or report. */
+  cents: number | null;
   /** Highest quantity the estimator offers; 1 = on/off. */
   maxQty: number;
   name: Localized;
@@ -39,11 +40,22 @@ export interface Package {
   includes: LocalizedList;
   /** Shown next to the price, e.g. costs billed at cost on top. */
   priceNote?: Localized;
+  /** true only for the launch offer package (see LAUNCH_OFFER). */
+  offer?: true;
 }
 
-export const CATALOG_VERSION = '2026-10-28.1';
+export const CATALOG_VERSION = '2026-11-08.1';
 
-/** Work is logged and billed in 15-minute steps. */
+/** The 99 € one-pager for the first clients. The counter lives in Inquiries.countsForOffer (see launchOffer.ts). */
+export const LAUNCH_OFFER = {
+  packageId: 'web-onepage-launch',
+  regularPackageId: 'web-onepage',
+  spots: 10,
+  /** Last day (Tallinn date) on which an inquiry can take a spot. */
+  endsOn: '2026-12-31',
+} as const;
+
+/** Hourly work (outside the packages) is logged and billed in 15-minute steps. */
 export const BILLING_STEP_MINUTES = 15;
 
 export const RATES: readonly Rate[] = [
@@ -89,11 +101,44 @@ export const GROUPS: readonly Group[] = [
 export const PACKAGES: readonly Package[] = [
   // --- New websites
   {
+    id: 'web-onepage-launch',
+    group: 'websites',
+    rate: 'web',
+    billing: 'once',
+    cents: 9900,
+    maxQty: 1,
+    offer: true,
+    name: { et: 'Ühelehine koduleht – avamispakkumine', en: 'One-page site – launch offer' },
+    summary: {
+      et: 'Ühelehine koduleht avamishinnaga meie esimesele 10 kliendile. Valite kujunduse meie näidiste hulgast.',
+      en: 'A one-page site at a launch price for our first 10 clients. You pick a design from our examples.',
+    },
+    includes: {
+      et: [
+        'Valmis kujundus meie näidiste hulgast, teie logo ja värvidega',
+        'Kuni 6 sisuplokki (teenused, meist, kontakt jne)',
+        'Mobiilisõbralik ja kiire, HTTPS ja turvapäised paigas',
+        'Tekstid ja pildid annate teie: näidis näitab, mida kuhu kirjutada',
+        'Üks parandusring',
+        'Lehe jaluses väike viide turve.ee-le',
+      ],
+      en: [
+        'A ready-made design from our examples, in your logo and colours',
+        'Up to 6 content sections (services, about, contact, …)',
+        'Mobile-friendly and fast, with HTTPS and security headers',
+        'You supply the texts and photos: the example shows what goes where',
+        'One round of revisions',
+        'A small turve.ee credit in the footer',
+      ],
+    },
+    priceNote: { et: 'Esimesele 10 kliendile, kuni 31.12.2026', en: 'For our first 10 clients, until 31 Dec 2026' },
+  },
+  {
     id: 'web-onepage',
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 12 * 60,
+    cents: 29000,
     maxQty: 1,
     name: { et: 'Ühelehine koduleht', en: 'One-page business site' },
     summary: {
@@ -122,7 +167,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 28 * 60,
+    cents: 79000,
     maxQty: 1,
     name: { et: 'Ettevõtte koduleht', en: 'Company website' },
     summary: {
@@ -153,7 +198,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 2 * 60,
+    cents: 4900,
     maxQty: 20,
     name: { et: 'Lisaleht', en: 'Extra page' },
     summary: {
@@ -170,7 +215,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 4 * 60,
+    cents: 9900,
     maxQty: 3,
     name: { et: 'Lisakeel', en: 'Extra language' },
     summary: {
@@ -183,11 +228,46 @@ export const PACKAGES: readonly Package[] = [
     },
   },
   {
+    id: 'web-texts',
+    group: 'websites',
+    rate: 'web',
+    billing: 'once',
+    cents: 6900,
+    maxQty: 20,
+    name: { et: 'Tekstide kirjutamine', en: 'Copywriting' },
+    summary: {
+      et: 'Kirjutame lehe tekstid teie eest lühikese vestluse põhjal. Hind on lehe kohta.',
+      en: 'We write the texts for you after a short conversation. Priced per page.',
+    },
+    includes: {
+      et: ['20-minutiline vestlus teie ettevõttest', 'Selged ja lühikesed tekstid ühes keeles', 'Üks parandusring'],
+      en: ['A 20-minute conversation about your business', 'Clear, short texts in one language', 'One round of revisions'],
+    },
+  },
+  {
+    id: 'web-payment-link',
+    group: 'websites',
+    rate: 'web',
+    billing: 'once',
+    cents: 7900,
+    maxQty: 1,
+    name: { et: 'Maksenupp', en: 'Payment button' },
+    summary: {
+      et: 'Nupp, millega klient saab teenuse või ettemaksu kohe ära maksta. Makse käib Montonio või Stripe’i lehel, nii et teie lehele ei lisandu võõrast koodi.',
+      en: "A button your customers use to pay for a service or a deposit straight away. Payment happens on Montonio's or Stripe's page, so no third-party code is added to your site.",
+    },
+    includes: {
+      et: ['Makselingi seadistamine teie Montonio või Stripe’i kontol', 'Nupp ja selgitus teie lehel', 'Proovimakse enne üleandmist'],
+      en: ['Setting up the payment link in your Montonio or Stripe account', 'Button and explanation on your site', 'A test payment before handover'],
+    },
+    priceNote: { et: '+ makseteenuse tasud', en: '+ payment provider fees' },
+  },
+  {
     id: 'web-inquiry-admin',
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 16 * 60,
+    cents: 49000,
     maxQty: 1,
     name: { et: 'Päringuvorm ja halduspaneel', en: 'Inquiry form and admin panel' },
     summary: {
@@ -214,7 +294,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'websites',
     rate: 'web',
     billing: 'once',
-    minutes: 40 * 60,
+    cents: 129000,
     maxQty: 1,
     name: { et: 'Broneerimissüsteem', en: 'Booking system' },
     summary: {
@@ -243,7 +323,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'modernising',
     rate: 'web',
     billing: 'once',
-    minutes: 4 * 60,
+    cents: 9900,
     maxQty: 1,
     name: { et: 'Vana lehe ülevaatus ja uuendusplaan', en: 'Old site review and modernisation plan' },
     summary: {
@@ -254,13 +334,13 @@ export const PACKAGES: readonly Package[] = [
       et: [
         'Tehnoloogia, versioonid ja pistikprogrammid',
         'Turvalisus, kiirus ja otsingunähtavus',
-        'Kirjalik plaan koos tundide ja hindadega',
+        'Kirjalik plaan koos hindadega',
         '30-minutiline kõne tulemuste üle',
       ],
       en: [
         'Technology, versions and plugins',
         'Security, speed and search visibility',
-        'Written plan with hours and prices',
+        'Written plan with prices',
         '30-minute call about the results',
       ],
     },
@@ -270,7 +350,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'modernising',
     rate: 'web',
     billing: 'once',
-    minutes: 8 * 60,
+    cents: 29000,
     maxQty: 1,
     name: { et: 'Turvauuendus', en: 'Security update' },
     summary: {
@@ -297,7 +377,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'modernising',
     rate: 'web',
     billing: 'once',
-    minutes: 6 * 60,
+    cents: 19000,
     maxQty: 1,
     name: { et: 'Kiiruse ja otsingunähtavuse korrastus', en: 'Speed and search visibility tidy-up' },
     summary: {
@@ -324,7 +404,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'modernising',
     rate: 'web',
     billing: 'once',
-    minutes: 24 * 60,
+    cents: 89000,
     maxQty: 1,
     name: { et: 'Uus kuub kaasaegsel tehnoloogial', en: 'New look on a modern stack' },
     summary: {
@@ -351,16 +431,16 @@ export const PACKAGES: readonly Package[] = [
     group: 'modernising',
     rate: 'web',
     billing: 'once',
-    minutes: null,
+    cents: null,
     maxQty: 1,
     name: { et: 'Uus funktsioon olemasolevale lehele', en: 'New feature for an existing site' },
     summary: {
-      et: 'Broneerimine, päringuvorm, uus keel, liidestus vms teie praegusele lehele. Tunnid selguvad ülevaatusel.',
-      en: 'Booking, an inquiry form, a new language, an integration or similar, added to your current site. Hours are set in the review.',
+      et: 'Broneerimine, päringuvorm, uus keel, liidestus vms teie praegusele lehele. Hind selgub ülevaatusel.',
+      en: 'Booking, an inquiry form, a new language, an integration or similar, added to your current site. The price is set in the review.',
     },
     includes: {
-      et: ['Hinnang tundides enne töö algust', 'Töö algab ainult teie kinnitusel'],
-      en: ['An estimate in hours before work starts', 'Work starts only once you approve'],
+      et: ['Fikseeritud hind enne töö algust', 'Töö algab ainult teie kinnitusel'],
+      en: ['A fixed price before work starts', 'Work starts only once you approve'],
     },
   },
 
@@ -370,7 +450,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'security',
     rate: 'security',
     billing: 'once',
-    minutes: 6 * 60,
+    cents: 29000,
     maxQty: 1,
     name: { et: 'Turva-tervisekontroll', en: 'Security health check' },
     summary: {
@@ -397,11 +477,38 @@ export const PACKAGES: readonly Package[] = [
     },
   },
   {
+    id: 'sec-fix',
+    group: 'security',
+    rate: 'security',
+    billing: 'once',
+    cents: null,
+    maxQty: 1,
+    name: { et: 'Leitud vigade parandamine', en: 'Fixing what we found' },
+    summary: {
+      et: 'Kui teil pole oma arendajat ega IT-inimest, parandame tervisekontrolli või läbistustesti leitud vead ise.',
+      en: "If you don't have a developer or IT person of your own, we fix the issues found in the health check or pentest ourselves.",
+    },
+    includes: {
+      et: [
+        'Fikseeritud hind aruande põhjal enne töö algust',
+        'Veebileht, domeen ja e-post (SPF, DKIM, DMARC), Microsoft 365 või Google Workspace',
+        'Iga parandus kontrollitakse pärast tööd üle',
+        'Töö algab ainult teie kinnitusel',
+      ],
+      en: [
+        'A fixed price based on the report, before work starts',
+        'Website, domain and e-mail (SPF, DKIM, DMARC), Microsoft 365 or Google Workspace',
+        'Every fix is checked afterwards',
+        'Work starts only once you approve',
+      ],
+    },
+  },
+  {
     id: 'sec-pentest-site',
     group: 'security',
     rate: 'security',
     billing: 'once',
-    minutes: 16 * 60,
+    cents: 89000,
     maxQty: 1,
     name: { et: 'Veebilehe või e-poe läbistustest', en: 'Website or web shop pentest' },
     summary: {
@@ -428,7 +535,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'security',
     rate: 'security',
     billing: 'once',
-    minutes: 32 * 60,
+    cents: 189000,
     maxQty: 1,
     name: { et: 'Veebirakenduse läbistustest', en: 'Web application pentest' },
     summary: {
@@ -455,7 +562,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'security',
     rate: 'security',
     billing: 'once',
-    minutes: 4 * 60,
+    cents: 19000,
     maxQty: 1,
     name: { et: 'Kordustest', en: 'Re-test after fixes' },
     summary: {
@@ -472,7 +579,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'security',
     rate: 'security',
     billing: 'once',
-    minutes: 12 * 60,
+    cents: 69000,
     maxQty: 1,
     name: { et: 'Nõuetele vastavuse kaardistus', en: 'Compliance gap analysis' },
     summary: {
@@ -483,13 +590,13 @@ export const PACKAGES: readonly Package[] = [
       et: [
         'Intervjuud ja dokumentide ülevaatus',
         'Puuduste nimekiri prioriteetidega',
-        'Tegevuskava koos tundide ja hindadega',
+        'Tegevuskava koos hindadega',
         'Üks standard või nõuete kogum paketi kohta',
       ],
       en: [
         'Interviews and document review',
         'List of gaps by priority',
-        'Action plan with hours and prices',
+        'Action plan with prices',
         'One standard or set of requirements per package',
       ],
     },
@@ -501,7 +608,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'monthly',
     rate: 'web',
     billing: 'monthly',
-    minutes: 60,
+    cents: 3900,
     maxQty: 1,
     name: { et: 'Hoolduspakett S', en: 'Care plan S' },
     summary: {
@@ -525,7 +632,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'monthly',
     rate: 'web',
     billing: 'monthly',
-    minutes: 3 * 60,
+    cents: 9900,
     maxQty: 1,
     name: { et: 'Hoolduspakett M', en: 'Care plan M' },
     summary: {
@@ -543,7 +650,7 @@ export const PACKAGES: readonly Package[] = [
     group: 'monthly',
     rate: 'security',
     billing: 'monthly',
-    minutes: 4 * 60,
+    cents: 24900,
     maxQty: 1,
     name: { et: 'Turvapartner', en: 'Security partner' },
     summary: {
@@ -579,7 +686,10 @@ export function findRate(id: RateId): Rate {
   return rate;
 }
 
-/** Price of `minutes` of work at a rate, in cents. Minutes are multiples of 15, so this is exact for whole-euro rates. */
+/**
+ * Price of hourly work (outside the packages): `minutes` at a rate, in cents. Minutes are multiples of 15, so this is
+ * exact for whole-euro rates. Package prices are fixed (`Package.cents`); don't use this for them.
+ */
 export function priceCents(minutes: number, rate: RateId): number {
   return Math.round((minutes * findRate(rate).centsPerHour) / 60);
 }

@@ -1,33 +1,31 @@
-import { CATALOG_VERSION, GroupId, Localized, Package, RateId, findPackage, findRate, priceCents } from './catalog';
+import { CATALOG_VERSION, GroupId, Localized, Package, findPackage } from './catalog';
 
 export interface SelectionItem {
   id: string;
   qty: number;
 }
 
-/** One priced line, frozen into the inquiry so later catalog changes don't alter what the visitor saw. */
+/**
+ * One priced line, frozen into the inquiry so later catalog changes don't alter what the visitor saw.
+ * Inquiries from before CATALOG_VERSION 2026-11-08.1 hold the older hour-based shape (unitMinutes, minutes, …).
+ */
 export interface PricedLine {
   id: string;
   name: Localized;
   group: GroupId;
   billing: Package['billing'];
-  rate: RateId;
-  centsPerHour: number;
-  /** Per unit; null = hours are set after a review. */
-  unitMinutes: number | null;
+  /** Fixed price per unit; null = the price is set after a review. */
+  unitCents: number | null;
   qty: number;
-  minutes: number;
   cents: number;
 }
 
 export interface PricedSelection {
   catalogVersion: string;
   lines: PricedLine[];
-  onceMinutes: number;
   onceCents: number;
-  monthlyMinutes: number;
   monthlyCents: number;
-  /** Some line has no fixed hours yet (minutes: null). */
+  /** Some line has no fixed price yet (cents: null). */
   needsEstimate: boolean;
 }
 
@@ -93,31 +91,25 @@ export function priceSelection(items: readonly SelectionItem[]): PricedSelection
     if (!pkg) {
       throw new SelectionError(`Unknown package ${id}.`);
     }
-    const minutes = pkg.minutes === null ? 0 : pkg.minutes * qty;
     return {
       id: pkg.id,
       name: pkg.name,
       group: pkg.group,
       billing: pkg.billing,
-      rate: pkg.rate,
-      centsPerHour: findRate(pkg.rate).centsPerHour,
-      unitMinutes: pkg.minutes,
+      unitCents: pkg.cents,
       qty,
-      minutes,
-      cents: priceCents(minutes, pkg.rate),
+      cents: pkg.cents === null ? 0 : pkg.cents * qty,
     };
   });
 
-  const sum = (billing: Package['billing'], key: 'minutes' | 'cents') =>
-    lines.filter((line) => line.billing === billing).reduce((total, line) => total + line[key], 0);
+  const sum = (billing: Package['billing']) =>
+    lines.filter((line) => line.billing === billing).reduce((total, line) => total + line.cents, 0);
 
   return {
     catalogVersion: CATALOG_VERSION,
     lines,
-    onceMinutes: sum('once', 'minutes'),
-    onceCents: sum('once', 'cents'),
-    monthlyMinutes: sum('monthly', 'minutes'),
-    monthlyCents: sum('monthly', 'cents'),
-    needsEstimate: lines.some((line) => line.unitMinutes === null),
+    onceCents: sum('once'),
+    monthlyCents: sum('monthly'),
+    needsEstimate: lines.some((line) => line.unitCents === null),
   };
 }

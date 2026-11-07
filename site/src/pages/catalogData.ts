@@ -1,19 +1,17 @@
-import { BILLING_STEP_MINUTES, CATALOG_VERSION, PACKAGES, priceCents } from '../../../server/src/catalog/catalog';
+import { CATALOG_VERSION, PACKAGES } from '../../../server/src/catalog/catalog';
 import type { PageContext } from '../context';
 
 /** What estimator.js and contact.js need, in the page's language. Prices are display-only; the API re-prices. */
 export function catalogForScripts(ctx: PageContext) {
   return {
     version: CATALOG_VERSION,
-    step: BILLING_STEP_MINUTES,
     lang: ctx.lang,
     packages: PACKAGES.map((pkg) => ({
       id: pkg.id,
       name: pkg.name[ctx.lang],
       billing: pkg.billing,
-      minutes: pkg.minutes,
       maxQty: pkg.maxQty,
-      cents: pkg.minutes === null ? null : priceCents(pkg.minutes, pkg.rate),
+      cents: pkg.cents,
       note: pkg.priceNote?.[ctx.lang] ?? null,
     })),
     labels: {

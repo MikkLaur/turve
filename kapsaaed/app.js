@@ -150,7 +150,6 @@ const dateTimeFmt = new Intl.DateTimeFormat('et-EE', { timeZone: TZ, day: '2-dig
 const fmtDateTime = (value) => dateTimeFmt.format(new Date(value));
 const euroFmt = new Intl.NumberFormat('et-EE', { style: 'currency', currency: 'EUR' });
 const euros = (cents) => euroFmt.format(Number(cents) / 100);
-const hours = (minutes) => `${new Intl.NumberFormat('et-EE', { maximumFractionDigits: 2 }).format(Number(minutes) / 60)} h`;
 
 function flagTags(flags) {
   return String(flags || '')
@@ -273,24 +272,25 @@ async function viewList(status) {
   );
 }
 
+/** Fixed-price lines (unitCents); snapshots from before catalog 2026-11-08.1 have unitMinutes instead. */
 function selectionTable(selection) {
+  const isQuote = (line) => line.unitCents === null || line.unitMinutes === null;
   const rows = selection.lines.map((line) =>
     h(
       'tr',
       null,
       h('td', null, line.name.et, line.qty > 1 ? ` × ${line.qty}` : ''),
       h('td', null, line.billing === 'monthly' ? 'kuus' : 'ühekordne'),
-      h('td', { class: 'num' }, line.unitMinutes === null ? 'hinnata' : hours(line.minutes)),
-      h('td', { class: 'num' }, line.unitMinutes === null ? '–' : euros(line.cents)),
+      h('td', { class: 'num' }, isQuote(line) ? 'pakkumine' : euros(line.cents)),
     ),
   );
   const foot = [];
-  if (selection.onceMinutes) foot.push(h('tr', null, h('td', { colSpan: 2 }, 'Ühekordne kokku'), h('td', { class: 'num' }, hours(selection.onceMinutes)), h('td', { class: 'num' }, euros(selection.onceCents))));
-  if (selection.monthlyMinutes) foot.push(h('tr', null, h('td', { colSpan: 2 }, 'Kuus kokku'), h('td', { class: 'num' }, hours(selection.monthlyMinutes)), h('td', { class: 'num' }, euros(selection.monthlyCents))));
+  if (Number(selection.onceCents) > 0) foot.push(h('tr', null, h('td', { colSpan: 2 }, 'Ühekordne kokku'), h('td', { class: 'num' }, euros(selection.onceCents))));
+  if (Number(selection.monthlyCents) > 0) foot.push(h('tr', null, h('td', { colSpan: 2 }, 'Kuus kokku'), h('td', { class: 'num' }, euros(selection.monthlyCents))));
   return h(
     'table',
     null,
-    h('thead', null, h('tr', null, h('th', null, 'Pakett'), h('th', null, 'Arveldus'), h('th', { class: 'num' }, 'Tunnid'), h('th', { class: 'num' }, 'Summa'))),
+    h('thead', null, h('tr', null, h('th', null, 'Pakett'), h('th', null, 'Arveldus'), h('th', { class: 'num' }, 'Summa'))),
     h('tbody', null, rows),
     h('tfoot', null, foot),
   );

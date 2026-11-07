@@ -1,4 +1,4 @@
-import { Lang, findPackage, priceCents } from '../catalog/catalog';
+import { Lang, findPackage } from '../catalog/catalog';
 import type { StoredCheck } from '../repositories/securityChecks';
 import { localizeFinding } from './findings';
 
@@ -18,9 +18,7 @@ export function presentCheck(check: StoredCheck, lang: Lang) {
       .sort((a, b) => ORDER[a.status] - ORDER[b.status]),
     suggestions: result.suggestions.flatMap((id) => {
       const pkg = findPackage(id);
-      return pkg
-        ? [{ id, name: pkg.name[lang], summary: pkg.summary[lang], minutes: pkg.minutes, cents: pkg.minutes === null ? null : priceCents(pkg.minutes, pkg.rate) }]
-        : [];
+      return pkg ? [{ id, name: pkg.name[lang], summary: pkg.summary[lang], cents: pkg.cents }] : [];
     }),
   };
 }

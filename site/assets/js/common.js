@@ -20,10 +20,6 @@ window.Turve = (() => {
     }).format(cents / 100);
   }
 
-  function hours(minutes) {
-    return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(minutes / 60)} h`;
-  }
-
   function h(tag, attrs, ...children) {
     const el = document.createElement(tag);
     for (const [key, value] of Object.entries(attrs || {})) {
@@ -75,23 +71,17 @@ window.Turve = (() => {
     return items.map((item) => (item.qty > 1 ? `${item.id}:${item.qty}` : item.id)).join(',');
   }
 
-  /** Display totals only; the API prices the selection again from its own catalog. */
+  /** Display totals only; the API prices the selection again from its own catalog. Packages have fixed prices. */
   function priceItems(items, catalog) {
-    const result = { lines: [], onceMinutes: 0, onceCents: 0, monthlyMinutes: 0, monthlyCents: 0, needsEstimate: false };
+    const result = { lines: [], onceCents: 0, monthlyCents: 0, needsEstimate: false };
     for (const item of items) {
       const pkg = catalog.packages.find((p) => p.id === item.id);
       if (!pkg) continue;
-      const minutes = pkg.minutes === null ? 0 : pkg.minutes * item.qty;
       const cents = pkg.cents === null ? 0 : pkg.cents * item.qty;
-      result.lines.push({ pkg, qty: item.qty, minutes, cents });
-      if (pkg.minutes === null) result.needsEstimate = true;
-      if (pkg.billing === 'monthly') {
-        result.monthlyMinutes += minutes;
-        result.monthlyCents += cents;
-      } else {
-        result.onceMinutes += minutes;
-        result.onceCents += cents;
-      }
+      result.lines.push({ pkg, qty: item.qty, cents });
+      if (pkg.cents === null) result.needsEstimate = true;
+      if (pkg.billing === 'monthly') result.monthlyCents += cents;
+      else result.onceCents += cents;
     }
     return result;
   }
@@ -99,23 +89,23 @@ window.Turve = (() => {
   /** Summary lines + totals, shared by the estimator and the contact page. */
   function renderTotals(priced, labels) {
     const totals = h('p', { class: 'summary-totals' });
-    if (priced.onceMinutes || !priced.monthlyMinutes) {
-      totals.append(h('span', null, `${labels.summaryOnce}: `, h('strong', null, `${hours(priced.onceMinutes)} · ${euros(priced.onceCents)}`)));
+    const hasMonthly = priced.lines.some((line) => line.pkg.billing === 'monthly');
+    const hasOnce = priced.lines.some((line) => line.pkg.billing !== 'monthly');
+    if (hasOnce || !hasMonthly) {
+      totals.append(h('span', null, `${labels.summaryOnce}: `, h('strong', null, euros(priced.onceCents))));
     }
-    if (priced.monthlyMinutes) {
-      totals.append(
-        h('span', null, `${labels.summaryMonthly}: `, h('strong', null, `${hours(priced.monthlyMinutes)} · ${euros(priced.monthlyCents)} ${labels.perMonth}`)),
-      );
+    if (hasMonthly) {
+      totals.append(h('span', null, `${labels.summaryMonthly}: `, h('strong', null, `${euros(priced.monthlyCents)} ${labels.perMonth}`)));
     }
     return totals;
   }
 
   function lineText(line, labels) {
     const qty = line.qty > 1 ? ` × ${line.qty}` : '';
-    if (line.pkg.minutes === null) return { name: `${line.pkg.name}${qty}`, value: labels.estimateAfterReview };
+    if (line.pkg.cents === null) return { name: `${line.pkg.name}${qty}`, value: labels.estimateAfterReview };
     const monthly = line.pkg.billing === 'monthly' ? ` ${labels.perMonth}` : '';
-    return { name: `${line.pkg.name}${qty}`, value: `${hours(line.minutes)} · ${euros(line.cents)}${monthly}` };
+    return { name: `${line.pkg.name}${qty}`, value: `${euros(line.cents)}${monthly}` };
   }
 
-  return { apiOrigin, lang, json, euros, hours, h, api, parseSelection, selectionString, priceItems, renderTotals, lineText };
+  return { apiOrigin, lang, json, euros, h, api, parseSelection, selectionString, priceItems, renderTotals, lineText };
 })();

@@ -32,8 +32,8 @@ export const et = {
   common: {
     perUnit: '/ tk',
     perMonth: 'kuus',
-    estimateAfterReview: 'tunnid pärast ülevaatust',
-    hourlyRate: 'tunnihind',
+    estimateAfterReview: 'hind pärast ülevaatust',
+    offerRegular: 'Tavahind',
     includes: 'Sisaldab',
     readMore: 'Loe lähemalt',
     seePrices: 'Vaata hindu',
@@ -45,11 +45,11 @@ export const et = {
   home: {
     title: 'Turve – turvalised veebilehed ja küberturve väikeettevõttele',
     description:
-      'Ehitame turvalisi veebilehti, uuendame vanu ja teeme väikeettevõttele jõukohaseid turvakontrolle ning läbistusteste. Iga tund on enne tellimist näha.',
+      'Ehitame turvalisi veebilehti, uuendame vanu ja teeme väikeettevõttele jõukohaseid turvakontrolle ning läbistusteste. Hind on enne tellimist teada.',
     eyebrow: 'Veebilehed · Küberturve · Väikeettevõttele',
     heroTitle: 'Turvalised veebilehed ja jõukohane küberturve',
     heroLead:
-      'Ehitame uusi veebilehti ja toome vanad tänapäeva nii, et neid oleks raske rünnata. Teeme turvakontrolle ja läbistusteste hinnaga, mis sobib ka väikesele firmale. Iga tund on näha enne, kui tellite.',
+      'Ehitame uusi veebilehti ja toome vanad tänapäeva nii, et neid oleks raske rünnata. Teeme turvakontrolle ja läbistusteste hinnaga, mis sobib ka väikesele firmale. Hind on teada enne, kui tellite.',
     heroCheckLabel: 'Kontrollige oma veebilehte tasuta',
     heroCheckPlaceholder: 'teieettevote.ee',
     heroCheckButton: 'Kontrolli',
@@ -97,7 +97,7 @@ export const et = {
     modernText:
       'Paljud väikeettevõtete kodulehed on tehtud aastaid tagasi ega ole sellest saati uuendusi näinud. Vananenud WordPress või pistikprogramm on üks levinumaid viise, kuidas ründajad sisse saavad. Võtame sellise lehe üle, teeme korda ja ehitame juurde, mida teil täna vaja on.',
     modernPoints: [
-      'Ülevaatus ja kirjalik plaan koos tundidega',
+      'Ülevaatus ja kirjalik plaan koos hindadega',
       'Turvauuendus ilma lehte ümber tegemata',
       'Uus kuub, mis säilitab sisu ja otsingukohad',
       'Uued funktsioonid olemasolevale lehele',
@@ -109,8 +109,8 @@ export const et = {
         text: 'Turvalisus on meie igapäevatöö. Seepärast ehitame lehti nii, nagu ründaja neid vaatab, ja testime neid samamoodi.',
       },
       {
-        title: 'Iga tund on näha',
-        text: 'Iga pakett on kirjas tundides ja eurodes. Te teate enne tellimist, mille eest maksate, ja arvega tuleb kaasa ajalogi.',
+        title: 'Hind on enne teada',
+        text: 'Iga paketi hind ja sisu on kirjas. Teate enne tellimist, mida saate ja mida maksate.',
       },
       {
         title: 'Ilma jälgimiseta',
@@ -124,9 +124,9 @@ export const et = {
     processTitle: 'Kuidas töö käib',
     process: [
       { title: 'Valige paketid', text: 'Hinnakalkulaatoris või kirjeldage lihtsalt, mida vajate.' },
-      { title: 'Saate täpse pakkumise', text: 'Tundides ja eurodes, kahe tööpäeva jooksul.' },
+      { title: 'Saate täpse pakkumise', text: 'Fikseeritud hinnaga, kahe tööpäeva jooksul.' },
       { title: 'Töö algab teie kinnitusel', text: 'Lisatöö ainult siis, kui olete selle enne heaks kiitnud.' },
-      { title: 'Arve koos ajalogiga', text: 'Näete täpselt, millele aeg kulus, 15-minutilise täpsusega.' },
+      { title: 'Arve pärast tööd', text: 'Arve tuleb pärast töö üleandmist, maksetähtaeg on 14 päeva.' },
     ],
     referenceTitle: 'Tehtud töö',
     referenceName: 'Kämblakoda massaažistuudio',
@@ -140,7 +140,7 @@ export const et = {
   websites: {
     title: 'Veebilehed – uued ja uuendatud | Turve',
     description:
-      'Turvalised ja kiired veebilehed väikeettevõttele ning vanade kodulehtede uuendamine: turvauuendus, uus kuub ja uued funktsioonid. Hinnad tundides.',
+      'Turvalised ja kiired veebilehed väikeettevõttele ning vanade kodulehtede uuendamine: turvauuendus, uus kuub ja uued funktsioonid. Fikseeritud hinnad.',
     heading: 'Veebilehed, mida on raske rünnata',
     lead: 'Teeme uusi lehti ja toome vanu tänapäeva. Mõlemal juhul on turvalisus algusest peale sees, mitte hiljem otsa liimitud.',
     secureTitle: 'Kuidas me turvaliselt ehitame',
@@ -171,9 +171,9 @@ export const et = {
   security: {
     title: 'Turvateenused väikeettevõttele | Turve',
     description:
-      'Turva-tervisekontroll, veebilehe ja rakenduse läbistustest, E-ITS, NIS2 ja ISO 27001 kaardistus ning igakuine turvapartner. Hinnad tundides.',
+      'Turva-tervisekontroll, veebilehe ja rakenduse läbistustest, E-ITS, NIS2 ja ISO 27001 kaardistus ning igakuine turvapartner. Fikseeritud hinnad.',
     heading: 'Küberturve, mis on väikeettevõttele jõukohane',
-    lead: 'Suured turvafirmad on väikesele ettevõttele sageli liiga kallid ja liiga keerulised. Teeme sama tööd selgelt piiritletud pakettidena, mille hind on enne näha.',
+    lead: 'Suured turvafirmad on väikesele ettevõttele sageli liiga kallid ja liiga keerulised. Teeme sama tööd selgelt piiritletud pakettidena, mille hind on enne näha. Kui teil pole kedagi, kes leitud vead parandaks, parandame need ise.',
     partnerHeading: 'Püsiv turvatugi',
     processTitle: 'Kuidas läbistustest käib',
     process: [
@@ -202,10 +202,9 @@ export const et = {
 
   pricing: {
     title: 'Hinnad ja kalkulaator | Turve',
-    description: 'Kõik paketid koos täpsete tundide ja hindadega. Valige vajalik ja küsige pakkumist otse kalkulaatorist.',
+    description: 'Kõik paketid koos hindadega. Valige vajalik ja küsige pakkumist otse kalkulaatorist.',
     heading: 'Hinnad',
-    lead: 'Iga pakett on kirjas tundides. Valige, mida vajate, ja näete kohe kogusummat. Pakkumise küsimine ei kohusta teid millekski.',
-    ratesTitle: 'Tunnihinnad',
+    lead: 'Iga paketi hind on fikseeritud. Valige, mida vajate, ja näete kohe kogusummat. Pakkumise küsimine ei kohusta teid millekski.',
     estimatorHint: 'Märkige paketid, mida vajate. Kokkuvõte on lehe allosas.',
     addLabel: 'Lisa',
     qtyLabel: 'Kogus',
@@ -217,11 +216,13 @@ export const et = {
     summaryButton: 'Küsi pakkumist selle valikuga',
     summaryClear: 'Tühjenda valik',
     noScript: 'Kalkulaator vajab JavaScripti. Hinnad on ka ilma selleta näha; pakkumist saate küsida kontaktivormist.',
+    projectTitle: 'Konsultatsioon ja projektitöö',
+    projectText:
+      'Töö, mis ühtegi paketti ei mahu, teeme fikseeritud hinnaga pakkumise alusel või tunnitööna. Tunnitööd arvestame 15-minutilise täpsusega ja arvega tuleb kaasa ajalogi.',
     termsTitle: 'Kuidas arveldame',
     terms: [
-      'Tööaega arvestame 15-minutilise täpsusega ja arvega tuleb kaasa ajalogi.',
-      'Paketi tunnid on kokkulepitud ülempiir. Kui töö võtab vähem aega, maksate vähem.',
-      'Paketist välja jäävat tööd teeme ainult teie eelneval nõusolekul ja tunnihinnaga.',
+      'Paketi hind on fikseeritud: maksate kokkulepitud summa, mitte rohkem.',
+      'Paketist välja jäävat tööd teeme ainult teie eelneval nõusolekul.',
       'Igakuiste pakettide kasutamata tunnid järgmisse kuusse ei kandu.',
       'Majutus ja muud kolmanda osapoole kulud arveldame omahinnaga.',
       'Arve maksetähtaeg on 14 päeva.',
@@ -233,7 +234,6 @@ export const et = {
     selected: 'Valitud',
     remove: 'Eemalda',
     total: 'Kokku',
-    hoursShort: 'h',
   },
 
   check: {
@@ -420,7 +420,7 @@ export const et = {
     valuesTitle: 'Mida lubame',
     values: [
       { title: 'Ausus', text: 'Ütleme, kui midagi pole vaja teha. Ka siis, kui see tähendab väiksemat arvet.' },
-      { title: 'Täpsus', text: 'Iga tund on kirjas ja põhjendatud.' },
+      { title: 'Selgus', text: 'Hind ja töö sisu on enne kirjas. Üllatusi arvel ei ole.' },
       { title: 'Konfidentsiaalsus', text: 'Teie andmed ja turvaleiud ei lähe kellelegi edasi.' },
     ],
   },

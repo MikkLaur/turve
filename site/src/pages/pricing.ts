@@ -11,10 +11,8 @@ export function pricingPage(ctx: PageContext): PageOutput {
   const p = t.pricing;
   const body = html`
     ${pageHead(p.heading, p.lead)}
-    <section class="section tight" aria-labelledby="h-rates">
+    <section class="section tight">
       <div class="wrap">
-        <h2 id="h-rates">${p.ratesTitle}</h2>
-        <ul class="rates">${RATES.map((rate) => html`<li><span>${rate.name[lang]}</span><strong>${euros(rate.centsPerHour, lang)} / h</strong></li>`)}</ul>
         <p class="muted">${t.common.finalPrices}</p>
         <noscript><p class="notice">${p.noScript}</p></noscript>
         <p class="notice" data-estimator-hint hidden>${p.estimatorHint}</p>
@@ -26,6 +24,13 @@ export function pricingPage(ctx: PageContext): PageOutput {
         <h2 id="h-terms">${p.termsTitle}</h2>
         <ul class="checklist">${p.terms.map((term) => html`<li>${term}</li>`)}</ul>
         <p class="muted">${t.common.finalPrices}</p>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="h-project">
+      <div class="wrap">
+        <h2 id="h-project">${p.projectTitle}</h2>
+        <p class="section-lead">${p.projectText}</p>
+        <ul class="rates">${RATES.map((rate) => html`<li><span>${rate.name[lang]}</span><strong>${euros(rate.centsPerHour, lang)} / h</strong></li>`)}</ul>
       </div>
     </section>
     <aside class="estimator-summary" id="estimator-summary" aria-labelledby="h-summary" aria-live="polite" hidden>
