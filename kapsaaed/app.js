@@ -18,6 +18,8 @@ const FLAGS = {
   'token-fast': 'saadeti liiga kiiresti',
   'token-expired': 'vormi märk aegunud',
   'no-js': 'ilma JavaScriptita',
+  'offer-full': 'avamispakkumise kohad olid täis',
+  'offer-ended': 'avamispakkumine oli lõppenud',
 };
 const FINDING_STATUS = { pass: 'korras', warn: 'hoiatus', fail: 'probleem', info: 'teave' };
 const AUDIT = {
@@ -30,6 +32,7 @@ const AUDIT = {
   'inquiry.status': 'Päringu olek',
   'inquiry.notes': 'Päringu märkmed',
   'inquiry.delete': 'Päring kustutatud',
+  'inquiry.offer': 'Avamispakkumise loendur',
   'admin.created': 'Kasutaja loodud',
   'admin.password_set': 'Parool muudetud',
   'admin.totp_enrolled': 'Autentimisrakendus seadistatud',
@@ -246,6 +249,7 @@ function inquiryCard(inquiry) {
         estimateText(inquiry) ? ` · ${estimateText(inquiry)}` : '',
         inquiry.securityCheckId ? ' · turvakontroll lisatud' : '',
         inquiry.lang === 'en' ? ' · EN' : '',
+        Number(inquiry.countsForOffer) === 1 ? h('span', { class: 'tag' }, 'avamispakkumine') : null,
         flagTags(inquiry.flags),
       ),
     ),
@@ -253,7 +257,7 @@ function inquiryCard(inquiry) {
 }
 
 async function viewList(status) {
-  const [{ counts }, { inquiries }] = await Promise.all([api('/overview'), api(`/inquiries?status=${encodeURIComponent(status)}&limit=100`)]);
+  const [{ counts, offer }, { inquiries }] = await Promise.all([api('/overview'), api(`/inquiries?status=${encodeURIComponent(status)}&limit=100`)]);
   const filters = [
     ['open', 'Uued ja pooleli', counts.new + counts.in_progress],
     ...Object.keys(STATUS).map((key) => [key, STATUS[key], counts[key]]),
@@ -268,6 +272,7 @@ async function viewList(status) {
         h('a', { class: 'count', href: key === 'open' ? '#/' : `#/koik/${key}`, 'aria-current': key === status ? 'true' : null }, label, h('strong', null, String(n))),
       ),
     ),
+    h('p', { class: 'muted' }, `Avamispakkumine: ${offer.taken}/${offer.spots} kohta võetud${offer.open ? '' : ' (suletud)'}`),
     inquiries.length ? h('ul', { class: 'cards' }, inquiries.map(inquiryCard)) : h('p', { class: 'muted' }, 'Päringuid pole.'),
   );
 }
@@ -317,6 +322,7 @@ async function viewInquiry(id) {
   const { inquiry, check } = await api(`/inquiries/${id}`);
   const notes = h('textarea', { id: 'notes', value: inquiry.adminNotes || '' });
   const refresh = () => viewInquiry(id);
+  const counted = Number(inquiry.countsForOffer) === 1;
 
   const statusButtons = Object.keys(STATUS).map((key) =>
     h(
@@ -360,6 +366,24 @@ async function viewInquiry(id) {
       ? [h('h2', null, 'Valitud paketid'), selectionTable(inquiry.selection), h('p', { class: 'muted' }, `Hinnad hinnakirja versioonist ${inquiry.catalogVersion}.`)]
       : null,
     check ? [h('h2', null, 'Turvakontroll'), checkSection(check)] : null,
+    h('h2', null, 'Avamispakkumine'),
+    h('p', null, counted ? 'Arvestatud loendurisse.' : 'Loendurisse ei arvestata.'),
+    h(
+      'div',
+      { class: 'row' },
+      h(
+        'button',
+        {
+          type: 'button',
+          onclick: action(async () => {
+            await api(`/inquiries/${id}/offer`, { method: 'POST', body: { counts: !counted } });
+            await refresh();
+            showMessage(counted ? 'Eemaldatud loendurist.' : 'Arvestatud loendurisse.');
+          }),
+        },
+        counted ? 'Eemalda loendurist' : 'Arvesta loendurisse',
+      ),
+    ),
     h('h2', null, 'Märkmed'),
     h('label', { for: 'notes' }, 'Ainult sinule nähtavad'),
     notes,

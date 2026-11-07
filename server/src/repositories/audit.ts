@@ -10,6 +10,7 @@ export type AuditAction =
   | 'inquiry.status'
   | 'inquiry.notes'
   | 'inquiry.delete'
+  | 'inquiry.offer'
   | 'admin.created'
   | 'admin.password_set'
   | 'admin.totp_enrolled';

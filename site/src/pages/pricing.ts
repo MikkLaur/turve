@@ -1,5 +1,5 @@
 import { GROUPS, RATES } from '../../../server/src/catalog/catalog';
-import { groupSection, pageHead } from '../components';
+import { groupSection, offerScriptData, pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { euros } from '../format';
 import { html, jsonBlock } from '../html';
@@ -45,6 +45,7 @@ export function pricingPage(ctx: PageContext): PageOutput {
         </div>
       </div>
     </aside>
-    ${jsonBlock('catalog', catalogForScripts(ctx))}`;
-  return { id: 'pricing', title: p.title, description: p.description, body, scripts: ['js/common.js', 'js/estimator.js'] };
+    ${jsonBlock('catalog', catalogForScripts(ctx))}
+    ${offerScriptData(ctx)}`;
+  return { id: 'pricing', title: p.title, description: p.description, body, scripts: ['js/common.js', 'js/offer.js', 'js/estimator.js'] };
 }

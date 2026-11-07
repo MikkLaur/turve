@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { body, matchedData, validationResult } from 'express-validator';
-import type { Lang } from '../catalog/catalog';
+import { LAUNCH_OFFER, type Lang } from '../catalog/catalog';
 import { parseSelection, priceSelection, PricedSelection, SelectionError } from '../catalog/pricing';
+import { clearOfferCache, currentOfferStatus } from './offerController';
 import { CONTACT_PATH, THANK_YOU_PATH } from '../catalog/sitePaths';
 import { config } from '../config/config';
 import { insertInquiry } from '../repositories/inquiries';
@@ -96,6 +97,18 @@ export async function createInquiry(req: Request, res: Response): Promise<void> 
     flags.push('no-js');
   }
 
+  // The launch offer: a spot is taken only while the offer is open. A late inquiry is still stored, with a flag.
+  let countsForOffer = false;
+  const wantsOffer = selection?.lines.some((line) => line.id === LAUNCH_OFFER.packageId) ?? false;
+  if (wantsOffer && !honeypot) {
+    const status = await currentOfferStatus();
+    if (status.open) {
+      countsForOffer = true;
+    } else {
+      flags.push(status.left === 0 ? 'offer-full' : 'offer-ended');
+    }
+  }
+
   await insertInquiry({
     lang,
     name: data.name!.trim(),
@@ -109,7 +122,11 @@ export async function createInquiry(req: Request, res: Response): Promise<void> 
     // Honeypot hits are kept (autofill can trigger it) but filed as spam, and the sender sees the normal answer.
     status: honeypot ? 'spam' : 'new',
     flags,
+    countsForOffer,
   });
+  if (countsForOffer) {
+    clearOfferCache();
+  }
 
   if (isFormPost(req)) {
     res.redirect(303, `${config.siteOrigin}${THANK_YOU_PATH[lang]}`);

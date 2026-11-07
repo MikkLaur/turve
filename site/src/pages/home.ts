@@ -1,6 +1,6 @@
-import { findPackage } from '../../../server/src/catalog/catalog';
+import { findPackage, LAUNCH_OFFER } from '../../../server/src/catalog/catalog';
 import { COMPANY } from '../config';
-import { ctaBand } from '../components';
+import { ctaBand, offerScriptData, offerStatusLine } from '../components';
 import { euros } from '../format';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
@@ -10,6 +10,7 @@ export function homePage(ctx: PageContext): PageOutput {
   const { t, lang, cfg } = ctx;
   const h = t.home;
   const fix = findPackage('mod-security-update')!;
+  const offer = findPackage(LAUNCH_OFFER.packageId)!;
   const marks = { ok: '✓', bad: '✕', warn: '!' } as const;
   const serviceLinks = [href('websites', lang), `${href('websites', lang)}#modernising`, href('security', lang), `${href('pricing', lang)}#monthly`];
 
@@ -37,6 +38,19 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
 <span class="t-grade">${h.terminalGrade}</span>
 <span class="t-prompt">→</span> ${fix.name[lang]} · ${euros(fix.cents!, lang)}</pre>
         </div>
+      </div>
+    </section>
+
+    <section class="section offer-band" aria-labelledby="h-offer">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">${h.offerEyebrow}</p>
+          <h2 id="h-offer">${h.offerTitle.replace('{price}', euros(offer.cents!, lang))}</h2>
+          <p>${h.offerText}</p>
+          ${offerStatusLine(ctx)}
+          <p class="button-row"><a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a></p>
+        </div>
+        <ul class="checklist">${offer.includes[lang].map((item) => html`<li>${item}</li>`)}</ul>
       </div>
     </section>
 
@@ -112,13 +126,15 @@ ${h.fpLines.map((line, i) => html`<span class="${i === 0 ? 't-ok' : 't-prompt'}"
     ${ctaBand(ctx, h.finalTitle, h.finalText, [
       { href: href('contact', lang), label: t.common.askOffer, primary: true },
       { href: href('pricing', lang), label: t.common.seePrices },
-    ])}`;
+    ])}
+    ${offerScriptData(ctx)}`;
 
   return {
     id: 'home',
     title: h.title,
     description: h.description,
     body,
+    scripts: ['js/common.js', 'js/offer.js'],
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',

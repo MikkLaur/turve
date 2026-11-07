@@ -8,10 +8,12 @@ import {
   INQUIRY_STATUSES,
   InquiryStatus,
   listInquiries,
+  setCountsForOffer,
   setInquiryNotes,
   setInquiryStatus,
 } from '../repositories/inquiries';
 import { findCheckById, listRecentChecks } from '../repositories/securityChecks';
+import { clearOfferCache, currentOfferStatus } from './offerController';
 
 const MAX_NOTES = 10_000;
 
@@ -26,7 +28,7 @@ function intQuery(value: unknown, fallback: number, max: number): number {
 }
 
 export async function getOverview(_req: Request, res: Response): Promise<void> {
-  res.json({ counts: await countByStatus() });
+  res.json({ counts: await countByStatus(), offer: await currentOfferStatus() });
 }
 
 export async function listInquiriesHandler(req: Request, res: Response): Promise<void> {
@@ -59,6 +61,25 @@ export async function setStatusHandler(req: Request, res: Response): Promise<voi
     return;
   }
   await audit('inquiry.status', { userId: req.admin?.userId, detail: `#${id} → ${status}`, ip: req.ip });
+  // Spam doesn't count in the launch offer, so a status change can change the counter.
+  clearOfferCache();
+  res.json({ ok: true });
+}
+
+/** Counts the inquiry in the launch offer counter, or takes it out (e.g. to count a client who phoned). */
+export async function setOfferHandler(req: Request, res: Response): Promise<void> {
+  const id = idParam(req);
+  const counts = (req.body as { counts?: unknown } | undefined)?.counts;
+  if (!id || typeof counts !== 'boolean') {
+    res.status(400).json({ message: 'Invalid value' });
+    return;
+  }
+  if (!(await setCountsForOffer(id, counts))) {
+    res.status(404).json({ message: 'Not found' });
+    return;
+  }
+  await audit('inquiry.offer', { userId: req.admin?.userId, detail: `#${id} → ${counts ? 'arvesse' : 'välja'}`, ip: req.ip });
+  clearOfferCache();
   res.json({ ok: true });
 }
 

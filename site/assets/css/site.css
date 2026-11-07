@@ -219,6 +219,9 @@ img { max-width: 100%; height: auto; }
 .pick input[type='checkbox'] { width: 1.3rem; height: 1.3rem; accent-color: var(--accent); }
 .pick-qty input { width: 4.5rem; padding: 0.35rem 0.5rem; }
 .package.offer { border: 2px solid var(--accent); padding: calc(1.5rem - 1px); }
+.offer-status { font-family: var(--mono); color: var(--accent); margin: 0.25rem 0 0; }
+.offer-status.closed { color: var(--muted); }
+.offer-band { background: var(--paper-2); }
 .package.selected { border: 2px solid var(--accent); padding: calc(1.5rem - 1px); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent); }
 
 .rates { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 1rem; }

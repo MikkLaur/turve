@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { createInquiry, getFormToken, inquiryValidation } from '../controllers/inquiryController';
+import { getLaunchOffer } from '../controllers/offerController';
 import { securityCheck } from '../controllers/securityCheckController';
 import { getPool } from '../db/pool';
 
@@ -15,6 +16,7 @@ router.get('/health', async (_req, res) => {
 });
 
 router.get('/form-token', limiter(15, 60, 'Too many requests'), getFormToken);
+router.get('/launch-offer', limiter(15, 120, 'Too many requests'), getLaunchOffer);
 router.post('/inquiries', limiter(60, 5, 'Too many inquiries, try again later'), inquiryValidation, createInquiry);
 router.post('/security-check', limiter(60, 10, 'Too many checks, try again later'), securityCheck);
 

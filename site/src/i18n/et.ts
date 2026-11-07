@@ -40,6 +40,11 @@ export const et = {
     askOffer: 'Küsi pakkumist',
     freeCheck: 'Tasuta turvakontroll',
     finalPrices: 'Hinnad on lõplikud: me ei ole käibemaksukohustuslased.',
+    // Launch offer. {spots}, {date} and {price} are filled at build time, {left} in the browser.
+    offerStatic: 'Esimesele {spots} kliendile kuni {date}',
+    offerLeft: 'Kohti alles: {left} / {spots}',
+    offerFull: 'Kõik avamispakkumise kohad on täis. Tavahind {price}.',
+    offerEnded: 'Avamispakkumine on lõppenud. Tavahind {price}.',
   },
 
   home: {
@@ -135,6 +140,11 @@ export const et = {
     referenceLink: 'kamblakoda.ee',
     finalTitle: 'Räägime teie lehest',
     finalText: 'Kirjeldage, mida vajate, või valige hinnakirjast paketid. Vastame kahe tööpäeva jooksul.',
+    offerEyebrow: 'Avamispakkumine',
+    // {price} = the launch offer's price
+    offerTitle: 'Ühelehine koduleht {price}',
+    offerText:
+      'Turve on uus ja kogub esimesi kliente. Esimesed 10 saavad kiire ja turvalise ühelehise kodulehe avamishinnaga. Valite kujunduse, meie teeme ülejäänu.',
   },
 
   websites: {

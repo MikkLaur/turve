@@ -10,6 +10,7 @@ import {
   listChecksHandler,
   listInquiriesHandler,
   setNotesHandler,
+  setOfferHandler,
   setStatusHandler,
 } from '../controllers/adminInquiryController';
 import { config } from '../config/config';
@@ -39,6 +40,7 @@ router.get('/inquiries', listInquiriesHandler);
 router.get('/inquiries/:id', getInquiryHandler);
 router.post('/inquiries/:id/status', setStatusHandler);
 router.post('/inquiries/:id/notes', setNotesHandler);
+router.post('/inquiries/:id/offer', setOfferHandler);
 router.delete('/inquiries/:id', deleteInquiryHandler);
 router.get('/security-checks', listChecksHandler);
 router.get('/security-checks/:id', getCheckHandler);

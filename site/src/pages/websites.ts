@@ -1,4 +1,4 @@
-import { ctaBand, groupSection, pageHead } from '../components';
+import { ctaBand, groupSection, offerScriptData, pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
 import { href } from '../routes';
@@ -20,6 +20,7 @@ export function websitesPage(ctx: PageContext): PageOutput {
     ${ctaBand(ctx, w.ctaTitle, w.ctaText, [
       { href: href('check', lang), label: t.common.freeCheck, primary: true },
       { href: href('pricing', lang), label: t.common.seePrices },
-    ])}`;
-  return { id: 'websites', title: w.title, description: w.description, body };
+    ])}
+    ${offerScriptData(ctx)}`;
+  return { id: 'websites', title: w.title, description: w.description, body, scripts: ['js/common.js', 'js/offer.js'] };
 }

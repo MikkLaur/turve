@@ -41,6 +41,11 @@ export const en: Messages = {
     askOffer: 'Get a quote',
     freeCheck: 'Free security check',
     finalPrices: 'Prices are final: we are not VAT registered.',
+    // Launch offer. {spots}, {date} and {price} are filled at build time, {left} in the browser.
+    offerStatic: 'For our first {spots} clients until {date}',
+    offerLeft: 'Spots left: {left} of {spots}',
+    offerFull: 'All launch offer spots are taken. Regular price {price}.',
+    offerEnded: 'The launch offer has ended. Regular price {price}.',
   },
 
   home: {
@@ -136,6 +141,11 @@ export const en: Messages = {
     referenceLink: 'kamblakoda.ee',
     finalTitle: "Let's talk about your website",
     finalText: 'Describe what you need, or pick packages from the price list. We reply within two working days.',
+    offerEyebrow: 'Launch offer',
+    // {price} = the launch offer's price
+    offerTitle: 'A one-page site for {price}',
+    offerText:
+      'Turve is new and looking for its first clients. The first 10 get a fast, secure one-page site at a launch price. You pick a design and we do the rest.',
   },
 
   websites: {

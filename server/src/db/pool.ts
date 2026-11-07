@@ -44,6 +44,12 @@ export async function withTransaction<T>(fn: (conn: PoolConnection) => Promise<T
   }
 }
 
+/** The DB server's current UTC time. Use this, not Date.now(), for anything compared with stored times. */
+export async function dbNow(): Promise<Date> {
+  const rows: { now: Date }[] = await getPool().query('SELECT UTC_TIMESTAMP() AS now');
+  return rows[0]!.now;
+}
+
 /**
  * One line for logs: the driver wraps the real reason (wrong password, unknown database, no privileges, refused)
  * in error.cause behind a generic "pool failed to retrieve a connection". Never contains the password.
