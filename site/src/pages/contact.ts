@@ -2,6 +2,7 @@ import type { PageContext, PageOutput } from '../context';
 import { pageHead } from '../components';
 import { html, jsonBlock } from '../html';
 import { href } from '../routes';
+import { THEMES } from '../onepager/themes';
 import { catalogForScripts } from './catalogData';
 
 function field(id: string, label: string, input: ReturnType<typeof html>, hint?: string, optional?: string) {
@@ -50,6 +51,12 @@ export function contactPage(ctx: PageContext): PageOutput {
       </div>
     </section>
     ${jsonBlock('catalog', catalogForScripts(ctx))}
-    ${jsonBlock('contact-labels', { thanksPath: href('thanks', lang), errors: c.errors, ...ctx.t.estimatorJs })}`;
+    ${jsonBlock('contact-labels', {
+      thanksPath: href('thanks', lang),
+      errors: c.errors,
+      ...ctx.t.estimatorJs,
+      themes: Object.fromEntries(THEMES.map((theme) => [theme.id, theme.name[lang]])),
+      themePrefix: c.themePrefix,
+    })}`;
   return { id: 'contact', title: c.title, description: c.description, body, scripts: ['js/common.js', 'js/contact.js'] };
 }

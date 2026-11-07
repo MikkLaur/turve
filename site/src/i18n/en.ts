@@ -28,6 +28,7 @@ export const en: Messages = {
     regCode: 'registry code',
     securityTxt: 'Report a security issue',
     fingerprint: 'Browser fingerprint',
+    examples: 'Design examples',
   },
 
   common: {
@@ -38,6 +39,7 @@ export const en: Messages = {
     includes: 'Includes',
     readMore: 'Read more',
     seePrices: 'See prices',
+    seeExamples: 'See design examples',
     askOffer: 'Get a quote',
     freeCheck: 'Free security check',
     finalPrices: 'Prices are final: we are not VAT registered.',
@@ -416,6 +418,21 @@ export const en: Messages = {
     ctaSecurity: 'See security services',
   },
 
+  examples: {
+    title: 'Website design examples | Turve',
+    description: 'See examples of one-page sites. Each one shows which text and picture goes where.',
+    heading: 'Design examples',
+    lead: 'Pick the design you like. Each part of the example says what to write there, so you know exactly what to send us.',
+    designsTitle: 'Four designs',
+    open: 'Open example',
+    choose: 'Choose this design',
+    langNote: 'The examples are in Estonian. Your site can be in any language.',
+    needTitle: 'What we need from you',
+    needLead: 'Once we have these, your site is usually ready in about a week.',
+    ctaTitle: 'Found a design you like?',
+    ctaText: 'Ask for a quote and mention the design you liked in your message. Our first 10 clients get a one-page site at the launch price.',
+  },
+
   about: {
     title: 'About | Turve',
     description: 'Who is behind Turve: a security engineer who builds websites the way an attacker looks at them.',
@@ -456,6 +473,8 @@ export const en: Messages = {
     consentBefore: 'I agree that Turve uses this data to answer my inquiry. Read more: ',
     consentLink: 'privacy',
     honeypot: 'Leave this field empty',
+    // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
+    themePrefix: 'Design',
     submit: 'Send inquiry',
     sending: 'Sending…',
     errors: {

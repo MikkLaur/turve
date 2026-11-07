@@ -29,6 +29,12 @@
     form.elements.packages.value = T.selectionString(items);
   }
 
+  // Design chosen on a demo page (?teema=betoon): noted in the message. Only known design ids are used.
+  const theme = params.get('teema');
+  if (theme && labels.themes && Object.prototype.hasOwnProperty.call(labels.themes, theme) && !form.elements.message.value) {
+    form.elements.message.value = `${labels.themePrefix}: ${labels.themes[theme]}\n\n`;
+  }
+
   // Result of the free security check (?check=<id>&domain=…)
   const check = params.get('check');
   if (check && /^[A-Za-z0-9_-]{22}$/.test(check)) {

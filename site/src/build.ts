@@ -6,6 +6,7 @@
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { LAUNCH_OFFER } from '../../server/src/catalog/catalog';
 import { COMPANY, PERSON, SiteConfig, siteConfig } from './config';
 import type { PageContext, PageOutput } from './context';
 import { htaccess } from './headers';
@@ -14,7 +15,11 @@ import { et } from './i18n/et';
 import { renderPage } from './layout';
 import { aboutPage } from './pages/about';
 import { checkPage } from './pages/check';
+import { DEMOS } from './onepager/demos';
+import { renderOnePager } from './onepager/render';
+import { THEMES } from './onepager/themes';
 import { contactPage } from './pages/contact';
+import { examplesPage } from './pages/examples';
 import { fingerprintPage } from './pages/fingerprint';
 import { homePage } from './pages/home';
 import { pricingPage } from './pages/pricing';
@@ -42,6 +47,7 @@ const PAGES: [PageId, (ctx: PageContext) => PageOutput][] = [
   ['pricing', pricingPage],
   ['check', checkPage],
   ['fingerprint', fingerprintPage],
+  ['examples', examplesPage],
   ['about', aboutPage],
   ['contact', contactPage],
   ['thanks', thanksPage],
@@ -182,6 +188,22 @@ export function build(dev: boolean, strict = false): void {
   }
   const etCtx: PageContext = { lang: 'et', t: et, cfg, asset };
   write('/404.html', renderPage(notFoundPage(etCtx), etCtx));
+
+  // One-pager demos (Estonian, noindex): /naidised/<id>/, linked from the examples page.
+  for (const theme of THEMES) {
+    write(
+      `/naidised/${theme.id}/index.html`,
+      renderOnePager(DEMOS[theme.id], {
+        css: [asset('css/onepager-base.css'), asset(`css/onepager-${theme.id}.css`)],
+        imgBase: '/assets/img/',
+        demo: {
+          themeName: theme.name.et,
+          chooseHref: `${ROUTES.contact.et}?p=${LAUNCH_OFFER.packageId}&teema=${theme.id}`,
+          examplesHref: ROUTES.examples.et,
+        },
+      }),
+    );
+  }
   if (dev) {
     write('/stiil/index.html', renderPage(styleTilePage(etCtx), etCtx));
   }
@@ -196,7 +218,7 @@ export function build(dev: boolean, strict = false): void {
     throw new Error(`Broken internal links:\n  ${broken.join('\n  ')}`);
   }
   const pending = todos();
-  console.log(`Built ${LANGS.length * PAGES.length + 1}${dev ? ' (+ style tile)' : ''} pages into ${path.relative(process.cwd(), DIST) || DIST} for ${cfg.siteOrigin}`);
+  console.log(`Built ${LANGS.length * PAGES.length + 1} pages and ${THEMES.length} demos${dev ? ' (+ style tile)' : ''} into ${path.relative(process.cwd(), DIST) || DIST} for ${cfg.siteOrigin}`);
   if (pending.length) {
     console.log(`TODO before launch:\n  - ${pending.join('\n  - ')}`);
     if (strict) {

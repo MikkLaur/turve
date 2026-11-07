@@ -15,6 +15,9 @@ phpini/
 *.tar.gz
 *.log
 
+# Client one-page sites (built with site/src/onepager/cli.ts); kept out of this repository
+clients/
+
 # OS / editor
 .DS_Store
 .vscode/

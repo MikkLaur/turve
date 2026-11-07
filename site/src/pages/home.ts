@@ -48,7 +48,10 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
           <h2 id="h-offer">${h.offerTitle.replace('{price}', euros(offer.cents!, lang))}</h2>
           <p>${h.offerText}</p>
           ${offerStatusLine(ctx)}
-          <p class="button-row"><a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a></p>
+          <p class="button-row">
+            <a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a>
+            <a class="button ghost" href="${href('examples', lang)}">${t.common.seeExamples}</a>
+          </p>
         </div>
         <ul class="checklist">${offer.includes[lang].map((item) => html`<li>${item}</li>`)}</ul>
       </div>

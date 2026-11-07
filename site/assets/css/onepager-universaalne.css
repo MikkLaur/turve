@@ -1,0 +1,14 @@
+/* Design "Universaalne": calm and neutral, for any line of business. */
+:root {
+  --op-bg: #ffffff;
+  --op-surface: #f4f6f9;
+  --op-text: #13213a;
+  --op-muted: #4a5568;
+  --op-accent: #1d5fbf;
+  --op-accent-text: #ffffff;
+  --op-link: #1d5fbf;
+  --op-line: #dfe3ea;
+  --op-radius: 6px;
+  --op-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --op-font-head: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

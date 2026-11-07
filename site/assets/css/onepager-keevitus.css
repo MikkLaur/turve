@@ -1,0 +1,17 @@
+/* Design "Keevitustöökoda": dark steel with spark orange; a subtle diagonal stripe in the hero. */
+:root {
+  color-scheme: dark;
+  --op-bg: #121417;
+  --op-surface: #1b1f24;
+  --op-text: #f1f1ec;
+  --op-muted: #b4b9bf;
+  --op-accent: #ff7a1a;
+  --op-accent-text: #121417;
+  --op-link: #ff9a4d;
+  --op-line: #2b3138;
+  --op-radius: 0;
+  --op-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --op-font-head: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.op h1, .op h2, .op h3 { font-weight: 800; }
+.op-hero { background: repeating-linear-gradient(135deg, var(--op-bg) 0 18px, var(--op-surface) 18px 36px); }

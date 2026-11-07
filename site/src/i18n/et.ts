@@ -27,6 +27,7 @@ export const et = {
     regCode: 'registrikood',
     securityTxt: 'Turvaprobleemist teatamine',
     fingerprint: 'Brauseri sõrmejälg',
+    examples: 'Kujundusnäidised',
   },
 
   common: {
@@ -37,6 +38,7 @@ export const et = {
     includes: 'Sisaldab',
     readMore: 'Loe lähemalt',
     seePrices: 'Vaata hindu',
+    seeExamples: 'Vaata kujundusnäidiseid',
     askOffer: 'Küsi pakkumist',
     freeCheck: 'Tasuta turvakontroll',
     finalPrices: 'Hinnad on lõplikud: me ei ole käibemaksukohustuslased.',
@@ -415,6 +417,21 @@ export const et = {
     ctaSecurity: 'Vaata turvateenuseid',
   },
 
+  examples: {
+    title: 'Kodulehe kujundusnäidised | Turve',
+    description: 'Vaadake ühelehise kodulehe näidiseid. Iga näidis näitab, mis tekst ja pilt kuhu käib.',
+    heading: 'Kujundusnäidised',
+    lead: 'Valige kujundus, mis teile meeldib. Näidises on iga osa juures kirjas, mida sinna kirjutada, nii et teate täpselt, mida meile saata.',
+    designsTitle: 'Neli kujundust',
+    open: 'Ava näidis',
+    choose: 'Vali see kujundus',
+    langNote: 'Näidised on eesti keeles. Teie leht võib olla mis tahes keeles.',
+    needTitle: 'Mida teilt vajame',
+    needLead: 'Kui need on olemas, saame lehe valmis teha umbes nädalaga.',
+    ctaTitle: 'Leidsite sobiva kujunduse?',
+    ctaText: 'Küsige pakkumist ja kirjutage sõnumisse, milline kujundus teile meeldis. Esimesed 10 klienti saavad ühelehise kodulehe avamishinnaga.',
+  },
+
   about: {
     title: 'Meist | Turve',
     description: 'Kes on Turve taga: turvainsener, kes ehitab veebilehti nii, nagu ründaja neid vaatab.',
@@ -455,6 +472,8 @@ export const et = {
     consentBefore: 'Olen nõus, et Turve kasutab neid andmeid minu päringule vastamiseks. Loe lähemalt: ',
     consentLink: 'privaatsus',
     honeypot: 'Jätke see väli tühjaks',
+    // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
+    themePrefix: 'Kujundus',
     submit: 'Saada päring',
     sending: 'Saadan…',
     errors: {

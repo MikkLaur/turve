@@ -1,0 +1,16 @@
+/* Design "Maniküürisalong": soft and cosy, rose accent, serif headings, rounded cards with a soft shadow. */
+:root {
+  --op-bg: #fdf7f5;
+  --op-surface: #ffffff;
+  --op-text: #3a2a2e;
+  --op-muted: #6e5a60;
+  --op-accent: #b23a6a;
+  --op-accent-text: #ffffff;
+  --op-link: #a3355f;
+  --op-line: #f0dfe2;
+  --op-radius: 18px;
+  --op-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --op-font-head: Georgia, "Times New Roman", serif;
+}
+.op h1, .op h2 { font-weight: 400; }
+.op-card, .op-quote, .op-figure img, .op-about-photo img, .op-photo-placeholder { box-shadow: 0 6px 20px rgba(58, 42, 46, 0.08); }

@@ -222,6 +222,9 @@ img { max-width: 100%; height: auto; }
 .offer-status { font-family: var(--mono); color: var(--accent); margin: 0.25rem 0 0; }
 .offer-status.closed { color: var(--muted); }
 .offer-band { background: var(--paper-2); }
+.offer-band .eyebrow { color: var(--accent); }
+.offer-band .offer-status { margin-bottom: 1.25rem; }
+.examples-note { margin-top: 1.5rem; }
 .package.selected { border: 2px solid var(--accent); padding: calc(1.5rem - 1px); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent); }
 
 .rates { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-wrap: wrap; gap: 1rem; }

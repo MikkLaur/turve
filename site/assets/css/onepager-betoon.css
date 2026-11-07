@@ -1,0 +1,16 @@
+/* Design "Betoonitööd": light concrete grey with construction yellow; flat surfaces, no shadows. */
+:root {
+  --op-bg: #f1f0ed;
+  --op-surface: #ffffff;
+  --op-text: #1d2125;
+  --op-muted: #555c63;
+  --op-accent: #e0a100;
+  --op-accent-text: #1d2125;
+  --op-link: #7a4f00;
+  --op-line: #d9d6d0;
+  --op-radius: 2px;
+  --op-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --op-font-head: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.op h1, .op h2, .op h3 { font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+.op-header { border-top: 6px solid var(--op-accent); }
