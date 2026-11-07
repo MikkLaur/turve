@@ -9,8 +9,8 @@ export interface GuideEntry {
 }
 
 /**
- * What the client must provide. Used twice: as the per-section notes in the demos, and as the
- * "Mida teilt vajame" (what we need from you) checklist on /naidised/, in exactly this order.
+ * What the client must provide, shown as the per-section notes in the demos. The list also works as a checklist for the
+ * free consultation.
  */
 export const GUIDE: readonly GuideEntry[] = [
   {

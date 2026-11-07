@@ -11,7 +11,6 @@
   const contactPath = link.getAttribute('href');
 
   document.querySelectorAll('[data-pick]').forEach((el) => el.removeAttribute('hidden'));
-  document.querySelector('[data-estimator-hint]')?.removeAttribute('hidden');
   summary.removeAttribute('hidden');
 
   const checkbox = (id) => document.querySelector(`input[data-pkg="${CSS.escape(id)}"]`);

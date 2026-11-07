@@ -4,21 +4,16 @@ import { euros } from './format';
 import { html, jsonBlock, raw, Raw } from './html';
 import type { Lang } from './routes';
 
-/** The launch offer's last day as shown on the site: 31.12.2026 / 31 Dec 2026. */
-function offerDate(lang: Lang): string {
-  const date = new Date(`${LAUNCH_OFFER.endsOn}T12:00:00Z`);
-  return lang === 'et'
-    ? new Intl.DateTimeFormat('et-EE', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(date)
-    : new Intl.DateTimeFormat('en-IE', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(date);
-}
-
 function regularPrice(lang: Lang): string {
   return euros(findPackage(LAUNCH_OFFER.regularPackageId)!.cents!, lang);
 }
 
-/** "For our first 10 clients until 31.12.2026": shown as is without JS; offer.js replaces it with the live count. */
+/**
+ * "Esimesele 10 kliendile": shown as is without JS; offer.js replaces it with the live count ("Kohti alles: 7 / 10").
+ * The end date is in the package's price note.
+ */
 export function offerStatusLine(ctx: PageContext): Raw {
-  const text = ctx.t.common.offerStatic.replace('{spots}', String(LAUNCH_OFFER.spots)).replace('{date}', offerDate(ctx.lang));
+  const text = ctx.t.common.offerStatic.replace('{spots}', String(LAUNCH_OFFER.spots));
   return html`<p class="offer-status" data-offer-status>${text}</p>`;
 }
 

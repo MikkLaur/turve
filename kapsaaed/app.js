@@ -18,8 +18,8 @@ const FLAGS = {
   'token-fast': 'saadeti liiga kiiresti',
   'token-expired': 'vormi märk aegunud',
   'no-js': 'ilma JavaScriptita',
-  'offer-full': 'avamispakkumise kohad olid täis',
-  'offer-ended': 'avamispakkumine oli lõppenud',
+  'offer-full': 'pakkumise kohad olid täis',
+  'offer-ended': 'pakkumine oli lõppenud',
 };
 const FINDING_STATUS = { pass: 'korras', warn: 'hoiatus', fail: 'probleem', info: 'teave' };
 const CONSULT_STATUS = { booked: 'Broneeritud', done: 'Tehtud', no_show: 'Ei vastanud', cancelled: 'Tühistatud' };
@@ -35,7 +35,7 @@ const AUDIT = {
   'inquiry.status': 'Päringu olek',
   'inquiry.notes': 'Päringu märkmed',
   'inquiry.delete': 'Päring kustutatud',
-  'inquiry.offer': 'Avamispakkumise loendur',
+  'inquiry.offer': 'Pakkumise loendur',
   'consultation.status': 'Konsultatsiooni olek',
   'consultation.notes': 'Konsultatsiooni märkmed',
   'consultation.delete': 'Konsultatsioon kustutatud',
@@ -260,7 +260,7 @@ function inquiryCard(inquiry) {
         estimateText(inquiry) ? ` · ${estimateText(inquiry)}` : '',
         inquiry.securityCheckId ? ' · turvakontroll lisatud' : '',
         inquiry.lang === 'en' ? ' · EN' : '',
-        Number(inquiry.countsForOffer) === 1 ? h('span', { class: 'tag' }, 'avamispakkumine') : null,
+        Number(inquiry.countsForOffer) === 1 ? h('span', { class: 'tag' }, 'aastalõpu pakkumine') : null,
         flagTags(inquiry.flags),
       ),
     ),
@@ -286,7 +286,7 @@ async function viewList(status) {
     h(
       'p',
       { class: 'muted' },
-      `Avamispakkumine: ${offer.taken}/${offer.spots} kohta võetud${offer.open ? '' : ' (suletud)'} · `,
+      `Aastalõpu pakkumine: ${offer.taken}/${offer.spots} kohta võetud${offer.open ? '' : ' (suletud)'} · `,
       h('a', { href: '#/konsultatsioonid' }, `Tulevasi konsultatsioone: ${consultations.upcoming}`),
     ),
     inquiries.length ? h('ul', { class: 'cards' }, inquiries.map(inquiryCard)) : h('p', { class: 'muted' }, 'Päringuid pole.'),
@@ -382,7 +382,7 @@ async function viewInquiry(id) {
       ? [h('h2', null, 'Valitud paketid'), selectionTable(inquiry.selection), h('p', { class: 'muted' }, `Hinnad hinnakirja versioonist ${inquiry.catalogVersion}.`)]
       : null,
     check ? [h('h2', null, 'Turvakontroll'), checkSection(check)] : null,
-    h('h2', null, 'Avamispakkumine'),
+    h('h2', null, 'Aastalõpu pakkumine'),
     h('p', null, counted ? 'Arvestatud loendurisse.' : 'Loendurisse ei arvestata.'),
     h(
       'div',

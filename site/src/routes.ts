@@ -11,7 +11,6 @@ export type PageId =
   | 'pricing'
   | 'check'
   | 'fingerprint'
-  | 'examples'
   | 'consultation'
   | 'about'
   | 'contact'
@@ -25,7 +24,6 @@ export const ROUTES: Record<PageId, Record<Lang, string>> = {
   pricing: { et: '/hinnad/', en: '/en/pricing/' },
   check: { et: '/turvakontroll/', en: '/en/security-check/' },
   fingerprint: { et: '/sormejalg/', en: '/en/fingerprint/' },
-  examples: { et: '/naidised/', en: '/en/examples/' },
   consultation: { et: '/konsultatsioon/', en: '/en/consultation/' },
   about: { et: '/meist/', en: '/en/about/' },
   contact: CONTACT_PATH,

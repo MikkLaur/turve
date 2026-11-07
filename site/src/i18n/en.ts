@@ -26,9 +26,7 @@ export const en: Messages = {
     contact: 'Contact',
     providerBefore: 'Turve services are provided by',
     regCode: 'registry code',
-    securityTxt: 'Report a security issue',
     fingerprint: 'Browser fingerprint',
-    examples: 'Design examples',
     consultation: 'Free consultation',
   },
 
@@ -40,16 +38,14 @@ export const en: Messages = {
     includes: 'Includes',
     readMore: 'Read more',
     seePrices: 'See prices',
-    seeExamples: 'See design examples',
     bookCall: 'Book a free consultation',
     askOffer: 'Get a quote',
     freeCheck: 'Free security check',
-    finalPrices: 'Prices are final: we are not VAT registered.',
-    // Launch offer. {spots}, {date} and {price} are filled at build time, {left} in the browser.
-    offerStatic: 'For our first {spots} clients until {date}',
+    // Year-end offer (LAUNCH_OFFER). {spots} and {price} are filled at build time, {left} in the browser.
+    offerStatic: 'For the first {spots} clients',
     offerLeft: 'Spots left: {left} of {spots}',
-    offerFull: 'All launch offer spots are taken. Regular price {price}.',
-    offerEnded: 'The launch offer has ended. Regular price {price}.',
+    offerFull: 'All spots in the offer are taken. Regular price {price}.',
+    offerEnded: 'The year-end offer has ended. Regular price {price}.',
   },
 
   home: {
@@ -145,11 +141,11 @@ export const en: Messages = {
     referenceLink: 'kamblakoda.ee',
     finalTitle: "Let's talk about your website",
     finalText: 'Describe what you need, or pick packages from the price list. We reply within two working days.',
-    offerEyebrow: 'Launch offer',
-    // {price} = the launch offer's price
+    offerEyebrow: 'Year-end offer',
+    // {price} = the offer's price
     offerTitle: 'A one-page site for {price}',
     offerText:
-      'Turve is new and looking for its first clients. The first 10 get a fast, secure one-page site at a launch price. You pick a design and we do the rest.',
+      'A fast, secure one-page site at a year-end price. The offer is for the first 10 clients and runs until the end of the year. We pick the design together in a free consultation.',
   },
 
   websites: {
@@ -220,7 +216,6 @@ export const en: Messages = {
     description: 'Every package with its price. Pick what you need and ask for a quote straight from the calculator.',
     heading: 'Pricing',
     lead: "Every package has a fixed price. Pick what you need and see the total straight away. Asking for a quote doesn't commit you to anything.",
-    estimatorHint: 'Tick the packages you need. The summary is at the bottom of the page.',
     addLabel: 'Add',
     qtyLabel: 'Quantity',
     summaryTitle: 'Your selection',
@@ -419,21 +414,6 @@ export const en: Messages = {
     ctaTitle: 'Do your staff know what their browser gives away?',
     ctaText: 'We help small companies understand how trackers and attackers work, and put in place protections that actually help.',
     ctaSecurity: 'See security services',
-  },
-
-  examples: {
-    title: 'Website design examples | Turve',
-    description: 'See examples of one-page sites. Each one shows which text and picture goes where.',
-    heading: 'Design examples',
-    lead: 'Pick the design you like. Each part of the example says what to write there, so you know exactly what to send us.',
-    designsTitle: 'Four designs',
-    open: 'Open example',
-    choose: 'Choose this design',
-    langNote: 'The examples are in Estonian. Your site can be in any language.',
-    needTitle: 'What we need from you',
-    needLead: 'Once we have these, your site is usually ready in about a week.',
-    ctaTitle: 'Found a design you like?',
-    ctaText: 'Ask for a quote and mention the design you liked in your message. Our first 10 clients get a one-page site at the launch price.',
   },
 
   consultation: {

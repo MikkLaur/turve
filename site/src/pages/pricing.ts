@@ -14,9 +14,7 @@ export function pricingPage(ctx: PageContext): PageOutput {
     <section class="section tight">
       <div class="wrap">
         <p class="notice">${p.consultNotice} <a href="${href('consultation', lang)}">${t.common.bookCall}</a></p>
-        <p class="muted">${t.common.finalPrices}</p>
         <noscript><p class="notice">${p.noScript}</p></noscript>
-        <p class="notice" data-estimator-hint hidden>${p.estimatorHint}</p>
       </div>
     </section>
     ${GROUPS.map((group) => groupSection(group.id, ctx, { selectable: true }))}
@@ -24,7 +22,6 @@ export function pricingPage(ctx: PageContext): PageOutput {
       <div class="wrap">
         <h2 id="h-terms">${p.termsTitle}</h2>
         <ul class="checklist">${p.terms.map((term) => html`<li>${term}</li>`)}</ul>
-        <p class="muted">${t.common.finalPrices}</p>
       </div>
     </section>
     <section class="section" aria-labelledby="h-project">

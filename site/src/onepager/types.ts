@@ -1,4 +1,4 @@
-/** The one-pager kit's designs: demos at /naidised/<id>/ and the starting point of every launch-offer site. */
+/** The one-pager kit's designs: unlisted demos at /naidised/<id>/ and the starting point of every year-end-offer site. */
 export type ThemeId = 'betoon' | 'keevitus' | 'manikuur' | 'universaalne';
 
 /**

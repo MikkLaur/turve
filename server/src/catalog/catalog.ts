@@ -44,9 +44,9 @@ export interface Package {
   offer?: true;
 }
 
-export const CATALOG_VERSION = '2026-11-08.1';
+export const CATALOG_VERSION = '2026-11-08.2';
 
-/** The 99 € one-pager for the first clients. The counter lives in Inquiries.countsForOffer (see launchOffer.ts). */
+/** The 99 € one-pager for the first clients (shown on the site as "Aastalõpu pakkumine", year-end offer). The counter lives in Inquiries.countsForOffer (see launchOffer.ts). */
 export const LAUNCH_OFFER = {
   packageId: 'web-onepage-launch',
   regularPackageId: 'web-onepage',
@@ -108,30 +108,30 @@ export const PACKAGES: readonly Package[] = [
     cents: 9900,
     maxQty: 1,
     offer: true,
-    name: { et: 'Ühelehine koduleht – avamispakkumine', en: 'One-page site – launch offer' },
+    name: { et: 'Üheleheline koduleht – aastalõpu pakkumine', en: 'One-page site – year-end offer' },
     summary: {
-      et: 'Ühelehine koduleht avamishinnaga meie esimesele 10 kliendile. Valite kujunduse meie näidiste hulgast.',
-      en: 'A one-page site at a launch price for our first 10 clients. You pick a design from our examples.',
+      et: 'Üheleheline koduleht aastalõpu hinnaga esimesele 10 kliendile. Kujunduse valime koos tasuta konsultatsioonil.',
+      en: 'A one-page site at a year-end price for the first 10 clients. We pick the design together in a free consultation.',
     },
     includes: {
       et: [
-        'Valmis kujundus meie näidiste hulgast, teie logo ja värvidega',
+        'Valmis kujundus, mille valime koos tasuta konsultatsioonil, teie logo ja värvidega',
         'Kuni 6 sisuplokki (teenused, meist, kontakt jne)',
         'Mobiilisõbralik ja kiire, HTTPS ja turvapäised paigas',
-        'Tekstid ja pildid annate teie: näidis näitab, mida kuhu kirjutada',
+        'Tekstid ja pildid annate teie: ütleme täpselt, mida kuhu vaja on',
         'Üks parandusring',
         'Lehe jaluses väike viide turve.ee-le',
       ],
       en: [
-        'A ready-made design from our examples, in your logo and colours',
+        'A ready-made design we pick together in a free consultation, in your logo and colours',
         'Up to 6 content sections (services, about, contact, …)',
         'Mobile-friendly and fast, with HTTPS and security headers',
-        'You supply the texts and photos: the example shows what goes where',
+        'You supply the texts and photos: we tell you exactly what goes where',
         'One round of revisions',
         'A small turve.ee credit in the footer',
       ],
     },
-    priceNote: { et: 'Esimesele 10 kliendile, kuni 31.12.2026', en: 'For our first 10 clients, until 31 Dec 2026' },
+    priceNote: { et: 'Kehtib kuni 31.12.2026', en: 'Valid until 31 Dec 2026' },
   },
   {
     id: 'web-onepage',
@@ -140,7 +140,7 @@ export const PACKAGES: readonly Package[] = [
     billing: 'once',
     cents: 29000,
     maxQty: 1,
-    name: { et: 'Ühelehine koduleht', en: 'One-page business site' },
+    name: { et: 'Üheleheline koduleht', en: 'One-page business site' },
     summary: {
       et: 'Kiire ja turvaline visiitkaart-leht: kes te olete, mida pakute ja kuidas teid leida.',
       en: 'A fast, secure single page: who you are, what you offer and how to reach you.',

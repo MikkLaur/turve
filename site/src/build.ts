@@ -20,7 +20,6 @@ import { DEMOS } from './onepager/demos';
 import { renderOnePager } from './onepager/render';
 import { THEMES } from './onepager/themes';
 import { contactPage } from './pages/contact';
-import { examplesPage } from './pages/examples';
 import { fingerprintPage } from './pages/fingerprint';
 import { homePage } from './pages/home';
 import { pricingPage } from './pages/pricing';
@@ -48,7 +47,6 @@ const PAGES: [PageId, (ctx: PageContext) => PageOutput][] = [
   ['pricing', pricingPage],
   ['check', checkPage],
   ['fingerprint', fingerprintPage],
-  ['examples', examplesPage],
   ['consultation', consultationPage],
   ['about', aboutPage],
   ['contact', contactPage],
@@ -191,7 +189,7 @@ export function build(dev: boolean, strict = false): void {
   const etCtx: PageContext = { lang: 'et', t: et, cfg, asset };
   write('/404.html', renderPage(notFoundPage(etCtx), etCtx));
 
-  // One-pager demos (Estonian, noindex): /naidised/<id>/, linked from the examples page.
+  // One-pager demos (Estonian, noindex, linked from nowhere): /naidised/<id>/. The owner shows them in the free consultation.
   for (const theme of THEMES) {
     write(
       `/naidised/${theme.id}/index.html`,
@@ -201,7 +199,6 @@ export function build(dev: boolean, strict = false): void {
         demo: {
           themeName: theme.name.et,
           chooseHref: `${ROUTES.contact.et}?p=${LAUNCH_OFFER.packageId}&teema=${theme.id}`,
-          examplesHref: ROUTES.examples.et,
         },
       }),
     );

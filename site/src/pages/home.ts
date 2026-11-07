@@ -50,7 +50,7 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
           ${offerStatusLine(ctx)}
           <p class="button-row">
             <a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a>
-            <a class="button ghost" href="${href('examples', lang)}">${t.common.seeExamples}</a>
+            <a class="button ghost" href="${href('consultation', lang)}">${t.common.bookCall}</a>
           </p>
         </div>
         <ul class="checklist">${offer.includes[lang].map((item) => html`<li>${item}</li>`)}</ul>

@@ -1,5 +1,6 @@
 /**
- * Renders a one-page site from OnePagerContent: the demos at /naidised/<id>/ and every client's site (cli.ts).
+ * Renders a one-page site from OnePagerContent: the demos at /naidised/<id>/ (unlisted; the owner shows them in the free
+ * consultation) and every client's site (cli.ts).
  * Everything goes through the escaping html tag; no scripts, no inline styles, no third-party content.
  * Demo mode adds the example bar, the dashed section outlines with label chips and the ✎ guide notes; client sites
  * carry none of that markup.
@@ -13,7 +14,7 @@ export interface RenderOptions {
   css: string[];
   /** URL prefix for content photos, e.g. 'img/'. */
   imgBase: string;
-  demo?: { themeName: string; chooseHref: string; examplesHref: string };
+  demo?: { themeName: string; chooseHref: string };
 }
 
 const HREF = /^(tel:\+?[0-9 ]+|mailto:[^\s"<>]+|https:\/\/[^\s"<>]+)$/;
@@ -83,7 +84,7 @@ export function renderOnePager(c: OnePagerContent, opts: RenderOptions): string 
 </head>
 <body class="op${demo ? ' op-demo' : ''}">
   ${demo
-    ? html`<div class="op-demobar">Näidis · kujundus „${demo.themeName}” · <a href="${demo.chooseHref}">Vali see kujundus →</a> · <a href="${demo.examplesHref}">Kõik näidised</a></div>`
+    ? html`<div class="op-demobar">Näidis · kujundus „${demo.themeName}” · <a href="${demo.chooseHref}">Vali see kujundus →</a></div>`
     : ''}
   <header class="op-header">
     <div class="op-wrap op-header-inner">
