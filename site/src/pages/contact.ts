@@ -1,17 +1,9 @@
 import type { PageContext, PageOutput } from '../context';
-import { pageHead } from '../components';
+import { formField as field, pageHead } from '../components';
 import { html, jsonBlock } from '../html';
 import { href } from '../routes';
 import { THEMES } from '../onepager/themes';
 import { catalogForScripts } from './catalogData';
-
-function field(id: string, label: string, input: ReturnType<typeof html>, hint?: string, optional?: string) {
-  return html`<div class="field">
-      <label for="f-${id}">${label}${optional ? html` <span class="optional">(${optional})</span>` : ''}</label>
-      ${hint ? html`<p class="hint" id="h-${id}">${hint}</p>` : ''}
-      ${input}
-    </div>`;
-}
 
 export function contactPage(ctx: PageContext): PageOutput {
   const { t, lang, cfg } = ctx;
@@ -20,6 +12,7 @@ export function contactPage(ctx: PageContext): PageOutput {
     ${pageHead(c.heading, c.lead)}
     <section class="section tight">
       <div class="wrap narrow">
+        <p class="notice">${c.consultHint} <a href="${href('consultation', lang)}">${t.common.bookCall}</a></p>
         <div class="selection" id="contact-selection" hidden>
           <h2>${c.selectionTitle}</h2>
           <div data-selection-body></div>

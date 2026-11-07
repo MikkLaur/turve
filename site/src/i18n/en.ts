@@ -29,6 +29,7 @@ export const en: Messages = {
     securityTxt: 'Report a security issue',
     fingerprint: 'Browser fingerprint',
     examples: 'Design examples',
+    consultation: 'Free consultation',
   },
 
   common: {
@@ -40,6 +41,7 @@ export const en: Messages = {
     readMore: 'Read more',
     seePrices: 'See prices',
     seeExamples: 'See design examples',
+    bookCall: 'Book a free consultation',
     askOffer: 'Get a quote',
     freeCheck: 'Free security check',
     finalPrices: 'Prices are final: we are not VAT registered.',
@@ -229,6 +231,7 @@ export const en: Messages = {
     summaryButton: 'Get a quote for this selection',
     summaryClear: 'Clear selection',
     noScript: 'The calculator needs JavaScript. Prices are visible without it; you can ask for a quote on the contact form.',
+    consultNotice: 'Not sure what to pick?',
     projectTitle: 'Consulting and project work',
     projectText:
       "Work that doesn't fit a package is done on a fixed-price quote or by the hour. Hourly work is logged to the quarter hour and the invoice comes with a time log.",
@@ -433,6 +436,48 @@ export const en: Messages = {
     ctaText: 'Ask for a quote and mention the design you liked in your message. Our first 10 clients get a one-page site at the launch price.',
   },
 
+  consultation: {
+    title: 'Free 20-minute consultation | Turve',
+    description:
+      "Book a free 20-minute phone call with a security engineer: a new website, modernising an old one, or your company's security.",
+    heading: 'Free 20-minute consultation',
+    lead: "Pick a time and we'll call you. We talk about what your business needs and tell you honestly what really matters. The call doesn't commit you to anything.",
+    whatTitle: 'What we can talk about',
+    what: [
+      'A new website and what to put on it',
+      'Modernising an old site or making it secure',
+      "Your company's e-mail, passwords and backups",
+      'Your security check result and what to do about it',
+    ],
+    pickDay: 'Choose a day',
+    pickTime: 'Choose a time',
+    timesNote: 'Times are Estonian time.',
+    loading: 'Loading free times…',
+    noSlots: "There are no free times right now. Write to us and we'll find a time.",
+    loadError: "Couldn't load the free times. Try again later or write to us.",
+    writeUs: 'Write to us',
+    formTitle: 'Your details',
+    chosen: 'Chosen time:',
+    change: 'Change time',
+    phoneHint: 'We call this number.',
+    topic: 'Topic',
+    topics: { website: 'A new website', modernising: 'Modernising an old site', security: 'Security', other: 'Something else' },
+    message: 'Anything we should know before the call?',
+    submit: 'Book this time',
+    sending: 'Booking…',
+    doneTitle: 'Your time is booked',
+    // {time}, {phone} and {email} are filled in the browser.
+    doneText: "We'll call you on {phone} at {time}. If the time no longer suits you, write to {email}.",
+    addToCalendar: 'Add to calendar',
+    icsSummary: 'Turve: free consultation',
+    noScript: 'Choosing a time needs JavaScript. You can also write to us and agree on a time.',
+    errors: {
+      slot_taken: 'Someone booked this time just before you. Please pick another.',
+      already_booked: 'You already have a booked time. To change it, write to us.',
+      rate_limited: 'Too many bookings in a row. Please try again later.',
+    },
+  },
+
   about: {
     title: 'About | Turve',
     description: 'Who is behind Turve: a security engineer who builds websites the way an attacker looks at them.',
@@ -475,6 +520,7 @@ export const en: Messages = {
     honeypot: 'Leave this field empty',
     // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
     themePrefix: 'Design',
+    consultHint: 'Prefer to talk?',
     submit: 'Send inquiry',
     sending: 'Sending…',
     errors: {
@@ -506,6 +552,7 @@ export const en: Messages = {
         title: 'What data we collect',
         paragraphs: [
           'Quote requests: name, company, e-mail, phone, website, message and chosen packages. We use them only to answer your inquiry and make an offer (steps prior to a contract, GDPR Art. 6(1)(b)).',
+          'Free consultation booking: name, company, phone, e-mail, topic, message and the chosen time. We use them only for the agreed call (steps prior to a contract, GDPR Art. 6(1)(b)).',
           'Security check: the domain checked and the result. We do not store your IP address with it.',
           'Web server logs: our hosting provider briefly stores the IP address, time and page opened, for technical and security reasons (legitimate interest, Art. 6(1)(f)).',
         ],
@@ -520,7 +567,7 @@ export const en: Messages = {
       {
         title: 'How long we keep data',
         paragraphs: [
-          'Inquiries that do not lead to a contract are deleted within 12 months at the latest. If we sign a contract, invoices and related data are kept for 7 years as the Estonian Accounting Act requires.',
+          'Inquiries that do not lead to a contract are deleted within 12 months at the latest. If we sign a contract, invoices and related data are kept for 7 years as the Estonian Accounting Act requires. Consultation bookings are deleted within 12 months.',
         ],
       },
       {

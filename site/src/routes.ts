@@ -4,7 +4,19 @@ import { CONTACT_PATH, THANK_YOU_PATH } from '../../server/src/catalog/sitePaths
 export type { Lang };
 export const LANGS: readonly Lang[] = ['et', 'en'];
 
-export type PageId = 'home' | 'websites' | 'security' | 'pricing' | 'check' | 'fingerprint' | 'examples' | 'about' | 'contact' | 'thanks' | 'privacy';
+export type PageId =
+  | 'home'
+  | 'websites'
+  | 'security'
+  | 'pricing'
+  | 'check'
+  | 'fingerprint'
+  | 'examples'
+  | 'consultation'
+  | 'about'
+  | 'contact'
+  | 'thanks'
+  | 'privacy';
 
 export const ROUTES: Record<PageId, Record<Lang, string>> = {
   home: { et: '/', en: '/en/' },
@@ -14,6 +26,7 @@ export const ROUTES: Record<PageId, Record<Lang, string>> = {
   check: { et: '/turvakontroll/', en: '/en/security-check/' },
   fingerprint: { et: '/sormejalg/', en: '/en/fingerprint/' },
   examples: { et: '/naidised/', en: '/en/examples/' },
+  consultation: { et: '/konsultatsioon/', en: '/en/consultation/' },
   about: { et: '/meist/', en: '/en/about/' },
   contact: CONTACT_PATH,
   thanks: THANK_YOU_PATH,

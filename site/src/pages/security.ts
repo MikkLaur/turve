@@ -31,6 +31,7 @@ export function securityPage(ctx: PageContext): PageOutput {
     ${ctaBand(ctx, s.ctaTitle, s.ctaText, [
       { href: href('check', lang), label: t.common.freeCheck, primary: true },
       { href: href('contact', lang), label: t.common.askOffer },
+      { href: href('consultation', lang), label: t.common.bookCall },
     ])}`;
   return { id: 'security', title: s.title, description: s.description, body };
 }

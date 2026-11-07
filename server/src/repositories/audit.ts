@@ -11,6 +11,11 @@ export type AuditAction =
   | 'inquiry.notes'
   | 'inquiry.delete'
   | 'inquiry.offer'
+  | 'consultation.status'
+  | 'consultation.notes'
+  | 'consultation.delete'
+  | 'consultation.hours'
+  | 'consultation.block'
   | 'admin.created'
   | 'admin.password_set'
   | 'admin.totp_enrolled';

@@ -13,6 +13,7 @@ export function pricingPage(ctx: PageContext): PageOutput {
     ${pageHead(p.heading, p.lead)}
     <section class="section tight">
       <div class="wrap">
+        <p class="notice">${p.consultNotice} <a href="${href('consultation', lang)}">${t.common.bookCall}</a></p>
         <p class="muted">${t.common.finalPrices}</p>
         <noscript><p class="notice">${p.noScript}</p></noscript>
         <p class="notice" data-estimator-hint hidden>${p.estimatorHint}</p>

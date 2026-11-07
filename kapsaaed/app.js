@@ -22,6 +22,9 @@ const FLAGS = {
   'offer-ended': 'avamispakkumine oli lõppenud',
 };
 const FINDING_STATUS = { pass: 'korras', warn: 'hoiatus', fail: 'probleem', info: 'teave' };
+const CONSULT_STATUS = { booked: 'Broneeritud', done: 'Tehtud', no_show: 'Ei vastanud', cancelled: 'Tühistatud' };
+const TOPIC = { website: 'Uus veebileht', modernising: 'Vana lehe uuendamine', security: 'Turvalisus', other: 'Muu' };
+const WEEKDAY = ['', 'Esmaspäev', 'Teisipäev', 'Kolmapäev', 'Neljapäev', 'Reede', 'Laupäev', 'Pühapäev'];
 const AUDIT = {
   'login.password_ok': 'Parool õige',
   'login.password_failed': 'Vale kasutajanimi või parool',
@@ -33,6 +36,11 @@ const AUDIT = {
   'inquiry.notes': 'Päringu märkmed',
   'inquiry.delete': 'Päring kustutatud',
   'inquiry.offer': 'Avamispakkumise loendur',
+  'consultation.status': 'Konsultatsiooni olek',
+  'consultation.notes': 'Konsultatsiooni märkmed',
+  'consultation.delete': 'Konsultatsioon kustutatud',
+  'consultation.hours': 'Konsultatsiooniajad',
+  'consultation.block': 'Vaba päev',
   'admin.created': 'Kasutaja loodud',
   'admin.password_set': 'Parool muudetud',
   'admin.totp_enrolled': 'Autentimisrakendus seadistatud',
@@ -85,7 +93,10 @@ function render(title, ...nodes) {
   const hash = location.hash || '#/';
   for (const link of nav.querySelectorAll('a')) {
     const target = link.getAttribute('href');
-    const current = target === '#/' ? hash === '#/' || hash === '#' || hash.startsWith('#/paring') : hash.startsWith(target);
+    const current =
+      target === '#/'
+        ? hash === '#/' || hash === '#' || hash.startsWith('#/paring')
+        : hash.startsWith(target) || (target === '#/konsultatsioonid' && hash.startsWith('#/konsultatsioon/'));
     if (current) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   }
@@ -257,7 +268,7 @@ function inquiryCard(inquiry) {
 }
 
 async function viewList(status) {
-  const [{ counts, offer }, { inquiries }] = await Promise.all([api('/overview'), api(`/inquiries?status=${encodeURIComponent(status)}&limit=100`)]);
+  const [{ counts, offer, consultations }, { inquiries }] = await Promise.all([api('/overview'), api(`/inquiries?status=${encodeURIComponent(status)}&limit=100`)]);
   const filters = [
     ['open', 'Uued ja pooleli', counts.new + counts.in_progress],
     ...Object.keys(STATUS).map((key) => [key, STATUS[key], counts[key]]),
@@ -272,7 +283,12 @@ async function viewList(status) {
         h('a', { class: 'count', href: key === 'open' ? '#/' : `#/koik/${key}`, 'aria-current': key === status ? 'true' : null }, label, h('strong', null, String(n))),
       ),
     ),
-    h('p', { class: 'muted' }, `Avamispakkumine: ${offer.taken}/${offer.spots} kohta võetud${offer.open ? '' : ' (suletud)'}`),
+    h(
+      'p',
+      { class: 'muted' },
+      `Avamispakkumine: ${offer.taken}/${offer.spots} kohta võetud${offer.open ? '' : ' (suletud)'} · `,
+      h('a', { href: '#/konsultatsioonid' }, `Tulevasi konsultatsioone: ${consultations.upcoming}`),
+    ),
     inquiries.length ? h('ul', { class: 'cards' }, inquiries.map(inquiryCard)) : h('p', { class: 'muted' }, 'Päringuid pole.'),
   );
 }
@@ -491,6 +507,263 @@ async function viewAudit() {
   );
 }
 
+/* ---------- consultations (free 20-minute calls booked on /konsultatsioon/) ---------- */
+
+const dayFmt = new Intl.DateTimeFormat('et-EE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+/** 'YYYY-MM-DD' (a Tallinn date) → "E, 09.11.2026" */
+const fmtDay = (ymd) => dayFmt.format(new Date(`${ymd}T12:00:00Z`));
+
+function consultationCard(c) {
+  return h(
+    'li',
+    null,
+    h(
+      'a',
+      { class: `card status-${c.status}`, href: `#/konsultatsioon/${Number(c.id)}` },
+      h(
+        'div',
+        { class: 'line1' },
+        h('span', null, `${fmtDateTime(c.startsAt)} · ${c.company ? `${c.name} · ${c.company}` : c.name}`),
+        h('span', null, CONSULT_STATUS[c.status] || c.status),
+      ),
+      h('div', { class: 'line2' }, `#${Number(c.id)} · ${c.phone} · ${TOPIC[c.topic] || c.topic}`, c.lang === 'en' ? ' · EN' : '', flagTags(c.flags)),
+    ),
+  );
+}
+
+async function viewConsultations(scope) {
+  const { consultations } = await api(`/consultations?scope=${scope}`);
+  render(
+    'Konsultatsioonid',
+    h(
+      'div',
+      { class: 'counts' },
+      h('a', { class: 'count', href: '#/konsultatsioonid', 'aria-current': scope === 'upcoming' ? 'true' : null }, 'Tulevased'),
+      h('a', { class: 'count', href: '#/konsultatsioonid/varasemad', 'aria-current': scope === 'past' ? 'true' : null }, 'Varasemad'),
+    ),
+    h('p', { class: 'muted' }, 'Tasuta 20-minutilised kõned: helista kliendile broneeritud ajal (Eesti aeg).'),
+    consultations.length
+      ? h('ul', { class: 'cards' }, consultations.map(consultationCard))
+      : h('p', { class: 'muted' }, scope === 'upcoming' ? 'Tulevasi konsultatsioone pole.' : 'Varasemaid konsultatsioone pole.'),
+    h('p', null, h('a', { href: '#/ajad' }, 'Broneeritavad ajad →')),
+  );
+}
+
+async function viewConsultation(id) {
+  const { consultation: c } = await api(`/consultations/${id}`);
+  const notes = h('textarea', { id: 'notes', value: c.adminNotes || '' });
+  const refresh = () => viewConsultation(id);
+
+  const statusButtons = Object.keys(CONSULT_STATUS).map((key) =>
+    h(
+      'button',
+      {
+        type: 'button',
+        'aria-pressed': String(c.status === key),
+        onclick: action(async () => {
+          await api(`/consultations/${id}/status`, { method: 'POST', body: { status: key } });
+          await refresh();
+          showMessage(`Olek: ${CONSULT_STATUS[key]}`);
+        }),
+      },
+      CONSULT_STATUS[key],
+    ),
+  );
+
+  render(
+    `Konsultatsioon #${Number(c.id)}`,
+    h('p', null, h('a', { href: '#/konsultatsioonid' }, '← Konsultatsioonid')),
+    h('div', { class: 'row', role: 'group', 'aria-label': 'Olek' }, statusButtons),
+    h('p', { class: 'muted' }, 'Tühistamine vabastab aja uuesti broneerimiseks.'),
+    h(
+      'dl',
+      { class: 'facts' },
+      h('dt', null, 'Aeg'),
+      h('dd', null, `${fmtDateTime(c.startsAt)} (20 min)`),
+      h('dt', null, 'Nimi'),
+      h('dd', null, c.name),
+      c.company ? [h('dt', null, 'Ettevõte'), h('dd', null, c.company)] : null,
+      h('dt', null, 'Telefon'),
+      h('dd', null, h('a', { href: `tel:${c.phone.replace(/[^0-9+]/g, '')}` }, c.phone)),
+      h('dt', null, 'E-post'),
+      h('dd', null, h('a', { href: `mailto:${c.email}` }, c.email)),
+      h('dt', null, 'Teema'),
+      h('dd', null, TOPIC[c.topic] || c.topic, c.lang === 'en' ? ' (inglise keeles)' : ''),
+      c.flags ? [h('dt', null, 'Märkused'), h('dd', null, flagTags(c.flags))] : null,
+      h('dt', null, 'Broneeritud'),
+      h('dd', null, fmtDateTime(c.createdAt)),
+      h('dt', null, 'Nõusolek'),
+      h('dd', null, fmtDateTime(c.consentAt)),
+    ),
+    c.message ? [h('h2', null, 'Sõnum'), h('div', { class: 'message' }, c.message)] : null,
+    h('h2', null, 'Märkmed'),
+    h('label', { for: 'notes' }, 'Ainult sinule nähtavad'),
+    notes,
+    h(
+      'div',
+      { class: 'row' },
+      h(
+        'button',
+        {
+          type: 'button',
+          class: 'primary',
+          onclick: action(async () => {
+            await api(`/consultations/${id}/notes`, { method: 'POST', body: { notes: notes.value } });
+            showMessage('Märkmed salvestatud.');
+          }),
+        },
+        'Salvesta märkmed',
+      ),
+    ),
+    h('h2', null, 'Kustutamine'),
+    h('p', { class: 'muted' }, 'Kustutab broneeringu jäädavalt (nt isikuandmete kustutamise soovi korral).'),
+    h(
+      'div',
+      { class: 'row' },
+      h(
+        'button',
+        {
+          type: 'button',
+          class: 'danger',
+          onclick: action(async () => {
+            if (!confirm(`Kustutan konsultatsiooni #${id} jäädavalt?`)) return;
+            await api(`/consultations/${id}`, { method: 'DELETE' });
+            flash = `Konsultatsioon #${id} kustutatud.`;
+            location.hash = '#/konsultatsioonid';
+          }),
+        },
+        'Kustuta broneering',
+      ),
+    ),
+  );
+}
+
+async function viewHours() {
+  const { hours, blocks } = await api('/consultation-hours');
+  const rows = hours.map((row) => ({ weekday: Number(row.weekday), startTime: row.startTime, endTime: row.endTime }));
+  const list = h('div', { class: 'hours-list' });
+
+  function weekdaySelect(row) {
+    const select = h(
+      'select',
+      { 'aria-label': 'Nädalapäev', onchange: (event) => (row.weekday = Number(event.target.value)) },
+      WEEKDAY.slice(1).map((name, i) => h('option', { value: String(i + 1) }, name)),
+    );
+    select.value = String(row.weekday);
+    return select;
+  }
+  const timeInput = (row, key, label) =>
+    h('input', { type: 'time', step: 1800, value: row[key], 'aria-label': label, oninput: (event) => (row[key] = event.target.value) });
+
+  function drawRows() {
+    list.replaceChildren(
+      ...(rows.length
+        ? rows.map((row, i) =>
+            h(
+              'div',
+              { class: 'hours-row' },
+              weekdaySelect(row),
+              timeInput(row, 'startTime', 'Algus'),
+              timeInput(row, 'endTime', 'Lõpp'),
+              h('button', { type: 'button', class: 'ghost', onclick: () => (rows.splice(i, 1), drawRows()) }, 'Eemalda'),
+            ),
+          )
+        : [h('p', { class: 'muted' }, 'Ühtegi aega pole, nii et lehel ei saa praegu aega broneerida.')]),
+    );
+  }
+  drawRows();
+
+  const day = h('input', { id: 'block-day', type: 'date', required: true });
+  const note = h('input', { id: 'block-note', maxLength: 200 });
+
+  render(
+    'Konsultatsiooniajad',
+    h(
+      'p',
+      { class: 'muted' },
+      'Iganädalased ajad, millal saab tasuta konsultatsiooni broneerida (Eesti aeg). Kõne kestab 20 minutit, ajad algavad iga 30 minuti järel. Varaseim broneeritav aeg on 16 tundi ette, kõige kaugem 3 nädalat.',
+    ),
+    list,
+    h(
+      'div',
+      { class: 'row' },
+      h(
+        'button',
+        {
+          type: 'button',
+          onclick: () => {
+            rows.push({ weekday: 1, startTime: '17:00', endTime: '19:00' });
+            drawRows();
+          },
+        },
+        'Lisa rida',
+      ),
+      h(
+        'button',
+        {
+          type: 'button',
+          class: 'primary',
+          onclick: action(async () => {
+            await api('/consultation-hours', { method: 'PUT', body: { hours: rows } });
+            await viewHours();
+            showMessage('Ajad salvestatud.');
+          }),
+        },
+        'Salvesta ajad',
+      ),
+    ),
+    h('h2', null, 'Vabad päevad'),
+    h('p', { class: 'muted' }, 'Päevad, mil konsultatsioone ei ole (puhkus, pühad).'),
+    blocks.length
+      ? h(
+          'ul',
+          { class: 'cards' },
+          blocks.map((block) =>
+            h(
+              'li',
+              { class: 'card' },
+              h(
+                'div',
+                { class: 'line1' },
+                h('span', null, fmtDay(block.day), block.note ? ` · ${block.note}` : ''),
+                h(
+                  'button',
+                  {
+                    type: 'button',
+                    class: 'ghost',
+                    onclick: action(async () => {
+                      await api(`/consultation-blocks/${encodeURIComponent(block.day)}`, { method: 'DELETE' });
+                      await viewHours();
+                      showMessage(`${fmtDay(block.day)} on jälle broneeritav.`);
+                    }),
+                  },
+                  'Eemalda',
+                ),
+              ),
+            ),
+          ),
+        )
+      : h('p', { class: 'muted' }, 'Vabu päevi pole lisatud.'),
+    h(
+      'form',
+      {
+        onsubmit: action(async () => {
+          if (!day.value) throw new Error('Vali kuupäev.');
+          const added = day.value;
+          await api('/consultation-blocks', { method: 'POST', body: { day: added, note: note.value.trim() || null } });
+          await viewHours();
+          showMessage(`${fmtDay(added)} lisatud vabade päevade hulka.`);
+        }),
+      },
+      h('label', { for: 'block-day' }, 'Kuupäev'),
+      day,
+      h('label', { for: 'block-note' }, 'Märkus (valikuline)'),
+      note,
+      h('div', { class: 'row' }, h('button', { type: 'submit' }, 'Lisa vaba päev')),
+    ),
+  );
+}
+
 /* ---------- router ---------- */
 
 async function route() {
@@ -503,6 +776,9 @@ async function route() {
     else if (view === 'kontrollid') await viewChecks();
     else if (view === 'kontroll' && Number(param) > 0) await viewCheck(Number(param));
     else if (view === 'logi') await viewAudit();
+    else if (view === 'konsultatsioonid') await viewConsultations(param === 'varasemad' ? 'past' : 'upcoming');
+    else if (view === 'konsultatsioon' && Number(param) > 0) await viewConsultation(Number(param));
+    else if (view === 'ajad') await viewHours();
     else await viewList('open');
   } catch (error) {
     if (!error.authRequired) {

@@ -96,6 +96,15 @@ export function ctaBand(ctx: PageContext, title: string, text: string, buttons: 
     </section>`;
 }
 
+/** A labelled form field; the input's id must be f-<id> (and its aria-describedby h-<id> when there is a hint). */
+export function formField(id: string, label: string, input: Raw, hint?: string, optional?: string): Raw {
+  return html`<div class="field">
+      <label for="f-${id}">${label}${optional ? html` <span class="optional">(${optional})</span>` : ''}</label>
+      ${hint ? html`<p class="hint" id="h-${id}">${hint}</p>` : ''}
+      ${input}
+    </div>`;
+}
+
 export function pageHead(heading: string, lead: string): Raw {
   return html`<section class="page-head">
       <div class="wrap">

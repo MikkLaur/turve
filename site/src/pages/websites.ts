@@ -20,6 +20,7 @@ export function websitesPage(ctx: PageContext): PageOutput {
     ${ctaBand(ctx, w.ctaTitle, w.ctaText, [
       { href: href('check', lang), label: t.common.freeCheck, primary: true },
       { href: href('pricing', lang), label: t.common.seePrices },
+      { href: href('consultation', lang), label: t.common.bookCall },
     ])}
     ${offerScriptData(ctx)}`;
   return { id: 'websites', title: w.title, description: w.description, body, scripts: ['js/common.js', 'js/offer.js'] };

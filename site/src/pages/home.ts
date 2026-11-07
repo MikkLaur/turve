@@ -129,6 +129,7 @@ ${h.fpLines.map((line, i) => html`<span class="${i === 0 ? 't-ok' : 't-prompt'}"
     ${ctaBand(ctx, h.finalTitle, h.finalText, [
       { href: href('contact', lang), label: t.common.askOffer, primary: true },
       { href: href('pricing', lang), label: t.common.seePrices },
+      { href: href('consultation', lang), label: t.common.bookCall },
     ])}
     ${offerScriptData(ctx)}`;
 
