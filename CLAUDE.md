@@ -1,7 +1,8 @@
 # turve.ee
 
 Secure websites and affordable security services for small Estonian companies (B2B). The owner is a security engineer.
-Built on the kamblakoda.ee setup (`/home/mikk/engineering/kamblakoda`), without its mail server or booking code.
+Built on the kamblakoda.ee setup (`/home/mikk/engineering/kamblakoda`), without its mail server; the free consultation booking is a small module of its own (`server/src/consultation/`).
+The 2026 launch campaign (fixed prices, 99 € offer, demos, consultations) is specced in `saving-the-companys-official-function-plan.md`.
 The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-to-nested-stream.md`.
 
 ## System
@@ -9,19 +10,24 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 | Part | Path | Notes |
 |---|---|---|
 | Public site | `site/` → `site/dist/` → `htdocs/` (www.turve.ee) | A small TypeScript build (`site/src/build.ts`, no framework). ET at `/`, EN at `/en/`. Texts are in `site/src/i18n/et.ts`; `en.ts` is typed against it, so a missing translation fails the compile. All markup goes through the escaping `html` tag in `site/src/html.ts`. There is no inline JS or CSS (CSP). Browser JS in `site/assets/js/` builds the DOM with `textContent` only. |
-| Catalog | `server/src/catalog/catalog.ts` | **The single source** of rates and packages. The site build bakes it into the pages and the API prices inquiries from it; client totals are never trusted. Bump `CATALOG_VERSION` and deploy API and site together. Never reuse a package id. |
+| Catalog | `server/src/catalog/catalog.ts` | **The single source** of rates and packages. Packages have fixed prices (`cents`; `null` = price after a review); the hourly rates are for work outside them. The site build bakes it into the pages and the API prices inquiries from it; client totals are never trusted. Bump `CATALOG_VERSION` and deploy API and site together. Never reuse a package id. |
 | API | `server/` | Express 5 + TypeScript + `mariadb` driver. PM2 app `turve-api` (named in the Zone panel), proxied by Zone at `api.turve.ee`. Its own deps are minimal: crypto (scrypt, TOTP, AES-GCM) is `node:crypto`. |
 | Free security check | `server/src/check/` | Passive only: TLS handshakes, http:// and https:// GETs (≤3 redirects), `/.well-known/security.txt`, public DNS. **SSRF guard:** `hostname.ts` (hostnames only), `addressGuard.ts` (public unicast only, including all of 127/8) and `resolve.ts` (resolve via DNS, never /etc/hosts; refuse if any address is non-public; connect to the pinned IP). Every redirect hop is re-validated in `httpProbe.ts`. Results are cached per domain for 1 h; the visitor's IP is never stored. |
 | Browser fingerprint demo | `site/assets/js/fingerprint.js` → `/sormejalg/`, `/en/fingerprint/` | Runs **only in the visitor's browser**: no API call, nothing sent or stored (the page and the privacy policy promise this). The code shown is a SHA-256 of signals that stay the same in a private window; battery, ad blocker and dark mode are shown but left out of it. |
 | Admin panel | `kapsaaed/` → kapsaaed.turve.ee | Plain JS, no build step, Estonian UI. Login is password + mandatory TOTP. Sessions are server-side (`Sessions` table holds the SHA-256 of the token) with a `__Host-turve_admin` cookie. Writes need `Origin: https://kapsaaed.turve.ee` and JSON (`middlewares/adminOrigin.ts`). Data is rendered as text only. |
 | DB | Zone.eu MariaDB (turve.ee's own) | Schema via numbered migrations in `server/src/db/migrations/` recorded in `schema_migrations`. **Never** edit an applied migration; add a new one. |
+| Launch offer | `LAUNCH_OFFER` in the catalog, `server/src/catalog/launchOffer.ts`, `GET /api/launch-offer` | `web-onepage-launch`, 99 € for the first 10 clients until 31.12.2026. A spot is taken by an inquiry with `Inquiries.countsForOffer = 1` that isn't spam; late ones get the flag `offer-full`/`offer-ended`. The owner toggles the count per inquiry in kapsaaed. `site/assets/js/offer.js` shows "Kohti alles: X / 10" (static text without JS). |
+| Consultation booking | `/konsultatsioon/`, `site/assets/js/booking.js`, `server/src/consultation/slots.ts` | Free 20-minute phone calls. Weekly windows (`ConsultationHours`, ISO weekday + Tallinn `HH:MM`) and blocked days (`ConsultationBlocks`) are set in kapsaaed → **Ajad**; bookings (`Consultations`) are in kapsaaed → **Konsultatsioonid**. 30-minute grid, 16 h lead time, 21-day horizon, "now" from the DB clock. The unique key on `activeStart` stops double bookings; cancelling frees the time. No mail: the visitor gets an `.ics` made in the browser. |
+| One-pager kit | `site/src/onepager/`, CSS `site/assets/css/onepager-*.css` | Designs `betoon`, `keevitus`, `manikuur`, `universaalne`. Demos (noindex, with guide notes) are built to `/naidised/<id>/`; `/naidised/` lists them with the "what we need from you" checklist. Client sites: `cd site && npm run onepager -- ../clients/<name> --origin https://www.client.ee` reads `clients/<name>/site.ts` + `img/` and writes `dist/` with a strict `.htaccess`. `clients/` is git-ignored and unversioned for now. |
 | Deployment | `deployment/` | Runs on the **local machine** only. |
 
 ## Owner decisions (do not re-litigate)
 - B2B, small companies. Two lines of business: websites (new builds **and modernising older sites**, the stand-out niche) and security (pentest, health check, compliance, retainer). Monthly care plans.
-- Prices are public and every hour is billable: packages list exact hours, rates are public, work is billed in 15-minute steps, and the estimator carries the selection into the inquiry.
+- Prices are public and fixed: each package shows what the client pays and gets, and the estimator carries the selection into the inquiry. Hourly rates (55 €/h web, 75 €/h security) appear only at the end of `/hinnad/`, for consultation and project work (billed in 15-minute steps with a time log).
+- Launch offer: `web-onepage-launch` at 99 € for the first 10 clients until 31.12.2026 (template design, client supplies texts and photos, one revision round, "Kodulehe tegi turve.ee" footer credit). The counter counts inquiries with `countsForOffer = 1` that aren't spam; the owner toggles it per inquiry in kapsaaed.
+- Keep pages lean: no optional form fields or extras (no "how did you hear about us" field).
 - OÜ, **not VAT registered**: prices are final and invoices carry no VAT.
-- No mail sending and no notifications: inquiries are seen in kapsaaed only. turve.ee itself does receive mail (MX zonemx.eu), but that's outside this app.
+- No mail sending and no notifications (no calendar feed either): inquiries and consultation bookings are seen in kapsaaed only. Free 20-minute consultations are booked on the site; bookable times are set under "Ajad". turve.ee itself does receive mail (MX zonemx.eu), but that's outside this app.
 - No third-party scripts, fonts, analytics or captcha anywhere. turve.ee must score A on its own check.
 - One admin user now, but users live in the DB (`Users.role` admin/staff).
 - Launch 1 = site + estimator + free check + inquiries. Launch 2 (before the first job is invoiced) = clients, projects, time entries, invoices (PDF + CSV for the accountant). Keep invoices 7 years.
@@ -33,7 +39,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - Admin user locally: `cd server && NODE_ENV=development npx tsx src/scripts/createAdmin.ts`.
 
 ## Verification
-- API: `cd server && npm run typecheck && npm test` (node:test via tsx; covers the SSRF guard, pricing, TOTP vectors, passwords, form tokens, header/mail analysis and the origin guard).
+- API: `cd server && npm run typecheck && npm test` (node:test via tsx; covers the SSRF guard, pricing and the launch offer, consultation slots and Tallinn time, TOTP vectors, passwords, form tokens, header/mail analysis and the origin guard).
 - Site: `cd site && npm run typecheck && npm run build`. The build fails on broken internal links and prints the content TODO list.
 - After deploy: `curl -s -o /dev/null -w '%{http_code}' https://api.turve.ee/api/health` → 200; `POST https://api.turve.ee/api/admin/login` with a foreign Origin → 403; run www.turve.ee through the site's own check, Mozilla Observatory and SSL Labs.
 
@@ -76,6 +82,6 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 `COMPANY` and `PERSON` in `site/src/config.ts`, the bio in `about.personBio` (et/en), a photo in `site/assets/img/`, a review of every page's copy and the privacy policy, and the final rates and packages in the catalog.
 
 ## Follow-ups
-- Retention: a Zone cron job (or admin button) to purge `SecurityChecks` older than ~90 days, expired `Sessions`, and lost/spam inquiries after 12 months (the privacy policy promises the latter).
+- Retention: a Zone cron job (or admin button) to purge `SecurityChecks` older than ~90 days, expired `Sessions`, lost/spam inquiries after 12 months and `Consultations` older than 12 months (the privacy policy promises the last two).
 - Launch 2 billing (see the plan). Have the accountant confirm the e-invoice (e-arve) duty before building invoice export.
 - kamblakoda.ee scores C on our check (missing HSTS/CSP/nosniff/framing headers): an easy fix in its `.htaccess`.
