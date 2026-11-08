@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import { consultationValidation, createConsultation, getSlots } from '../controllers/consultationController';
 import { createInquiry, getFormToken, inquiryValidation } from '../controllers/inquiryController';
 import { getLaunchOffer } from '../controllers/offerController';
 import { securityCheck } from '../controllers/securityCheckController';
@@ -20,7 +19,5 @@ router.get('/form-token', limiter(15, 60, 'Too many requests'), getFormToken);
 router.get('/launch-offer', limiter(15, 120, 'Too many requests'), getLaunchOffer);
 router.post('/inquiries', limiter(60, 5, 'Too many inquiries, try again later'), inquiryValidation, createInquiry);
 router.post('/security-check', limiter(60, 10, 'Too many checks, try again later'), securityCheck);
-router.get('/consultations/slots', limiter(15, 120, 'Too many requests'), getSlots);
-router.post('/consultations', limiter(60, 3, 'Too many bookings, try again later'), consultationValidation, createConsultation);
 
 export default router;

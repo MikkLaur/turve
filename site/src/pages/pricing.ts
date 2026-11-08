@@ -1,4 +1,5 @@
 import { GROUPS, RATES } from '../../../server/src/catalog/catalog';
+import { COMPANY, phoneHref } from '../config';
 import { groupSection, offerScriptData, pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { euros } from '../format';
@@ -13,7 +14,7 @@ export function pricingPage(ctx: PageContext): PageOutput {
     ${pageHead(p.heading, p.lead)}
     <section class="section tight">
       <div class="wrap">
-        <p class="notice">${p.consultNotice} <a href="${href('consultation', lang)}">${t.common.bookCall}</a></p>
+        <p class="notice">${p.consultNotice} ${p.consultCall} <a href="${phoneHref(COMPANY.phone)}">${COMPANY.phone}</a> ${p.consultOr} <a href="${href('contact', lang)}">${p.consultWrite}</a>. ${p.consultFree}</p>
         <noscript><p class="notice">${p.noScript}</p></noscript>
       </div>
     </section>

@@ -12,7 +12,6 @@ import {
   setInquiryNotes,
   setInquiryStatus,
 } from '../repositories/inquiries';
-import { countUpcoming } from '../repositories/consultations';
 import { findCheckById, listRecentChecks } from '../repositories/securityChecks';
 import { clearOfferCache, currentOfferStatus } from './offerController';
 
@@ -29,8 +28,8 @@ function intQuery(value: unknown, fallback: number, max: number): number {
 }
 
 export async function getOverview(_req: Request, res: Response): Promise<void> {
-  const [counts, offer, upcoming] = await Promise.all([countByStatus(), currentOfferStatus(), countUpcoming()]);
-  res.json({ counts, offer, consultations: { upcoming } });
+  const [counts, offer] = await Promise.all([countByStatus(), currentOfferStatus()]);
+  res.json({ counts, offer });
 }
 
 export async function listInquiriesHandler(req: Request, res: Response): Promise<void> {

@@ -34,9 +34,6 @@ describe('API routes', () => {
   it('has the POST replacements for the old PUT/DELETE admin routes', () => {
     const routes = routesOf(adminRoutes);
     for (const route of [
-      'POST /consultation-hours',
-      'POST /consultation-blocks/:day/delete',
-      'POST /consultations/:id/delete',
       'POST /inquiries/:id/delete',
     ]) {
       assert.ok(routes.includes(route), route);

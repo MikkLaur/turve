@@ -97,13 +97,6 @@ textarea { min-height: 8rem; resize: vertical; }
 .status-in_progress { border-left-color: var(--warn); }
 .status-won { border-left-color: var(--ok); }
 .status-lost, .status-spam { border-left-color: var(--muted); }
-.status-booked { border-left-color: var(--new); }
-.status-done { border-left-color: var(--ok); }
-.status-no_show { border-left-color: var(--warn); }
-.status-cancelled { border-left-color: var(--muted); }
-.hours-row { display: grid; grid-template-columns: minmax(8rem, 1fr) 10rem 10rem auto; gap: 0.5rem; align-items: center; margin: 0.4rem 0; }
-@media (max-width: 36rem) { .hours-row { grid-template-columns: 1fr 1fr; } }
-li.card .line1 { align-items: center; }
 .tag { display: inline-block; font-family: var(--mono); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; border: 1px solid currentColor; border-radius: 0.3rem; padding: 0 0.35rem; margin-left: 0.35rem; }
 .tag.flag { color: var(--warn); }
 

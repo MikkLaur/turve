@@ -1,4 +1,4 @@
-import { ctaBand, groupSection, pageHead } from '../components';
+import { callButton, ctaBand, groupSection, pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
 import { href } from '../routes';
@@ -31,7 +31,7 @@ export function securityPage(ctx: PageContext): PageOutput {
     ${ctaBand(ctx, s.ctaTitle, s.ctaText, [
       { href: href('check', lang), label: t.common.freeCheck, primary: true },
       { href: href('contact', lang), label: t.common.askOffer },
-      { href: href('consultation', lang), label: t.common.bookCall },
+      callButton(ctx),
     ])}`;
   return { id: 'security', title: s.title, description: s.description, body };
 }

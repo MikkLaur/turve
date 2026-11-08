@@ -1,5 +1,5 @@
 import { COMPANY, PERSON, phoneHref } from '../config';
-import { ctaBand, pageHead } from '../components';
+import { callButton, ctaBand, pageHead } from '../components';
 import type { PageContext, PageOutput } from '../context';
 import { html, type Raw } from '../html';
 import { href } from '../routes';
@@ -46,7 +46,7 @@ export function aboutPage(ctx: PageContext): PageOutput {
     </section>
     ${ctaBand(ctx, t.home.finalTitle, t.home.finalText, [
       { href: href('contact', lang), label: t.common.askOffer, primary: true },
-      { href: href('consultation', lang), label: t.common.bookCall },
+      callButton(ctx),
     ])}`;
 
   return {

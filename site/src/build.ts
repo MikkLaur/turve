@@ -15,7 +15,6 @@ import { et } from './i18n/et';
 import { renderPage } from './layout';
 import { aboutPage } from './pages/about';
 import { checkPage } from './pages/check';
-import { consultationPage } from './pages/consultation';
 import { DEMOS } from './onepager/demos';
 import { renderOnePager } from './onepager/render';
 import { THEMES } from './onepager/themes';
@@ -47,7 +46,6 @@ const PAGES: [PageId, (ctx: PageContext) => PageOutput][] = [
   ['pricing', pricingPage],
   ['check', checkPage],
   ['fingerprint', fingerprintPage],
-  ['consultation', consultationPage],
   ['about', aboutPage],
   ['contact', contactPage],
   ['thanks', thanksPage],

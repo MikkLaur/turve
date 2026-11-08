@@ -1,4 +1,5 @@
 import { findPackage, GroupId, GROUPS, LAUNCH_OFFER, Package, PACKAGES } from '../../server/src/catalog/catalog';
+import { COMPANY, phoneHref } from './config';
 import type { PageContext } from './context';
 import { euros } from './format';
 import { html, jsonBlock, raw, Raw } from './html';
@@ -89,6 +90,11 @@ export function ctaBand(ctx: PageContext, title: string, text: string, buttons: 
         <p class="button-row">${buttons.map((b) => html`<a class="button${b.primary ? '' : ' ghost'}" href="${b.href}">${b.label}</a>`)}</p>
       </div>
     </section>`;
+}
+
+/** The secondary "Helista +372 …" button: a tel: link to the Turve phone. */
+export function callButton(ctx: PageContext): { href: string; label: string } {
+  return { href: phoneHref(COMPANY.phone), label: `${ctx.t.common.call} ${COMPANY.phone}` };
 }
 
 /** A labelled form field; the input's id must be f-<id> (and its aria-describedby h-<id> when there is a hint). */

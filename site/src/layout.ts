@@ -50,7 +50,6 @@ function footer(ctx: PageContext) {
       <ul class="footer-links">
         ${NAV.map((id) => html`<li><a href="${href(id, lang)}">${t.nav[id as keyof typeof t.nav]}</a></li>`)}
         <li><a href="${href('fingerprint', lang)}">${t.footer.fingerprint}</a></li>
-        <li><a href="${href('consultation', lang)}">${t.footer.consultation}</a></li>
         <li><a href="${href('contact', lang)}">${t.footer.contact}</a></li>
         <li><a href="${href('privacy', lang)}">${t.footer.privacy}</a></li>
       </ul>

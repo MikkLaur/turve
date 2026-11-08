@@ -26,7 +26,6 @@ export const et = {
     providerBefore: 'Turve teenuseid osutab',
     regCode: 'registrikood',
     fingerprint: 'Brauseri sõrmejälg',
-    consultation: 'Tasuta konsultatsioon',
   },
 
   common: {
@@ -37,7 +36,7 @@ export const et = {
     includes: 'Sisaldab',
     readMore: 'Loe lähemalt',
     seePrices: 'Vaata hindu',
-    bookCall: 'Broneeri tasuta konsultatsioon',
+    call: 'Helista',
     askOffer: 'Küsi pakkumist',
     freeCheck: 'Tasuta turvakontroll',
     // Year-end offer (LAUNCH_OFFER). {spots} and {price} are filled at build time, {left} in the browser.
@@ -226,6 +225,10 @@ export const et = {
     summaryClear: 'Tühjenda valik',
     noScript: 'Kalkulaator vajab JavaScripti. Hinnad on ka ilma selleta näha; pakkumist saate küsida kontaktivormist.',
     consultNotice: 'Pole kindel, mida valida?',
+    consultCall: 'Helistage',
+    consultOr: 'või',
+    consultWrite: 'kirjutage meile',
+    consultFree: '20-minutiline konsultatsioon on tasuta.',
     projectTitle: 'Konsultatsioon ja projektitöö',
     projectText:
       'Töö, mis ühtegi paketti ei mahu, teeme fikseeritud hinnaga pakkumise alusel või tunnitööna. Tunnitööd arvestame 15-minutilise täpsusega ja arvega tuleb kaasa ajalogi.',
@@ -415,48 +418,6 @@ export const et = {
     ctaSecurity: 'Vaata turvateenuseid',
   },
 
-  consultation: {
-    title: 'Tasuta 20-minutiline konsultatsioon | Turve',
-    description:
-      'Broneerige tasuta 20-minutiline telefonikõne turvainseneriga: uus veebileht, vana lehe uuendamine või ettevõtte turvalisus.',
-    heading: 'Tasuta 20-minutiline konsultatsioon',
-    lead: 'Valige sobiv aeg ja me helistame teile. Räägime, mida teie ettevõte vajab, ja ütleme ausalt, mis on päriselt oluline. Kõne ei kohusta teid millekski.',
-    whatTitle: 'Millest saame rääkida',
-    what: [
-      'Uus koduleht ja mida sinna kirjutada',
-      'Vana lehe uuendamine või turvaliseks tegemine',
-      'Teie ettevõtte e-posti, paroolide ja varunduse turvalisus',
-      'Turvakontrolli tulemus ja mida sellega teha',
-    ],
-    pickDay: 'Valige päev',
-    pickTime: 'Valige kellaaeg',
-    timesNote: 'Kellaajad on Eesti aja järgi.',
-    loading: 'Laadin vabu aegu…',
-    noSlots: 'Praegu vabu aegu pole. Kirjutage meile ja leiame sobiva aja.',
-    loadError: 'Vabu aegu ei õnnestunud laadida. Proovige hiljem uuesti või kirjutage meile.',
-    writeUs: 'Kirjuta meile',
-    formTitle: 'Teie andmed',
-    chosen: 'Valitud aeg:',
-    change: 'Muuda aega',
-    phoneHint: 'Helistame sellel numbril.',
-    topic: 'Teema',
-    topics: { website: 'Uus veebileht', modernising: 'Vana lehe uuendamine', security: 'Turvalisus', other: 'Muu' },
-    message: 'Mida peaksime enne kõnet teadma?',
-    submit: 'Broneeri aeg',
-    sending: 'Broneerin…',
-    doneTitle: 'Aeg on broneeritud',
-    // {time}, {phone} and {email} are filled in the browser.
-    doneText: 'Helistame teile {time} numbril {phone}. Kui aeg ei sobi enam, kirjutage {email}.',
-    addToCalendar: 'Lisa kalendrisse',
-    icsSummary: 'Turve: tasuta konsultatsioon',
-    noScript: 'Aja valimiseks on vaja JavaScripti. Võite ka kirjutada meile ja leppida aja kokku.',
-    errors: {
-      slot_taken: 'Keegi jõudis selle aja just enne teid broneerida. Valige palun teine aeg.',
-      already_booked: 'Teil on juba üks broneeritud aeg. Selle muutmiseks kirjutage meile.',
-      rate_limited: 'Liiga palju broneeringuid järjest. Proovige hiljem uuesti.',
-    },
-  },
-
   about: {
     title: 'Meist | Turve',
     description:
@@ -502,8 +463,8 @@ export const et = {
     honeypot: 'Jätke see väli tühjaks',
     // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
     themePrefix: 'Kujundus',
-    consultHint: 'Eelistate rääkida?',
-    callOr: 'või helistage',
+    consultHint: 'Soovite enne rääkida? Kirjutage sõnumisse, et soovite tasuta 20-minutilist konsultatsiooni, ja lisage telefoninumber: helistame teile.',
+    callOr: 'Või helistage ise:',
     submit: 'Saada päring',
     sending: 'Saadan…',
     errors: {
@@ -536,7 +497,6 @@ export const et = {
         title: 'Milliseid andmeid kogume',
         paragraphs: [
           'Pakkumise päring: nimi, ettevõte, e-post, telefon, veebileht, sõnum ja valitud paketid. Neid kasutame ainult teie päringule vastamiseks ja pakkumise tegemiseks (lepingueelsed toimingud, isikuandmete kaitse üldmääruse art 6 lg 1 p b).',
-          'Tasuta konsultatsiooni broneering: nimi, ettevõte, telefon, e-post, teema, sõnum ja valitud aeg. Kasutame neid ainult kokkulepitud kõneks (lepingueelsed toimingud, isikuandmete kaitse üldmääruse art 6 lg 1 p b).',
           'Turvakontroll: kontrollitud domeen ja tulemus. Teie IP-aadressi me selle juurde ei salvesta.',
           'Veebiserveri logid: meie majutaja salvestab tehnilistel ja turvalisuse kaalutlustel lühiajaliselt IP-aadressi, aja ja avatud lehe (õigustatud huvi, art 6 lg 1 p f).',
         ],
@@ -551,7 +511,7 @@ export const et = {
       {
         title: 'Kui kaua andmeid hoiame',
         paragraphs: [
-          'Päringud, millest lepingut ei sünni, kustutame hiljemalt 12 kuu jooksul. Kui sõlmime lepingu, hoiame arveid ja nendega seotud andmeid raamatupidamise seaduse järgi 7 aastat. Konsultatsioonide broneeringud kustutame hiljemalt 12 kuu jooksul.',
+          'Päringud, millest lepingut ei sünni, kustutame hiljemalt 12 kuu jooksul. Kui sõlmime lepingu, hoiame arveid ja nendega seotud andmeid raamatupidamise seaduse järgi 7 aastat.',
         ],
       },
       {

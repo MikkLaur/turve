@@ -90,6 +90,7 @@ img { max-width: 100%; height: auto; }
 /* Text-heavy pages: same left edge as the page head and the wide pages, but lines kept to a readable length. */
 .narrow > * { max-width: 43.5rem; }
 .muted { color: var(--muted); }
+a[href^="tel:"] { white-space: nowrap; }
 .lead { font-size: 1.2rem; color: var(--muted); max-width: 44rem; }
 
 .skip-link { position: absolute; left: -999px; top: 0.5rem; background: var(--card); color: var(--text); padding: 0.5rem 1rem; z-index: 100; }
@@ -229,14 +230,6 @@ img { max-width: 100%; height: auto; }
 .offer-band .eyebrow { color: var(--accent); }
 .offer-band .offer-status { margin-bottom: 1.25rem; }
 
-/* ---------- consultation booking (/konsultatsioon/) ---------- */
-.booking, #booking-form, #booking-done { margin-top: 2.5rem; }
-.slot-grid:empty { display: none; }
-.slot-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0 1.5rem; }
-.slot { font: 500 0.95rem/1.2 var(--mono); background: var(--card); color: var(--text); border: 1px solid var(--field-border); border-radius: 0.5rem; padding: 0.55rem 0.85rem; cursor: pointer; }
-.slot:hover { border-color: var(--accent); }
-.slot:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.slot[aria-pressed="true"] { border: 2px solid var(--accent); padding: calc(0.55rem - 1px) calc(0.85rem - 1px); }
 .package.selected { border: 2px solid var(--accent); padding: calc(1.5rem - 1px); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent); }
 .package.offer.selected { border-color: var(--offer); }
 

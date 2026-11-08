@@ -1,6 +1,6 @@
 import { findPackage, LAUNCH_OFFER } from '../../../server/src/catalog/catalog';
 import { COMPANY } from '../config';
-import { ctaBand, offerScriptData, offerStatusLine } from '../components';
+import { callButton, ctaBand, offerScriptData, offerStatusLine } from '../components';
 import { euros } from '../format';
 import type { PageContext, PageOutput } from '../context';
 import { html } from '../html';
@@ -50,7 +50,7 @@ ${h.terminalLines.map((line) => html`<span class="t-${line.status}">${marks[line
           ${offerStatusLine(ctx)}
           <p class="button-row">
             <a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a>
-            <a class="button ghost" href="${href('consultation', lang)}">${t.common.bookCall}</a>
+            <a class="button ghost" href="${callButton(ctx).href}">${callButton(ctx).label}</a>
           </p>
         </div>
         <ul class="checklist">${offer.includes[lang].map((item) => html`<li>${item}</li>`)}</ul>
@@ -129,7 +129,7 @@ ${h.fpLines.map((line, i) => html`<span class="${i === 0 ? 't-ok' : 't-prompt'}"
     ${ctaBand(ctx, h.finalTitle, h.finalText, [
       { href: href('contact', lang), label: t.common.askOffer, primary: true },
       { href: href('pricing', lang), label: t.common.seePrices },
-      { href: href('consultation', lang), label: t.common.bookCall },
+      callButton(ctx),
     ])}
     ${offerScriptData(ctx)}`;
 

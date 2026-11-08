@@ -47,6 +47,10 @@ RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^${bare}$ [NC]
 RewriteRule ^ ${cfg.siteOrigin}%{REQUEST_URI} [R=301,L]
 
+# The free consultation is no longer booked on the site (TURVE-013): old links and ads go to the contact form.
+RewriteRule ^konsultatsioon/?$ /kontakt/ [R=301,L]
+RewriteRule ^en/consultation/?$ /en/contact/ [R=301,L]
+
 <IfModule mod_headers.c>
 ${headerLines}
   <FilesMatch "\\.(html|xml|txt)$">

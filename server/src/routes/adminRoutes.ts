@@ -1,16 +1,5 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
-import {
-  addBlockHandler,
-  deleteBlockHandler,
-  deleteConsultationHandler,
-  getConsultationHandler,
-  getHoursHandler,
-  listConsultationsHandler,
-  saveHoursHandler,
-  setConsultationNotesHandler,
-  setConsultationStatusHandler,
-} from '../controllers/adminConsultationController';
 import { login, logout, me, verifyLoginTotp } from '../controllers/adminAuthController';
 import {
   deleteInquiryHandler,
@@ -57,14 +46,5 @@ router.post('/inquiries/:id/delete', deleteInquiryHandler);
 router.get('/security-checks', listChecksHandler);
 router.get('/security-checks/:id', getCheckHandler);
 router.get('/audit', listAuditHandler);
-router.get('/consultations', listConsultationsHandler);
-router.get('/consultations/:id', getConsultationHandler);
-router.post('/consultations/:id/status', setConsultationStatusHandler);
-router.post('/consultations/:id/notes', setConsultationNotesHandler);
-router.post('/consultations/:id/delete', deleteConsultationHandler);
-router.get('/consultation-hours', getHoursHandler);
-router.post('/consultation-hours', saveHoursHandler);
-router.post('/consultation-blocks', addBlockHandler);
-router.post('/consultation-blocks/:day/delete', deleteBlockHandler);
 
 export default router;

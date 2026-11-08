@@ -12,8 +12,8 @@ A Zone cron job (or a kapsaaed button) that deletes old data.
 - [ ] `SecurityChecks` older than ~90 days purged.
 - [ ] Expired `Sessions` purged.
 - [ ] Lost/spam inquiries older than 12 months purged.
-- [ ] `Consultations` older than 12 months purged.
 - [ ] Scheduled in the Zone panel (not crontab).
 
 ## Log
 - 2026-11-08: Created (from CLAUDE.md follow-ups).
+- 2026-11-08: Consultations removed (TURVE-013); nothing to purge there.
