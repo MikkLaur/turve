@@ -99,7 +99,7 @@ export async function getHoursHandler(_req: Request, res: Response): Promise<voi
 }
 
 /** Saves the whole list of weekly windows (ISO weekday 1–7, 'HH:MM'–'HH:MM' Tallinn time). */
-export async function putHoursHandler(req: Request, res: Response): Promise<void> {
+export async function saveHoursHandler(req: Request, res: Response): Promise<void> {
   const raw = (req.body as { hours?: unknown } | undefined)?.hours;
   if (!Array.isArray(raw) || raw.length > MAX_HOURS_ROWS) {
     res.status(400).json({ message: 'Vigased ajad.' });

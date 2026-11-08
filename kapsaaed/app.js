@@ -431,7 +431,7 @@ async function viewInquiry(id) {
           class: 'danger',
           onclick: action(async () => {
             if (!confirm(`Kustutan päringu #${id} jäädavalt?`)) return;
-            await api(`/inquiries/${id}`, { method: 'DELETE' });
+            await api(`/inquiries/${id}/delete`, { method: 'POST' });
             flash = `Päring #${id} kustutatud.`;
             location.hash = '#/';
           }),
@@ -627,7 +627,7 @@ async function viewConsultation(id) {
           class: 'danger',
           onclick: action(async () => {
             if (!confirm(`Kustutan konsultatsiooni #${id} jäädavalt?`)) return;
-            await api(`/consultations/${id}`, { method: 'DELETE' });
+            await api(`/consultations/${id}/delete`, { method: 'POST' });
             flash = `Konsultatsioon #${id} kustutatud.`;
             location.hash = '#/konsultatsioonid';
           }),
@@ -704,7 +704,7 @@ async function viewHours() {
           type: 'button',
           class: 'primary',
           onclick: action(async () => {
-            await api('/consultation-hours', { method: 'PUT', body: { hours: rows } });
+            await api('/consultation-hours', { method: 'POST', body: { hours: rows } });
             await viewHours();
             showMessage('Ajad salvestatud.');
           }),
@@ -732,7 +732,7 @@ async function viewHours() {
                     type: 'button',
                     class: 'ghost',
                     onclick: action(async () => {
-                      await api(`/consultation-blocks/${encodeURIComponent(block.day)}`, { method: 'DELETE' });
+                      await api(`/consultation-blocks/${encodeURIComponent(block.day)}/delete`, { method: 'POST' });
                       await viewHours();
                       showMessage(`${fmtDay(block.day)} on jälle broneeritav.`);
                     }),

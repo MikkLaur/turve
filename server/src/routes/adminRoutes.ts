@@ -7,7 +7,7 @@ import {
   getConsultationHandler,
   getHoursHandler,
   listConsultationsHandler,
-  putHoursHandler,
+  saveHoursHandler,
   setConsultationNotesHandler,
   setConsultationStatusHandler,
 } from '../controllers/adminConsultationController';
@@ -43,6 +43,7 @@ router.post('/login/totp', loginLimiter, verifyLoginTotp);
 router.post('/logout', logout);
 
 // Everything below requires a full (password + TOTP) admin session.
+// GET and POST only: Zone's proxy answers PUT, DELETE and PATCH with its own 403 before they reach the API.
 router.use(requireSession, requireRole('admin'));
 
 router.get('/me', me);
@@ -52,7 +53,7 @@ router.get('/inquiries/:id', getInquiryHandler);
 router.post('/inquiries/:id/status', setStatusHandler);
 router.post('/inquiries/:id/notes', setNotesHandler);
 router.post('/inquiries/:id/offer', setOfferHandler);
-router.delete('/inquiries/:id', deleteInquiryHandler);
+router.post('/inquiries/:id/delete', deleteInquiryHandler);
 router.get('/security-checks', listChecksHandler);
 router.get('/security-checks/:id', getCheckHandler);
 router.get('/audit', listAuditHandler);
@@ -60,10 +61,10 @@ router.get('/consultations', listConsultationsHandler);
 router.get('/consultations/:id', getConsultationHandler);
 router.post('/consultations/:id/status', setConsultationStatusHandler);
 router.post('/consultations/:id/notes', setConsultationNotesHandler);
-router.delete('/consultations/:id', deleteConsultationHandler);
+router.post('/consultations/:id/delete', deleteConsultationHandler);
 router.get('/consultation-hours', getHoursHandler);
-router.put('/consultation-hours', putHoursHandler);
+router.post('/consultation-hours', saveHoursHandler);
 router.post('/consultation-blocks', addBlockHandler);
-router.delete('/consultation-blocks/:day', deleteBlockHandler);
+router.post('/consultation-blocks/:day/delete', deleteBlockHandler);
 
 export default router;

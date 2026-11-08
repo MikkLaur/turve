@@ -65,6 +65,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
   Once every subdomain is HTTPS-only, add `includeSubDomains; preload` to HSTS in `site/src/headers.ts`.
 
 ## Zone.eu quirks
+- Zone's proxy in front of `api.turve.ee` answers **PUT, DELETE and PATCH** (and a GET with a body) with its own 403 HTML page; they never reach the API. Use GET and POST only (deletes are `POST …/delete`); `test/routes.test.ts` enforces it.
 - `pm2`/`npm` are only on PATH in a **login shell** (`bash -l`). Cron is configured in the Zone panel, not crontab.
 - The app's output goes to `/dev/null`, and `ss` on the VM cannot see the app's listening socket: judge the API from
   outside (`curl https://api.turve.ee/api/health`). For start-up errors, run a second copy briefly:

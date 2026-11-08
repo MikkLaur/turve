@@ -16,7 +16,8 @@ app.use(securityHeaders);
 
 // Public endpoints need no cookies. Admin routes answer only the panel's origin, with credentials.
 const publicCors = cors({ origin: config.publicOrigins, methods: ['GET', 'POST'] });
-const adminCors = cors({ origin: config.adminOrigin, methods: ['GET', 'POST', 'PUT', 'DELETE'], credentials: true });
+// GET and POST only: Zone's proxy blocks PUT, DELETE and PATCH (see adminRoutes.ts).
+const adminCors = cors({ origin: config.adminOrigin, methods: ['GET', 'POST'], credentials: true });
 app.use((req, res, next) => (req.path.startsWith('/api/admin') ? adminCors : publicCors)(req, res, next));
 
 app.use(express.json({ limit: '20kb' }));
