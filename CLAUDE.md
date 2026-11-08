@@ -80,9 +80,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - `TOTP_ENC_KEY` encrypts the TOTP secrets: rotating it means re-enrolling (`npm run reset-totp`).
 
 ## Content still owed by the owner (the build lists these)
-`COMPANY` and `PERSON` in `site/src/config.ts`, the bio in `about.personBio` (et/en), a photo in `site/assets/img/`, a review of every page's copy and the privacy policy, and the final rates and packages in the catalog.
+`COMPANY` and `PERSON` in `site/src/config.ts`, a review of every page's copy and the privacy policy, and the final rates and packages in the catalog.
 
-## Follow-ups
-- Retention: a Zone cron job (or admin button) to purge `SecurityChecks` older than ~90 days, expired `Sessions`, lost/spam inquiries after 12 months and `Consultations` older than 12 months (the privacy policy promises the last two).
-- Launch 2 billing (see the plan). Have the accountant confirm the e-invoice (e-arve) duty before building invoice export.
-- kamblakoda.ee scores C on our check (missing HSTS/CSP/nosniff/framing headers): an easy fix in its `.htaccess`.
+## Backlog
+Work is tracked as tickets in `backlog/` (`TURVE-NNN-short-recap.md`, three-digit numbers, conventions in `backlog/README.md`). Follow-ups, owner content, infra, marketing and business tasks all go there, not in this file. When a task is finished, set its ticket's `status` and add a dated line to its Log.
