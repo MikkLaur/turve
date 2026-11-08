@@ -15,6 +15,7 @@
   const daysBox = picker.querySelector('[data-days]');
   const timesBox = picker.querySelector('[data-times]');
   const timesTitle = picker.querySelector('[data-times-title]');
+  const timesNote = picker.querySelector('[data-times-note]');
   const chosenText = form.querySelector('[data-chosen]');
   const errorBox = document.getElementById('booking-error');
   const submitButton = form.querySelector('button[type="submit"]');
@@ -74,6 +75,7 @@
     show(statusText, true);
     show(fallback, false);
     show(timesTitle, false);
+    show(timesNote, false);
     daysBox.replaceChildren();
     timesBox.replaceChildren();
     let res = null;
@@ -95,6 +97,7 @@
       return;
     }
     show(statusText, false);
+    show(timesNote, true);
     daysBox.replaceChildren(
       ...days.map((day) =>
         slotButton(dayFormat.format(new Date(day.slots[0])), (button) => {

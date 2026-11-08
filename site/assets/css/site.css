@@ -63,7 +63,8 @@
 
 /* ---------- base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
+/* scrollbar-gutter: short pages (no scrollbar) don't shift the centred layout sideways. */
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; scrollbar-gutter: stable; }
 body {
   margin: 0;
   font-family: var(--sans);
@@ -86,7 +87,8 @@ img { max-width: 100%; height: auto; }
 [hidden] { display: none !important; }
 
 .wrap { width: 100%; max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
-.narrow { max-width: 46rem; }
+/* Text-heavy pages: same left edge as the page head and the wide pages, but lines kept to a readable length. */
+.narrow > * { max-width: 43.5rem; }
 .muted { color: var(--muted); }
 .lead { font-size: 1.2rem; color: var(--muted); max-width: 44rem; }
 
@@ -229,6 +231,7 @@ img { max-width: 100%; height: auto; }
 
 /* ---------- consultation booking (/konsultatsioon/) ---------- */
 .booking, #booking-form, #booking-done { margin-top: 2.5rem; }
+.slot-grid:empty { display: none; }
 .slot-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0 1.5rem; }
 .slot { font: 500 0.95rem/1.2 var(--mono); background: var(--card); color: var(--text); border: 1px solid var(--field-border); border-radius: 0.5rem; padding: 0.55rem 0.85rem; cursor: pointer; }
 .slot:hover { border-color: var(--accent); }

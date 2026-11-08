@@ -28,7 +28,7 @@ export function consultationPage(ctx: PageContext): PageOutput {
           <div class="slot-grid" data-days role="group" aria-label="${k.pickDay}"></div>
           <h2 data-times-title hidden>${k.pickTime}</h2>
           <div class="slot-grid" data-times role="group" aria-label="${k.pickTime}"></div>
-          <p class="muted">${k.timesNote}</p>
+          <p class="muted" data-times-note hidden>${k.timesNote}</p>
         </div>
 
         <form class="contact-form" id="booking-form" novalidate hidden>
