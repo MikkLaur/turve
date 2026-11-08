@@ -149,6 +149,7 @@ ${h.fpLines.map((line, i) => html`<span class="${i === 0 ? 't-ok' : 't-prompt'}"
       areaServed: { '@type': 'Country', name: 'Estonia' },
       knowsLanguage: ['et', 'en'],
       ...(COMPANY.email ? { email: COMPANY.email } : {}),
+      ...(COMPANY.phone ? { telephone: COMPANY.phone } : {}),
     },
   };
 }

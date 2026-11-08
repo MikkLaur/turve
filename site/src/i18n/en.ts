@@ -460,21 +460,24 @@ export const en: Messages = {
 
   about: {
     title: 'About | Turve',
-    description: 'Who is behind Turve: a security engineer who builds websites the way an attacker looks at them.',
+    description:
+      'Mikk Laur, security engineer and founder of Turve. Cyber security has to be affordable for every business, not only the big ones.',
     heading: 'Who is behind Turve',
-    lead: 'Turve is a small company with one clear idea: a small business should be able to get a secure website and real security expertise at a price it can afford.',
+    lead: "Cyber security can't be something only big companies can afford.",
     personTitle: 'The person',
     personBio: [
-      'I work as a security engineer, looking after the security of systems day to day.',
-      'Turve started when I saw how often small-business websites are outdated and unprotected, even though fixing them does not have to be expensive.',
-      'Most recently I built a bilingual website for the Kämblakoda massage studio, with a booking system and an admin panel.',
+      'For years, companies have treated cyber security as a cost they can put off. Those days are over: phishing, hijacked accounts and hacked websites no longer pick the big and the rich, but anyone who is easy to get into.',
+      "A small company has no security engineer of its own and no big-company budget. But it has to do something, and that something has to be affordable. That's why Turve exists: security services any company can afford.",
+      "By day I'm a security engineer at Bigbank. Turve is my own company, where I do the same kind of work for small businesses: find the weak spots before attackers do, and explain in plain language what to do about them.",
     ],
     photoAlt: 'founder of Turve',
-    valuesTitle: 'What we promise',
-    values: [
-      { title: 'Honesty', text: "We tell you when something doesn't need doing, even if that means a smaller invoice." },
-      { title: 'Clarity', text: 'The price and the scope are written down up front. No surprises on the invoice.' },
-      { title: 'Confidentiality', text: 'Your data and security findings go to no one else.' },
+    linkedin: 'My background on LinkedIn',
+    forYouTitle: 'What this means for you',
+    forYou: [
+      { title: 'I look at it like an attacker', text: 'Every site I build gets checked the way an attacker would check it, before handover. What I find, I fix before anyone else finds it.' },
+      { title: 'You can start small', text: "Security doesn't have to start with a big project. A free security check or a single security health check shows where to begin, and you know the price up front." },
+      { title: "I tell you what isn't needed", text: "Not everything needs fixing. I'll tell you honestly what really matters, even if that means a smaller invoice." },
+      { title: 'Your data stays yours', text: 'Your data and security findings go to no one else.' },
     ],
   },
 
@@ -501,6 +504,7 @@ export const en: Messages = {
     // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
     themePrefix: 'Design',
     consultHint: 'Prefer to talk?',
+    callOr: 'or call',
     submit: 'Send inquiry',
     sending: 'Sending…',
     errors: {

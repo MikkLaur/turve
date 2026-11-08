@@ -1,4 +1,4 @@
-import { COMPANY, registerUrl } from './config';
+import { COMPANY, phoneHref, registerUrl } from './config';
 import type { PageContext, PageOutput } from './context';
 import { html, jsonBlock, raw, toString } from './html';
 import { href, LANGS, NAV, ROUTES } from './routes';
@@ -45,6 +45,7 @@ function footer(ctx: PageContext) {
           ? html`<p>${t.footer.providerBefore} <a href="${registerUrl(lang)}" rel="noopener">${COMPANY.legalName}</a>${COMPANY.regCode ? ` (${t.footer.regCode} ${COMPANY.regCode})` : ''}.</p>`
           : ''}
         ${COMPANY.email ? html`<p><a href="mailto:${COMPANY.email}">${COMPANY.email}</a></p>` : ''}
+        ${COMPANY.phone ? html`<p><a href="${phoneHref(COMPANY.phone)}">${COMPANY.phone}</a></p>` : ''}
       </div>
       <ul class="footer-links">
         ${NAV.map((id) => html`<li><a href="${href(id, lang)}">${t.nav[id as keyof typeof t.nav]}</a></li>`)}

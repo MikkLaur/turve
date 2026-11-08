@@ -342,6 +342,7 @@ details.findings-ok summary { cursor: pointer; font-weight: 600; margin-bottom: 
 .person-photo { width: 100%; max-width: 18rem; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius); }
 .person-photo.placeholder { display: grid; place-items: center; background: var(--ink); color: var(--accent-bright); font-family: var(--mono); font-size: 1.5rem; }
 .person-role { font-family: var(--mono); color: var(--accent); }
+.person-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-weight: 600; }
 
 /* ---------- footer ---------- */
 .site-footer { background: var(--ink); color: var(--on-dark-muted); padding: 3rem 0 1.5rem; }

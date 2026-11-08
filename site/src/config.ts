@@ -21,7 +21,7 @@ export const COMPANY = {
   legalName: 'Lõvikonserv OÜ',
   regCode: '16869757',
   email: 'info@turve.ee',
-  phone: '',
+  phone: '+372 5192 8421',
 };
 
 /** The company's public entry in the Estonian e-Business Register. */
@@ -34,11 +34,16 @@ export function fillCompany(text: string): string {
   return text.replace(/\{(legalName|regCode|email)\}/g, (_m, key: 'legalName' | 'regCode' | 'email') => COMPANY[key] || `[${key}]`);
 }
 
+/** A tel: link for a displayed phone number such as '+372 5192 8421'. */
+export function phoneHref(phone: string): string {
+  return `tel:${phone.replace(/[^\d+]/g, '')}`;
+}
+
 /** The person behind Turve (about page). The build lists empty fields as TODO. */
 export const PERSON = {
   name: 'Mikk Laur',
-  role: { et: 'Turvainsener ja arendaja', en: 'Security engineer and developer' },
+  role: { et: 'Turvainsener · Turve asutaja', en: 'Security engineer · founder of Turve' },
   // 640×640 WebP made from the original with metadata stripped (magick … -resize 640x640 -strip).
   photo: 'img/person.webp',
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/mikk-laur/',
 };

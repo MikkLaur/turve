@@ -1,3 +1,4 @@
+import { COMPANY, phoneHref } from '../config';
 import type { PageContext, PageOutput } from '../context';
 import { formField as field, pageHead } from '../components';
 import { html, jsonBlock } from '../html';
@@ -12,7 +13,7 @@ export function contactPage(ctx: PageContext): PageOutput {
     ${pageHead(c.heading, c.lead)}
     <section class="section tight">
       <div class="wrap narrow">
-        <p class="notice">${c.consultHint} <a href="${href('consultation', lang)}">${t.common.bookCall}</a></p>
+        <p class="notice">${c.consultHint} <a href="${href('consultation', lang)}">${t.common.bookCall}</a>${COMPANY.phone ? html` ${c.callOr} <a href="${phoneHref(COMPANY.phone)}">${COMPANY.phone}</a>.` : ''}</p>
         <div class="selection" id="contact-selection" hidden>
           <h2>${c.selectionTitle}</h2>
           <div data-selection-body></div>

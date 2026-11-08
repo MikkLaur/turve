@@ -459,21 +459,24 @@ export const et = {
 
   about: {
     title: 'Meist | Turve',
-    description: 'Kes on Turve taga: turvainsener, kes ehitab veebilehti nii, nagu ründaja neid vaatab.',
+    description:
+      'Mikk Laur on turvainsener ja Turve asutaja. Küberturve peab olema jõukohane igale ettevõttele, mitte ainult suurtele.',
     heading: 'Kes on Turve taga',
-    lead: 'Turve on väike ettevõte ühe selge mõttega: väikeettevõttel peab olema võimalik saada turvaline veebileht ja päris turvaekspertiisi hinnaga, mis on jõukohane.',
+    lead: 'Küberturve ei tohi olla ainult suurte ettevõtete pärusmaa.',
     personTitle: 'Inimene',
     personBio: [
-      'Töötan igapäevaselt turvainsenerina ja tegelen süsteemide turvalisusega.',
-      'Turve sai alguse sellest, et nägin, kui sageli on väikeettevõtete veebilehed vananenud ja kaitseta, kuigi nende korda tegemine ei pea olema kallis.',
-      'Viimati ehitasin Kämblakoja massaažistuudiole kakskeelse kodulehe koos broneerimissüsteemi ja halduspaneeliga.',
+      'Ettevõtted on küberturvet pikalt pidanud kuluks, mille võib edasi lükata. Need ajad on möödas: petukirjad, ülevõetud kontod ja häkitud kodulehed ei vali enam suuri ja rikkaid, vaid kõiki, kelle juurde on lihtne sisse saada.',
+      'Väikeettevõttel pole oma turvainseneri ega suure firma eelarvet. Aga midagi tuleb teha, ja see midagi peab olema jõukohane. Selleks ongi Turve: turvateenused, mida saab endale lubada iga ettevõte.',
+      'Päeval töötan turvainsenerina Bigbankis. Turve on minu oma ettevõte, kus teen väikeettevõtetele sama laadi tööd: leian nõrgad kohad enne ründajaid ja selgitan lihtsas keeles, mida nendega teha.',
     ],
     photoAlt: 'Turve asutaja',
-    valuesTitle: 'Mida lubame',
-    values: [
-      { title: 'Ausus', text: 'Ütleme, kui midagi pole vaja teha. Ka siis, kui see tähendab väiksemat arvet.' },
-      { title: 'Selgus', text: 'Hind ja töö sisu on enne kirjas. Üllatusi arvel ei ole.' },
-      { title: 'Konfidentsiaalsus', text: 'Teie andmed ja turvaleiud ei lähe kellelegi edasi.' },
+    linkedin: 'Minu taust LinkedInis',
+    forYouTitle: 'Mida see teile tähendab',
+    forYou: [
+      { title: 'Vaatan ründaja pilguga', text: 'Iga lehte, mille ehitan, kontrollin enne üleandmist nii, nagu seda teeks ründaja. Mida leian, selle parandan enne, kui keegi teine selle leiab.' },
+      { title: 'Alustada saab väikselt', text: 'Turvalisus ei pea algama suurest projektist. Tasuta turvakontroll või üks turva-tervisekontroll näitab, kust alustada, ja hind on enne teada.' },
+      { title: 'Ütlen, mis pole vajalik', text: 'Kõike ei pea parandama. Ütlen ausalt, mis on päriselt oluline, ka siis, kui see tähendab väiksemat arvet.' },
+      { title: 'Teie andmed jäävad teile', text: 'Teie andmed ja turvaleiud ei lähe kellelegi edasi.' },
     ],
   },
 
@@ -500,6 +503,7 @@ export const et = {
     // Prefilled in the message when the visitor comes from a demo's "Vali see kujundus" link.
     themePrefix: 'Kujundus',
     consultHint: 'Eelistate rääkida?',
+    callOr: 'või helistage',
     submit: 'Saada päring',
     sending: 'Saadan…',
     errors: {
