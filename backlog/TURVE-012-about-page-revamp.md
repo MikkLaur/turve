@@ -1,5 +1,5 @@
 ---
-status: doing
+status: done
 area: site
 created: 2026-11-08
 ---
@@ -276,8 +276,9 @@ Then set this ticket to `status: done`.
 - [x] Typecheck and build green; no inline styles, no third-party requests.
 - [x] Owner approved the copy (step 6.5).
 - [x] CLAUDE.md and TURVE-002 updated; committed.
-- [ ] Deployed and still grade A.
+- [x] Deployed and still grade A.
 
 ## Log
 - 2026-11-08: Created. First draft copied the LinkedIn "About" text; the owner rejected that ("everything … can be read from LinkedIn"). Rewritten around why Turve exists.
 - 2026-11-08: Owner approved the copy. Built: typecheck and build green, tel: link on every page, no inline styles, no console errors on /meist/ and /en/about/ (desktop checked; mobile not, the window manager kept the window full width). Waiting for deploy.
+- 2026-11-08: Deployed (site + API restart, no pending migrations). health 200, foreign-Origin login 403, tel: links live, www.turve.ee grade A on its own check.
