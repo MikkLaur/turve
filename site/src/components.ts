@@ -3,7 +3,7 @@ import { COMPANY, phoneHref } from './config';
 import type { PageContext } from './context';
 import { euros } from './format';
 import { html, jsonBlock, raw, Raw } from './html';
-import type { Lang } from './routes';
+import { href, type Lang } from './routes';
 
 function regularPrice(lang: Lang): string {
   return euros(findPackage(LAUNCH_OFFER.regularPackageId)!.cents!, lang);
@@ -26,6 +26,32 @@ export function offerScriptData(ctx: PageContext): Raw {
     full: common.offerFull.replace('{price}', regularPrice(ctx.lang)),
     ended: common.offerEnded.replace('{price}', regularPrice(ctx.lang)),
   });
+}
+
+/**
+ * The year-end offer band (home and giveaway pages): the offer's price, text, live status line and what it includes.
+ * The page also needs offerScriptData() and js/offer.js for the live count. `text` replaces the default paragraph.
+ */
+export function offerBand(ctx: PageContext, text?: string): Raw {
+  const { t, lang } = ctx;
+  const h = t.home;
+  const offer = findPackage(LAUNCH_OFFER.packageId)!;
+  const call = callButton(ctx);
+  return html`<section class="section offer-band" aria-labelledby="h-offer">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">${h.offerEyebrow}</p>
+          <h2 id="h-offer">${h.offerTitle.replace('{price}', euros(offer.cents!, lang))}</h2>
+          <p>${text ?? h.offerText}</p>
+          ${offerStatusLine(ctx)}
+          <p class="button-row">
+            <a class="button" href="${href('contact', lang)}?p=${LAUNCH_OFFER.packageId}">${t.common.askOffer}</a>
+            <a class="button ghost" href="${call.href}">${call.label}</a>
+          </p>
+        </div>
+        <ul class="checklist">${offer.includes[lang].map((item) => html`<li>${item}</li>`)}</ul>
+      </div>
+    </section>`;
 }
 
 /** The package's fixed price; the launch offer also shows the regular price it replaces. */

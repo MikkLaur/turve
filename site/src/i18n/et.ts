@@ -13,6 +13,7 @@ export const et = {
     pricing: 'Hinnad',
     check: 'Turvakontroll',
     about: 'Meist',
+    giveaway: 'Loos',
     cta: 'Küsi pakkumist',
     switchLang: 'In English',
     switchLangLabel: 'Read this page in English',
@@ -418,6 +419,97 @@ export const et = {
     ctaSecurity: 'Vaata turvateenuseid',
   },
 
+  giveaway: {
+    title: 'Loos: võida ühelehelise kodulehe | Turve',
+    endedTitle: 'Loos on lõppenud | Turve',
+    // {price} = the prize package's price from the catalog
+    description: 'Loosime välja ühelehelise kodulehe koos domeeni ja majutusega, väärtus üle {price}. Osalemine käib Facebookis, reeglid on sellel lehel.',
+    eyebrow: 'Loos',
+    heading: 'Loosime välja ühelehelise kodulehe',
+    endedHeading: 'Loos on lõppenud',
+    lead: 'Kui teie ettevõttel pole veebilehte või see on vana, saate uue meilt kingituseks, koos domeeni ja majutusega. Väärtus üle {price}.',
+    enter: 'Osale Facebookis',
+    consult: 'Küsi tasuta konsultatsiooni',
+    // The dates in these texts must match GIVEAWAY in site/src/giveaway.ts (the build checks `when` and `closed`).
+    when: 'Osalemine lõpeb kolmapäeval, 11.11 kell 12:00',
+    units: { days: 'päeva', hours: 'tundi', minutes: 'minutit', seconds: 'sekundit' },
+    // After the deadline: `closed` above the countdown to the reveal, `drawing` while the winner isn't published yet,
+    // `drawn` as the lead once the giveaway has ended (after GIVEAWAY.tabUntil).
+    closed: 'Osalemine on lõppenud. Võitja avalikustame siin kell 18:00.',
+    drawing: 'Loosime võitjat. Tulemus ilmub siia mõne minuti jooksul.',
+    drawn: 'Osalemine lõppes 11.11 kell 12:00 ja võitja loosisime samal päeval kell 18:00.',
+    // The reveal. {company} and {business} are the winner's, as written in the comment.
+    showWinner: 'Näita võitjat',
+    winnerTitle: 'Võitja',
+    drawCommand: 'shuf -n 1 kommentaarid.txt',
+    congrats: 'Palju õnne. Võtame teiega ühendust Messengeris.',
+    winnerAnnounce: 'Võitja: {company}, {business}.',
+    prizeTitle: 'Mida võitja saab',
+    prize: [
+      'Valmis kujundus, mille valime koos tasuta konsultatsioonil, teie logo ja värvidega',
+      'Kuni 6 sisuplokki (teenused, meist, kontakt jne)',
+      'Mobiilisõbralik ja kiire, HTTPS ja turvapäised paigas',
+      'Üks parandusring',
+      'Lehe jaluses väike viide turve.ee-le',
+      'Domeen ja majutus esimeseks aastaks: need ostame ja seadistame meie',
+    ],
+    prizeNote: 'Tekstid ja pildid annate teie; ütleme täpselt, mida kuhu vaja on.',
+    howTitle: 'Kuidas osaleda',
+    how: [
+      'Avage Facebooki postitus.',
+      'Kirjutage kommentaaridesse oma ettevõtte nimi ja tegevusala.',
+      'Oodake kolmapäeva 18:00: siis avalikustame võitja siin lehel ja vastame talle kommentaarina ja Messengeris.',
+    ],
+    howNote: 'Üks kommentaar inimese kohta. Jagama ega sõpru märkima ei pea.',
+    rulesTitle: 'Reeglid',
+    // As in reklaamikampaania/material/2026-11-08-kodulehe-loos/rules.md. {legalName} and {regCode} come from COMPANY,
+    // {package} and {price} from the catalog, {privacy} becomes a link to the privacy page, `code` is shown as code.
+    rules: [
+      {
+        title: 'Korraldaja',
+        text: '{legalName} (registrikood {regCode}), kaubamärk Turve / turve.ee. Facebook ega Meta ei ole loosimisega seotud, ei toeta seda ega korralda seda.',
+      },
+      {
+        title: 'Auhind',
+        text: 'üks „{package}“ pakett (kataloogihind {price}) koos domeeni ja majutusega, võitjale tasuta. Sisaldab: valmis kujundus, mille valime koos tasuta konsultatsioonil võitja logo ja värvidega; kuni 6 sisuplokki; mobiilisõbralik leht, HTTPS ja turvapäised; üks parandusring; lehe jaluses väike viide turve.ee-le; domeen ja majutus esimeseks aastaks, mille ostab ja seadistab korraldaja. Domeeninime valime koos (sõltub sellest, kas nimi on vaba); domeen registreeritakse võitja ettevõtte nimele. Tekstid ja pildid annab võitja. Pärast esimest aastat jätkub majutus ja domeen võitja kulul; korraldaja teatab enne tähtaega hinna ja võitja otsustab, kas jätkab. Auhinda ei saa vahetada raha vastu ega üle anda teisele.',
+      },
+      {
+        title: 'Kes võivad osaleda',
+        text: 'Eestis registreeritud ettevõtte või FIE esindajad, 18-aastased ja vanemad. Ettevõttel peab olema õigus lehe sisu kasutada. Korraldaja ja tema lähikondlased ei osale.',
+      },
+      {
+        title: 'Kuidas osaleda',
+        text: 'kirjutage selle postituse alla kommentaar oma ettevõtte nimega ja tegevusalaga. Üks kommentaar inimese kohta. Postituse jagamine ega sõprade märkimine ei ole nõutud. Ostu ega makset ei nõuta.',
+      },
+      {
+        title: 'Aeg',
+        text: 'osalemine kuni kolmapäev, 11.11.2026 kell 12:00 (Eesti aeg). Loosimine samal päeval kell 18:00.',
+      },
+      {
+        title: 'Loosimine',
+        text: 'kehtivad kommentaarid nummerdatakse ilmumise järjekorras; võitja valitakse juhuslikult arvutiga (`shuf -n 1` süsteemi juhuslikkusest). Valik salvestatakse ekraanipildina. Kommentaarid, mis on kustutatud või ei vasta reeglitele, ei osale.',
+      },
+      {
+        title: 'Võitja teavitamine',
+        text: 'võitja saab vastuse kommentaarina postituse all ja Messengeris. Kui võitja ei vasta 48 tunni jooksul, loositakse uus.',
+      },
+      {
+        title: 'Auhinna lunastamine',
+        text: 'võitja broneerib tasuta konsultatsiooni (telefonil või kontaktivormis) kuni 27.11.2026 ja saadab tekstid ning pildid kuni 4.12.2026. Hilinemisel võib auhind aeguda. Töö valmib enne aasta lõppu.',
+      },
+      {
+        title: 'Andmed',
+        text: 'kasutame osaleja nime ja kommentaari ainult loosimiseks ja võitjaga ühenduse võtmiseks. Muid andmeid me ei kogu. Võitja ettevõtte nime ja tegevusala avaldame turve.ee lehel ja postituse all. Privaatsus: {privacy}',
+      },
+      {
+        title: 'Muud',
+        text: 'korraldajal on õigus loosimine tühistada või reegleid muuta, kui see on vajalik (nt tehniline probleem või väärkasutus), teatades sellest postituse all.',
+      },
+    ],
+    // The year-end offer band at the end of the page.
+    offerText: 'Ka ilma loosita saate ühelehelise kodulehe aastalõpu hinnaga, kuni 10 esimesele kliendile ja aasta lõpuni. Kujunduse valime koos tasuta konsultatsioonil.',
+  },
+
   about: {
     title: 'Meist | Turve',
     description:
@@ -428,7 +520,7 @@ export const et = {
     personBio: [
       'Ettevõtted on küberturvet pikalt pidanud kuluks, mille võib edasi lükata. Need ajad on möödas: petukirjad, ülevõetud kontod ja häkitud kodulehed ei vali enam suuri ja rikkaid, vaid kõiki, kelle juurde on lihtne sisse saada.',
       'Väikeettevõttel pole oma turvainseneri ega suure firma eelarvet. Aga midagi tuleb teha, ja see midagi peab olema jõukohane. Selleks ongi Turve: turvateenused, mida saab endale lubada iga ettevõte.',
-      'Päeval töötan turvainsenerina Bigbankis. Turve on minu oma ettevõte, kus teen väikeettevõtetele sama laadi tööd: leian nõrgad kohad enne ründajaid ja selgitan lihtsas keeles, mida nendega teha.',
+      'Turve on minu oma ettevõte. Teen väikeettevõtetele seda, mida suurtes firmades teeb turvameeskond: leian nõrgad kohad enne ründajaid ja selgitan lihtsas keeles, mida nendega teha.',
     ],
     photoAlt: 'Turve asutaja',
     linkedin: 'Minu taust LinkedInis',

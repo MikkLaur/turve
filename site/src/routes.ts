@@ -11,6 +11,7 @@ export type PageId =
   | 'pricing'
   | 'check'
   | 'fingerprint'
+  | 'giveaway'
   | 'about'
   | 'contact'
   | 'thanks'
@@ -23,13 +24,14 @@ export const ROUTES: Record<PageId, Record<Lang, string>> = {
   pricing: { et: '/hinnad/', en: '/en/pricing/' },
   check: { et: '/turvakontroll/', en: '/en/security-check/' },
   fingerprint: { et: '/sormejalg/', en: '/en/fingerprint/' },
+  giveaway: { et: '/loos/', en: '/en/giveaway/' },
   about: { et: '/meist/', en: '/en/about/' },
   contact: CONTACT_PATH,
   thanks: THANK_YOU_PATH,
   privacy: { et: '/privaatsus/', en: '/en/privacy/' },
 };
 
-/** Pages left out of the sitemap and marked noindex. */
+/** Pages left out of the sitemap and marked noindex. The giveaway page joins them once it has ended (build.ts). */
 export const UNLISTED: ReadonlySet<PageId> = new Set(['thanks']);
 
 export const NAV: readonly PageId[] = ['websites', 'security', 'pricing', 'check', 'about'];

@@ -1,6 +1,7 @@
 import { COMPANY, phoneHref, registerUrl } from './config';
 import type { PageContext, PageOutput } from './context';
-import { html, jsonBlock, raw, toString } from './html';
+import { GIVEAWAY, utcIso } from './giveaway';
+import { html, jsonBlock, raw, toString, type Raw } from './html';
 import { href, LANGS, NAV, ROUTES } from './routes';
 
 function alternates(page: PageOutput, ctx: PageContext) {
@@ -12,6 +13,18 @@ function alternates(page: PageOutput, ctx: PageContext) {
     <link rel="alternate" hreflang="x-default" href="${ctx.cfg.siteOrigin}${ROUTES[id].et}">`;
 }
 
+/**
+ * The gold giveaway tab (TURVE-014), first in the header and footer nav until GIVEAWAY.tabUntil, through the entries,
+ * the countdown to the reveal and the reveal itself (on narrow screens the nav scrolls sideways, so a last item would
+ * be out of sight). Builds after tabUntil leave it out; common.js removes it in the browser from an older build.
+ */
+function giveawayTab(ctx: PageContext, current: boolean): Raw | '' {
+  if (ctx.giveaway === 'ended') {
+    return '';
+  }
+  return html`<li><a class="nav-giveaway" href="${href('giveaway', ctx.lang)}" data-giveaway-tab="${utcIso(GIVEAWAY.tabUntil)}"${current ? raw(' aria-current="page"') : ''}>${ctx.t.nav.giveaway}</a></li>`;
+}
+
 function header(page: PageOutput, ctx: PageContext) {
   const { t, lang } = ctx;
   const other = lang === 'et' ? 'en' : 'et';
@@ -21,6 +34,7 @@ function header(page: PageOutput, ctx: PageContext) {
       <a class="brand" href="${href('home', lang)}" aria-label="Turve – ${t.nav.label}"><span class="brand-word">turve</span><span class="brand-cursor" aria-hidden="true"></span></a>
       <nav class="site-nav" aria-label="${t.nav.label}">
         <ul>
+          ${giveawayTab(ctx, page.id === 'giveaway')}
           ${NAV.map(
             (id) => html`<li><a href="${href(id, lang)}"${page.id === id ? raw(' aria-current="page"') : ''}>${t.nav[id as keyof typeof t.nav]}</a></li>`,
           )}
@@ -48,6 +62,7 @@ function footer(ctx: PageContext) {
         ${COMPANY.phone ? html`<p><a href="${phoneHref(COMPANY.phone)}">${COMPANY.phone}</a></p>` : ''}
       </div>
       <ul class="footer-links">
+        ${giveawayTab(ctx, false)}
         ${NAV.map((id) => html`<li><a href="${href(id, lang)}">${t.nav[id as keyof typeof t.nav]}</a></li>`)}
         <li><a href="${href('fingerprint', lang)}">${t.footer.fingerprint}</a></li>
         <li><a href="${href('contact', lang)}">${t.footer.contact}</a></li>
@@ -61,6 +76,9 @@ function footer(ctx: PageContext) {
 export function renderPage(page: PageOutput, ctx: PageContext): string {
   const { t, cfg, asset } = ctx;
   const canonical = page.id ? `${cfg.siteOrigin}${ROUTES[page.id][ctx.lang]}` : null;
+  // The giveaway tab's deadline check is in common.js, so every page loads it while the tab is shown (cached after the first).
+  const scripts = page.scripts ?? [];
+  const allScripts = ctx.giveaway !== 'ended' && !scripts.includes('js/common.js') ? ['js/common.js', ...scripts] : scripts;
   const doc = html`<!doctype html>
 <html lang="${t.htmlLang}">
 <head>
@@ -84,7 +102,7 @@ export function renderPage(page: PageOutput, ctx: PageContext): string {
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/ibm-plex-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="${asset('css/site.css')}">
-  ${(page.scripts ?? []).map((script) => html`<script src="${asset(script)}" defer></script>`)}
+  ${allScripts.map((script) => html`<script src="${asset(script)}" defer></script>`)}
   ${page.jsonLd ? jsonBlock(null, page.jsonLd, 'application/ld+json') : ''}
 </head>
 <body>

@@ -9,6 +9,7 @@ import path from 'node:path';
 import { LAUNCH_OFFER } from '../../server/src/catalog/catalog';
 import { COMPANY, PERSON, SiteConfig, siteConfig } from './config';
 import type { PageContext, PageOutput } from './context';
+import { checkGiveaway, GIVEAWAY, GiveawayPhase, giveawayPhase, tallinnWords, WINNER_PATH } from './giveaway';
 import { htaccess } from './headers';
 import { en } from './i18n/en';
 import { et } from './i18n/et';
@@ -20,6 +21,7 @@ import { renderOnePager } from './onepager/render';
 import { THEMES } from './onepager/themes';
 import { contactPage } from './pages/contact';
 import { fingerprintPage } from './pages/fingerprint';
+import { giveawayPage } from './pages/giveaway';
 import { homePage } from './pages/home';
 import { pricingPage } from './pages/pricing';
 import { securityPage } from './pages/security';
@@ -46,6 +48,7 @@ const PAGES: [PageId, (ctx: PageContext) => PageOutput][] = [
   ['pricing', pricingPage],
   ['check', checkPage],
   ['fingerprint', fingerprintPage],
+  ['giveaway', giveawayPage],
   ['about', aboutPage],
   ['contact', contactPage],
   ['thanks', thanksPage],
@@ -92,9 +95,9 @@ function copyAssets(): Map<string, string> {
   return map;
 }
 
-function sitemap(cfg: SiteConfig): string {
+function sitemap(cfg: SiteConfig, unlisted: ReadonlySet<PageId>): string {
   const urls = (Object.keys(ROUTES) as PageId[])
-    .filter((id) => !UNLISTED.has(id))
+    .filter((id) => !unlisted.has(id))
     .flatMap((id) =>
       LANGS.map(
         (lang) => `  <url>
@@ -148,8 +151,18 @@ function checkLinks(): string[] {
   return broken;
 }
 
-function todos(): string[] {
+function todos(giveaway: GiveawayPhase): string[] {
   const list: string[] = [];
+  if (giveaway === 'open' && !GIVEAWAY.postUrl) list.push('GIVEAWAY.postUrl is empty: the link of the Facebook post (site/src/giveaway.ts)');
+  // The copy names the giveaway's dates in words: catch a date moved in GIVEAWAY but not in the texts.
+  const ends = tallinnWords(GIVEAWAY.endsAt);
+  const draw = tallinnWords(GIVEAWAY.drawAt);
+  for (const [lang, t] of [['et', et], ['en', en]] as const) {
+    const g = t.giveaway;
+    if (!g.when.includes(ends[lang]) || !g.when.includes(ends.time) || !g.closed.includes(draw.time)) {
+      list.push(`giveaway.when/closed (${lang}) name other dates than GIVEAWAY.endsAt/drawAt: update the giveaway texts and rules`);
+    }
+  }
   for (const key of ['legalName', 'regCode', 'email'] as const) {
     if (!COMPANY[key]) list.push(`COMPANY.${key} is empty (site/src/config.ts)`);
   }
@@ -160,7 +173,10 @@ function todos(): string[] {
   return list;
 }
 
-export function build(dev: boolean, strict = false): void {
+/** `now` decides the giveaway's phase (TURVE-014); pass another time to preview the page before or after the deadline. */
+export function build(dev: boolean, strict = false, now = Date.now()): void {
+  checkGiveaway(now);
+  const giveaway = giveawayPhase(now);
   const cfg = siteConfig(dev);
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
@@ -175,7 +191,7 @@ export function build(dev: boolean, strict = false): void {
   };
 
   for (const lang of LANGS) {
-    const ctx: PageContext = { lang, t: lang === 'et' ? et : en, cfg, asset };
+    const ctx: PageContext = { lang, t: lang === 'et' ? et : en, cfg, asset, giveaway };
     for (const [id, builder] of PAGES) {
       const page = builder(ctx);
       if (page.id !== id) {
@@ -184,7 +200,7 @@ export function build(dev: boolean, strict = false): void {
       write(`${ROUTES[id][lang]}index.html`, renderPage(page, ctx));
     }
   }
-  const etCtx: PageContext = { lang: 'et', t: et, cfg, asset };
+  const etCtx: PageContext = { lang: 'et', t: et, cfg, asset, giveaway };
   write('/404.html', renderPage(notFoundPage(etCtx), etCtx));
 
   // One-pager demos (Estonian, noindex, linked from nowhere): /naidised/<id>/. The owner shows them in the free consultation.
@@ -206,7 +222,12 @@ export function build(dev: boolean, strict = false): void {
   }
 
   write('/robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${cfg.siteOrigin}/sitemap.xml\n`);
-  write('/sitemap.xml', sitemap(cfg));
+  // Once the giveaway has ended the page stays (for the rules) but leaves the sitemap; it is noindex then too.
+  write('/sitemap.xml', sitemap(cfg, giveaway === 'ended' ? new Set([...UNLISTED, 'giveaway']) : UNLISTED));
+  // The published winner: pages that were open before it existed play the reveal live (assets/js/giveaway.js).
+  if (GIVEAWAY.winner) {
+    write(WINNER_PATH, `${JSON.stringify({ company: GIVEAWAY.winner.company.trim(), business: GIVEAWAY.winner.business.trim() })}\n`);
+  }
   write('/.htaccess', htaccess(cfg));
   write('/.well-known/security.txt', securityTxt(cfg));
 
@@ -214,8 +235,10 @@ export function build(dev: boolean, strict = false): void {
   if (broken.length) {
     throw new Error(`Broken internal links:\n  ${broken.join('\n  ')}`);
   }
-  const pending = todos();
+  const pending = todos(giveaway);
   console.log(`Built ${LANGS.length * PAGES.length + 1} pages and ${THEMES.length} demos${dev ? ' (+ style tile)' : ''} into ${path.relative(process.cwd(), DIST) || DIST} for ${cfg.siteOrigin}`);
+  const winnerNote = GIVEAWAY.winner ? `, winner published (${WINNER_PATH})` : giveaway === 'drawn' ? ', winner not set yet' : '';
+  console.log(`Giveaway (TURVE-014): ${giveaway}${giveaway === 'ended' ? ', no tab; /loos/ shows the ended page' : ', gold tab in the nav'}${winnerNote}`);
   if (pending.length) {
     console.log(`TODO before launch:\n  - ${pending.join('\n  - ')}`);
     if (strict) {

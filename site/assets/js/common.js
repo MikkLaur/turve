@@ -107,5 +107,11 @@ window.Turve = (() => {
     return { name: `${line.pkg.name}${qty}`, value: `${euros(line.cents)}${monthly}` };
   }
 
+  // Giveaway tab (TURVE-014): a build from before the deadline still has it. Once entries have closed, take it out
+  // of the nav (until the next build drops it for good). The deadline is in its data-giveaway-tab attribute.
+  document.querySelectorAll('[data-giveaway-tab]').forEach((link) => {
+    if (Date.now() >= Date.parse(link.getAttribute('data-giveaway-tab'))) link.closest('li').remove();
+  });
+
   return { apiOrigin, lang, json, euros, h, api, parseSelection, selectionString, priceItems, renderTotals, lineText };
 })();

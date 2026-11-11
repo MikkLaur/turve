@@ -16,6 +16,7 @@ const PALETTE = [
   { name: 'Hoiatus', variable: '--warn', hex: '#b45309', use: 'Kontrolli tulemus: hoiatus' },
   { name: 'Probleem', variable: '--fail', hex: '#b91c1c', use: 'Kontrolli tulemus: probleem' },
   { name: 'Pakkumine', variable: '--offer', hex: '#dc2626', use: 'Aastalõpu pakkumise kaardi raam: ainus punane hinnalehtedel' },
+  { name: 'Kuld', variable: '--gold', hex: '#f2c14e', use: 'Ainult loosi ajal: Loos-sakk, loenduri numbrid ja /loos/ silt (TURVE-014)' },
 ];
 
 /** Brand review page for the owner (dev builds only, /stiil/). Not linked, not in the sitemap. */

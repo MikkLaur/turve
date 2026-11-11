@@ -14,6 +14,7 @@ export const en: Messages = {
     pricing: 'Pricing',
     check: 'Security check',
     about: 'About',
+    giveaway: 'Giveaway',
     cta: 'Get a quote',
     switchLang: 'Eesti keeles',
     switchLangLabel: 'Loe seda lehte eesti keeles',
@@ -419,6 +420,89 @@ export const en: Messages = {
     ctaSecurity: 'See security services',
   },
 
+  giveaway: {
+    title: 'Giveaway: win a one-page website | Turve',
+    endedTitle: 'The giveaway has ended | Turve',
+    description: 'We are giving away a one-page website with the domain and hosting included, worth over {price}. You enter on Facebook; the rules are on this page.',
+    eyebrow: 'Giveaway',
+    heading: 'We are giving away a one-page website',
+    endedHeading: 'The giveaway has ended',
+    lead: 'If your business has no website, or an old one, you can win a new one from us, with the domain and hosting included. Value over {price}.',
+    enter: 'Enter on Facebook',
+    consult: 'Ask for a free consultation',
+    when: 'Entries close Wednesday 11 Nov at 12:00 (Estonian time)',
+    units: { days: 'days', hours: 'hours', minutes: 'minutes', seconds: 'seconds' },
+    closed: 'Entries are closed. We reveal the winner here at 18:00.',
+    drawing: 'We are drawing the winner. The result appears here within a few minutes.',
+    drawn: 'Entries closed on 11 Nov at 12:00 and we drew the winner the same day at 18:00.',
+    showWinner: 'Show the winner',
+    winnerTitle: 'The winner',
+    drawCommand: 'shuf -n 1 comments.txt',
+    congrats: "Congratulations. We'll contact you on Messenger.",
+    winnerAnnounce: 'The winner: {company}, {business}.',
+    prizeTitle: 'What the winner gets',
+    prize: [
+      'A ready-made design we pick together in a free consultation, in your logo and colours',
+      'Up to 6 content sections (services, about, contact, …)',
+      'Mobile-friendly and fast, with HTTPS and security headers',
+      'One round of revisions',
+      'A small turve.ee credit in the footer',
+      'Domain and hosting for the first year: we buy them and set them up',
+    ],
+    prizeNote: 'You supply the texts and photos; we tell you exactly what goes where.',
+    howTitle: 'How to enter',
+    how: [
+      'Open the Facebook post.',
+      "Write your company's name and line of business in a comment.",
+      'Wait for Wednesday 18:00: we reveal the winner on this page and reply to them in a comment and on Messenger.',
+    ],
+    howNote: "One comment per person. You don't have to share the post or tag friends.",
+    rulesTitle: 'Rules',
+    rules: [
+      {
+        title: 'Organiser',
+        text: '{legalName} (registry code {regCode}), brand Turve / turve.ee. Facebook and Meta are not involved in the giveaway and do not sponsor or run it.',
+      },
+      {
+        title: 'Prize',
+        text: "one \"{package}\" package (catalogue price {price}) with a domain and hosting, free to the winner. It includes: a ready-made design we pick together in a free consultation, in the winner's logo and colours; up to 6 content sections; a mobile-friendly site with HTTPS and security headers; one round of revisions; a small turve.ee credit in the footer; a domain and hosting for the first year, bought and set up by the organiser. We choose the domain name together (it depends on whether the name is free); the domain is registered to the winner's company. The winner supplies the texts and photos. After the first year, hosting and the domain continue at the winner's expense; the organiser gives the price before the renewal date and the winner decides whether to continue. The prize cannot be exchanged for money or passed on to anyone else.",
+      },
+      {
+        title: 'Who can enter',
+        text: 'representatives of a company or sole trader (FIE) registered in Estonia, aged 18 or over. The company must have the right to use the content of the site. The organiser and people close to the organiser cannot enter.',
+      },
+      {
+        title: 'How to enter',
+        text: "write a comment under the giveaway post with your company's name and line of business. One comment per person. You don't have to share the post or tag friends. No purchase or payment is required.",
+      },
+      {
+        title: 'Dates',
+        text: 'entries are open until Wednesday 11 November 2026 at 12:00 (Estonian time). The draw is on the same day at 18:00.',
+      },
+      {
+        title: 'The draw',
+        text: "valid comments are numbered in the order they appeared; the winner is picked at random by a computer (`shuf -n 1`, using the system's randomness). The pick is saved as a screenshot. Comments that have been deleted or don't meet the rules are not included.",
+      },
+      {
+        title: 'Telling the winner',
+        text: "the winner gets a reply to their comment under the post and a message in Messenger. If the winner doesn't respond within 48 hours, a new winner is drawn.",
+      },
+      {
+        title: 'Claiming the prize',
+        text: 'the winner books the free consultation (by phone or through the contact form) by 27 November 2026 and sends the texts and photos by 4 December 2026. If they are late, the prize may lapse. The work is finished before the end of the year.',
+      },
+      {
+        title: 'Data',
+        text: "we use an entrant's name and comment only for the draw and to contact the winner. We collect no other data. We publish the winning company's name and line of business on turve.ee and under the post. Privacy: {privacy}",
+      },
+      {
+        title: 'Other',
+        text: 'the organiser may cancel the giveaway or change the rules if necessary (for example, because of a technical problem or misuse), and will say so under the post.',
+      },
+    ],
+    offerText: 'Even without the giveaway, you can get a one-page site at the year-end price, for the first 10 clients and until the end of the year. We pick the design together in a free consultation.',
+  },
+
   about: {
     title: 'About | Turve',
     description:
@@ -429,7 +513,7 @@ export const en: Messages = {
     personBio: [
       'For years, companies have treated cyber security as a cost they can put off. Those days are over: phishing, hijacked accounts and hacked websites no longer pick the big and the rich, but anyone who is easy to get into.',
       "A small company has no security engineer of its own and no big-company budget. But it has to do something, and that something has to be affordable. That's why Turve exists: security services any company can afford.",
-      "By day I'm a security engineer at Bigbank. Turve is my own company, where I do the same kind of work for small businesses: find the weak spots before attackers do, and explain in plain language what to do about them.",
+      "Turve is my own company. I do for small businesses what a security team does in a big company: find the weak spots before attackers do, and explain in plain language what to do about them.",
     ],
     photoAlt: 'founder of Turve',
     linkedin: 'My background on LinkedIn',

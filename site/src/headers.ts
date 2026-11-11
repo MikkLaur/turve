@@ -9,7 +9,8 @@ export function securityHeaders(cfg: SiteConfig): Record<string, string> {
       "style-src 'self'",
       "img-src 'self'",
       "font-src 'self'",
-      `connect-src ${cfg.apiOrigin}`,
+      // 'self': the giveaway page polls /loos/voitja.json for the winner (TURVE-014).
+      `connect-src 'self' ${cfg.apiOrigin}`,
       `form-action 'self' ${cfg.apiOrigin}`,
       "base-uri 'none'",
       "frame-ancestors 'none'",
@@ -53,7 +54,7 @@ RewriteRule ^en/consultation/?$ /en/contact/ [R=301,L]
 
 <IfModule mod_headers.c>
 ${headerLines}
-  <FilesMatch "\\.(html|xml|txt)$">
+  <FilesMatch "\\.(html|xml|txt|json)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
   <FilesMatch "\\.[0-9a-f]{10}\\.(css|js)$">
