@@ -22,3 +22,12 @@ clients/
 .DS_Store
 .vscode/
 .idea/
+
+# Local spec packages and notes (not versioned)
+misc/
+
+# Ad campaign material: its own git repository inside
+reklaamikampaania/
+
+# Owner's raw photo (large binary, kept locally)
+20240602-AUR_5262-2.jpg
