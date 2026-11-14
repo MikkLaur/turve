@@ -31,3 +31,8 @@ reklaamikampaania/
 
 # Owner's raw photo (large binary, kept locally)
 20240602-AUR_5262-2.jpg
+
+# Kurva Nokitseb photo work (client photos stay out of git)
+kurva/work/
+kurva/site/img/
+kurva/shots/
