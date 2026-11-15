@@ -25,12 +25,22 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - B2B, small companies. Two lines of business: websites (new builds **and modernising older sites**, the stand-out niche) and security (pentest, health check, compliance, retainer). Monthly care plans.
 - Prices are public and fixed: each package shows what the client pays and gets, and the estimator carries the selection into the inquiry. Hourly rates (55 €/h web, 75 €/h security) appear only at the end of `/hinnad/`, for consultation and project work (billed in 15-minute steps with a time log).
 - Launch offer: `web-onepage-launch` at 99 € for the first 10 clients until 31.12.2026 (template design picked together in the free consultation, client supplies texts and photos, one revision round, "Kodulehe tegi turve.ee" footer credit). The counter counts inquiries with `countsForOffer = 1` that aren't spam; the owner toggles it per inquiry in kapsaaed.
-- Keep pages lean: no optional form fields or extras (no "how did you hear about us" field, no VAT note, no estimator hint, no security.txt link in the footer; security.txt itself stays). Estonian: "üheleheline" (not "ühelehine").
+- Keep pages lean: no extras (no "how did you hear about us" field, no VAT note, no estimator hint, no security.txt link in the footer; security.txt itself stays). Estonian: "üheleheline" (not "ühelehine").
 - OÜ, **not VAT registered**: prices are final and invoices carry no VAT.
 - No mail sending and no notifications (no calendar feed either): inquiries are seen in kapsaaed only. The free 20-minute consultation is a phone call: visitors ask for it in the contact form or call +372 5192 8421. turve.ee itself does receive mail (MX zonemx.eu), but that's outside this app.
 - No third-party scripts, fonts, analytics or captcha anywhere. turve.ee must score A on its own check.
 - One admin user now, but users live in the DB (`Users.role` admin/staff).
 - Launch 1 = site + estimator + free check + inquiries. Launch 2 (before the first job is invoiced) = clients, projects, time entries, invoices (PDF + CSV for the accountant). Keep invoices 7 years.
+
+### Direction from 2026-11-15 (the site is not yet changed)
+The owner changed course; the redesign is tracked in `~/Business/backlog/new-design-turve/` and studied in `~/Business/design/research/2026-11-15-turve-99-sales/`. It replaces the "prices are public and fixed" decision above once it ships:
+- **Beauty first, always; selling second.** The owner wants clients who care about beauty.
+- The 99 € one-pager is the whole front of the site and the **only public fixed price**, shown as a discount: regular 290 € (`web-onepage`), now 99 € (`web-onepage-launch`).
+- Every other package (larger sites, modernising, care plans, security) stays but is discreet and has no public price: the price follows from what the client needs.
+- The estimator ("cart") is replaced by a multi-step inquiry modal opened from the contact buttons. Optional form fields are allowed.
+- Cybersecurity is not removed, only moved out of the front row. The free security check stays.
+- www.kurvanokitseb.ee may be shown as an example of work done.
+- Until the redesign ships, the live site stays as it is, and the ads contract below holds before and after.
 
 ## Paid ads depend on the site (keep backwards compatible)
 A live Google Ads campaign and print/Business Profile listings point at the site. Its full contract is in
