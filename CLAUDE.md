@@ -1,8 +1,9 @@
 # turve.ee
 
 Secure websites and affordable security services for small Estonian companies (B2B). The owner is a security engineer.
-Built on the kamblakoda.ee setup (`/home/mikk/engineering/kamblakoda`), without its mail server.
-The 2026 launch campaign (fixed prices, 99 € offer, demos, consultations) is specced in `saving-the-companys-official-function-plan.md`.
+Built on the kamblakoda.ee setup (`/home/mikk/Business/clients/kamblakoda/kamblakoda`), without its mail server.
+This folder holds **only what is deployed to turve.ee**: the public site, the API, the admin panel and the deploy scripts. Marketing is in `../marketing/`, design research in `../design/`, client sites in `../clients/`, tickets in `../backlog/` (map in `../CLAUDE.md`).
+The 2026 launch campaign (fixed prices, 99 € offer, demos, consultations) is specced in `../company/strategy/saving-the-companys-official-function-plan.md`.
 The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-to-nested-stream.md`.
 
 ## System
@@ -17,7 +18,7 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 | Admin panel | `kapsaaed/` → kapsaaed.turve.ee | Plain JS, no build step, Estonian UI. Login is password + mandatory TOTP. Sessions are server-side (`Sessions` table holds the SHA-256 of the token) with a `__Host-turve_admin` cookie. Writes need `Origin: https://kapsaaed.turve.ee` and JSON (`middlewares/adminOrigin.ts`). Data is rendered as text only. |
 | DB | Zone.eu MariaDB (turve.ee's own) | Schema via numbered migrations in `server/src/db/migrations/` recorded in `schema_migrations`. **Never** edit an applied migration; add a new one. |
 | Launch offer | `LAUNCH_OFFER` in the catalog, `server/src/catalog/launchOffer.ts`, `GET /api/launch-offer` | Shown on the site as **"Aastalõpu pakkumine"** (year-end offer, not "avamispakkumine": no "we're new" angle), in a red frame (`--offer`, the only red on the price pages). `web-onepage-launch`, 99 € for the first 10 clients until 31.12.2026. A spot is taken by an inquiry with `Inquiries.countsForOffer = 1` that isn't spam; late ones get the flag `offer-full`/`offer-ended`. The owner toggles the count per inquiry in kapsaaed. `site/assets/js/offer.js` shows "Kohti alles: X / 10" (static "Esimesele 10 kliendile" without JS). |
-| One-pager kit | `site/src/onepager/`, CSS `site/assets/css/onepager-*.css` | Designs `betoon`, `keevitus`, `manikuur`, `universaalne`. Demos (noindex, with guide notes) are built to `/naidised/<id>/` but **linked from nowhere**: the owner shows them in the free consultation and picks the template there. There is no `/naidised/` index page. Client sites: `cd site && npm run onepager -- ../clients/<name> --origin https://www.client.ee` reads `clients/<name>/site.ts` + `img/` and writes `dist/` with a strict `.htaccess`. `clients/` is git-ignored and unversioned for now. |
+| One-pager kit | `site/src/onepager/`, CSS `site/assets/css/onepager-*.css` | Designs `betoon`, `keevitus`, `manikuur`, `universaalne`. Demos (noindex, with guide notes) are built to `/naidised/<id>/` but **linked from nowhere**: the owner shows them in the free consultation and picks the template there. There is no `/naidised/` index page. Client sites live outside this repo in `~/Business/clients/<name>/website/` (own git repo each): `cd site && npm run onepager -- ../../clients/<name>/website --origin https://www.client.ee` reads its `site.ts` + `img/` and writes `dist/` there with a strict `.htaccess`. |
 | Deployment | `deployment/` | Runs on the **local machine** only. |
 
 ## Owner decisions (do not re-litigate)
@@ -30,6 +31,14 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 - No third-party scripts, fonts, analytics or captcha anywhere. turve.ee must score A on its own check.
 - One admin user now, but users live in the DB (`Users.role` admin/staff).
 - Launch 1 = site + estimator + free check + inquiries. Launch 2 (before the first job is invoiced) = clients, projects, time entries, invoices (PDF + CSV for the accountant). Keep invoices 7 years.
+
+## Paid ads depend on the site (keep backwards compatible)
+A live Google Ads campaign and print/Business Profile listings point at the site. Its full contract is in
+`../marketing/material/2026-11-15-google-ads-search/README.md` ("Website contract"). In short, any change or rewrite must keep:
+- `https://www.turve.ee/` (with the year-end offer band), `/hinnad/`, `/veebilehed/`, `/turvakontroll/`, `/meist/`, `/loos/`, `/privaatsus/` answering 200 on host `www.turve.ee`; a moved path gets a same-host 301 and the ad's sitelink is updated the same day.
+- `turve.ee` and `http://` → 301 to `https://www.turve.ee/`; any query string (`?gclid=…`, `utm_*`) → same page, 200, not stored.
+- Every claim in the ads backed on the landing pages (99 €, tavahind 290 €, esimesele 10 kliendile, kuni 31.12.2026, one revision round, mobile-friendly, HTTPS, turvainsener, phone). When the catalog price, spots or end date change, or the offer fills or ends, pause or edit the ads the same day.
+Run the curl check in that README after every site deploy.
 
 ## Local development
 - A MariaDB runs on `127.0.0.1:3306` with user `turve`/`turve` and database `turve_dev` (the config's dev defaults). Its clock was 2 h behind this machine on 2026-10-28; session timing therefore uses the DB clock only (`UTC_TIMESTAMP()`), never `Date.now()`.
@@ -82,4 +91,4 @@ The full plan, including Launch 2 (billing), is in `~/.claude/plans/i-am-about-t
 `COMPANY` and `PERSON` in `site/src/config.ts`, a review of every page's copy and the privacy policy, and the final rates and packages in the catalog.
 
 ## Backlog
-Work is tracked as tickets in `backlog/` (`TURVE-NNN-short-recap.md`, three-digit numbers, conventions in `backlog/README.md`). Follow-ups, owner content, infra, marketing and business tasks all go there, not in this file. When a task is finished, set its ticket's `status` and add a dated line to its Log.
+Work is tracked as tickets in `~/Business/backlog/` (its own git repo; `TURVE-NNN-short-recap.md`, three-digit numbers, conventions in its `README.md`). Follow-ups, owner content, infra, marketing and business tasks all go there, not in this file. When a task is finished, set its ticket's `status` and add a dated line to its Log.

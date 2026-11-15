@@ -15,24 +15,7 @@ phpini/
 *.tar.gz
 *.log
 
-# Client one-page sites (built with site/src/onepager/cli.ts); kept out of this repository
-clients/
-
 # OS / editor
 .DS_Store
 .vscode/
 .idea/
-
-# Local spec packages and notes (not versioned)
-misc/
-
-# Ad campaign material: its own git repository inside
-reklaamikampaania/
-
-# Owner's raw photo (large binary, kept locally)
-20240602-AUR_5262-2.jpg
-
-# Kurva Nokitseb photo work (client photos stay out of git)
-kurva/work/
-kurva/site/img/
-kurva/shots/
