@@ -67,7 +67,8 @@
       const response = await fetch(data.winnerUrl, { cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) return null;
       const winner = await response.json();
-      return winner && typeof winner.company === 'string' && typeof winner.business === 'string' ? winner : null;
+      const business = winner && winner.business && winner.business[data.lang];
+      return typeof business === 'string' && typeof winner.company === 'string' ? { company: winner.company, business } : null;
     } catch {
       return null;
     }

@@ -226,7 +226,7 @@ export function build(dev: boolean, strict = false, now = Date.now()): void {
   write('/sitemap.xml', sitemap(cfg, giveaway === 'ended' ? new Set([...UNLISTED, 'giveaway']) : UNLISTED));
   // The published winner: pages that were open before it existed play the reveal live (assets/js/giveaway.js).
   if (GIVEAWAY.winner) {
-    write(WINNER_PATH, `${JSON.stringify({ company: GIVEAWAY.winner.company.trim(), business: GIVEAWAY.winner.business.trim() })}\n`);
+    write(WINNER_PATH, `${JSON.stringify({ company: GIVEAWAY.winner.company.trim(), business: { et: GIVEAWAY.winner.business.et.trim(), en: GIVEAWAY.winner.business.en.trim() } })}\n`);
   }
   write('/.htaccess', htaccess(cfg));
   write('/.well-known/security.txt', securityTxt(cfg));

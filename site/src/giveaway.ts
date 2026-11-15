@@ -26,10 +26,10 @@ export interface Giveaway {
   /** The prize package in the catalog; its price is the "value over" figure. */
   packageId: string;
   /**
-   * Set after the draw, as the entrant wrote it in the comment (rule 9: company name and line of business, no
-   * person's name). The build refuses it before drawAt, so the winner can't leak in the page source early.
+   * Set after the draw (rule 9: company name and line of business, no person's name). The company is spelled as in
+   * the business register (äriregister); the line of business is the comment's, once per language. The build refuses it before drawAt, so the winner can't leak in the page source early.
    */
-  winner?: { company: string; business: string };
+  winner?: { company: string; business: { et: string; en: string } };
 }
 
 export const GIVEAWAY: Giveaway = {
@@ -38,6 +38,8 @@ export const GIVEAWAY: Giveaway = {
   tabUntil: '2026-11-13T00:00:00+02:00',
   postUrl: 'https://www.facebook.com/permalink.php?story_fbid=122106008649533983&id=61596019515203',
   packageId: 'web-onepage',
+  // Drawn 2026-11-11 17:35 (~/Business/marketing/material/2026-11-08-kodulehe-loos/loosimine.log + screenshot).
+  winner: { company: 'OÜ Gesserit', business: { et: 'Fotograafia', en: 'Photography' } },
 };
 
 /**
@@ -80,8 +82,8 @@ export function checkGiveaway(now: number): void {
   if (GIVEAWAY.winner && now < drawAt) {
     throw new Error('GIVEAWAY.winner is set before the draw: it would be in the page source early. Set it after drawAt (site/src/giveaway.ts).');
   }
-  if (GIVEAWAY.winner && (!GIVEAWAY.winner.company.trim() || !GIVEAWAY.winner.business.trim())) {
-    throw new Error('GIVEAWAY.winner needs both company and business (site/src/giveaway.ts).');
+  if (GIVEAWAY.winner && (!GIVEAWAY.winner.company.trim() || !GIVEAWAY.winner.business.et.trim() || !GIVEAWAY.winner.business.en.trim())) {
+    throw new Error('GIVEAWAY.winner needs a company and a business in both languages (site/src/giveaway.ts).');
   }
   if (GIVEAWAY.postUrl && !isFacebookLink(GIVEAWAY.postUrl)) {
     throw new Error('GIVEAWAY.postUrl must be the https://www.facebook.com/… link of the post (site/src/giveaway.ts).');

@@ -462,7 +462,7 @@ export const et = {
     ],
     howNote: 'Üks kommentaar inimese kohta. Jagama ega sõpru märkima ei pea.',
     rulesTitle: 'Reeglid',
-    // As in reklaamikampaania/material/2026-11-08-kodulehe-loos/rules.md. {legalName} and {regCode} come from COMPANY,
+    // As in ~/Business/marketing/material/2026-11-08-kodulehe-loos/rules.md. {legalName} and {regCode} come from COMPANY,
     // {package} and {price} from the catalog, {privacy} becomes a link to the privacy page, `code` is shown as code.
     rules: [
       {

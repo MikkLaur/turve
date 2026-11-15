@@ -25,7 +25,7 @@ function ruleText(text: string, ctx: PageContext): Raw[] {
  * The winner, behind a "Näita võitjat" button (<details>: works without JS). Empty fields make the <template> that
  * giveaway.js fills when the winner is published while the page is open. giveaway.js plays the reveal on top.
  */
-function winnerReveal(ctx: PageContext, winner?: { company: string; business: string }): Raw {
+function winnerReveal(ctx: PageContext, winner?: { company: string; business: { et: string; en: string } }): Raw {
   const g = ctx.t.giveaway;
   return html`<details class="winner" data-winner>
             <summary class="button winner-button">${g.showWinner}</summary>
@@ -35,7 +35,7 @@ function winnerReveal(ctx: PageContext, winner?: { company: string; business: st
                 <p class="winner-cmd"><span class="t-prompt" aria-hidden="true">$</span> ${g.drawCommand}</p>
                 <p class="winner-title">${g.winnerTitle}</p>
                 <p class="winner-company" data-winner-company>${winner?.company ?? ''}</p>
-                <p class="winner-business" data-winner-business>${winner?.business ?? ''}</p>
+                <p class="winner-business" data-winner-business>${winner?.business[ctx.lang] ?? ''}</p>
                 <p class="winner-congrats">${g.congrats}</p>
               </div>
             </div>
@@ -126,6 +126,7 @@ export function giveawayPage(ctx: PageContext): PageOutput {
       drawing: g.drawing,
       announce: g.winnerAnnounce,
       winnerUrl: WINNER_PATH,
+      lang: ctx.lang,
     })}`;
 
   return {
